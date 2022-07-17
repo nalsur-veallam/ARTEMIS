@@ -52,7 +52,7 @@ int main(int argc, char* argv[]){
         vector <double> mie;
         names.push_back(rep.getResidueName(resid1));
         
-        for (unsigned int resid2 = resid1; resid2 <= NResidues; resid2++) {
+        for (unsigned int resid2 = 1; resid2 <= NResidues; resid2++) {
             
             vector <vector< int > >dofs1;
             dofs1.push_back(rep.getBonds(resid1));

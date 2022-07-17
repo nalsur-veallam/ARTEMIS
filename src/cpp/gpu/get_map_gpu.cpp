@@ -86,7 +86,12 @@ int main(int argc, char* argv[]){
         map.push_back(mie);
     }
     
-    save_map(NResidues, map, names);
+    vector <int> real_numbers;
+    for (unsigned int i = 0; i < NResidues; i++) {
+        real_numbers.push_back(rep.getResidueNumber(i + 1));
+    }
+    
+    save_map(NResidues, map, names, real_numbers);
 
     return 0;
 }

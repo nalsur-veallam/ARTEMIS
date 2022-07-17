@@ -24,5 +24,5 @@ fig, axs = plt.subplots(figsize=(10,10), constrained_layout=True)
 
 sns.heatmap(MIE, annot=False, cmap="icefire")
 
-plt.title('Mutual information on residues for ' + name)
+plt.title('Mutual information on residues for ' + name, fontsize=20)
 fig.savefig(out_path + '.pdf')

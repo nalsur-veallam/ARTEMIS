@@ -24,7 +24,7 @@ max_of_clust = NResidues
 
 frob = np.sqrt(sum(abs(map_.flatten())**2)) #Frobenius norm of a matrix
 
-distances = np.ones((NResidues, NResidues)) #Residual Distance Matrix
+distances = np.ones((NResidues, NResidues)) - map_/frob #Residual Distance Matrix
 
 metric_quotient = []
 metric_with_log = []
@@ -67,21 +67,3 @@ plt.title('$MI_{ex}$/log(N) from number of clusters', fontsize=20)
 plt.tick_params(axis='both', which='major', labelsize=16)
 plt.show()
 fig.savefig(out_path + '_metric_with_log.pdf')
-
-
-
-#fig, axs = plt.subplots(figsize=(10,10), constrained_layout=True)
-
-#p1 = axs.plot(np.linspace(2,9,8),MI)
-
-
-#plt.title('MI_ex/MI_in from num of clusters')
-#plt.xlabel('N - Num of clusters')
-#plt.ylabel('MI_ex/MI_in')
-#plt.grid()
-#plt.show()
-
-#fig.set_figwidth(10)
-#fig.set_figheight(10)
-
-#fig.savefig('MI')

@@ -101,7 +101,8 @@ int main(int argc, char* argv[]) {
             j++;
         }
         names.pop_back();
-        
+        vector <int> real_numbers;
+        real_numbers = residueNumbers;
         int current = 1;
         int total = 1;
         for (int i = 0; i < size; i ++) {
@@ -273,7 +274,7 @@ int main(int argc, char* argv[]) {
             }
         }
         
-        save_map(NResidues, map, names);
+        save_map(NResidues, map, names, real_numbers);
     }
     else {
         cerr<<"ERROR: COULD NOT OPEN FILE !\n\nUSAGE:\n"<<argv[0]<<" input.par"<<endl;

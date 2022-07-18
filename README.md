@@ -46,3 +46,17 @@ The src/python/clustering.py script performs clustering according to the existin
 
 where after the -nclust flag is the desired number of clusters.
 
+### CREATING A PYMOL SESSION
+
+The src/python/create_pse.py script on your pdb file, passed after the -f flag, creates a pymol session with the selection of clusters into groups and saves it to the ./output/clustering/ directory. To run use:
+> python src/python/clustering.py -f input.pdb -n project_name -nclust num_of_clust
+
+### COMPARISON WITH USER MATRIX
+
+The calculation of the Frobenius norm of a given matrix and the user matrix and drawing the difference matrix of these normalized matrices is done using the src/python/matrix_comparison.py script, which receives a json file with the saved user matrix as input after the -f flag, as well as the name of the matrix in this file after the -matname flag, and after saves everything to the ./output/analysis/ directory. To run use:
+> python src/python/matrix_comparison.py -f input.json -n project_name -nclust num_of_clust -matname matrix_name
+
+### CALCULATION OF THE INTENSITY OF RELATIONSHIPS WITH AN ACTIVE SITE
+
+The src/python/allosteric_site_search.py script receives as input after the -f flag a json file with a list of residues in the active site, as well as the name of this list in the received file after the -asn flag. Output is made to the ./output/analysis/ directory. To run use:
+> python src/python/allosteric_site_search.py -f input.json -n project_name -nclust num_of_clust -asn list_name

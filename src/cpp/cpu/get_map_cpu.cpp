@@ -49,16 +49,16 @@ int main(int argc, char* argv[]) {
     
     Arg_Parser arg_parser(argc, argv);
   
-    if( !( arg_parser.exists( string("-f") ) && (argc==3) ) ){
-        cerr<<"USAGE:\n"<<argv[0]<<" -f input.par"<<endl;
+    if( !( arg_parser.exists( string("-f") ) && arg_parser.exists( string("-n") ) && (argc==5) ) ){
+        cerr<<"USAGE:\n"<<argv[0]<<" -f input.par -n name"<<endl;
         return 1;
     }
     
     if ( strcmp( arg_parser.get_ext( arg_parser.get("-f") ) , "par") ) {
     // check for the extensions of the input file
-    cerr<<"USAGE:\n"<<argv[0]<<" -f input.par"<<endl;
+    cerr<<"USAGE:\n"<<argv[0]<<" -f input.par -n name"<<endl;
     exit(EXIT_FAILURE);
-    }
+   }
 
     int double_prec, numFrames, nDihedrals;
     int version, bDens, aDens, dDens, bDens1D, aDens1D, dDens1D;
@@ -101,7 +101,8 @@ int main(int argc, char* argv[]) {
             j++;
         }
         names.pop_back();
-        
+        vector <int> real_numbers;
+        real_numbers = residueNumbers;
         int current = 1;
         int total = 1;
         for (int i = 0; i < size; i ++) {
@@ -119,7 +120,7 @@ int main(int argc, char* argv[]) {
         
         for (unsigned int i = 0; i < NResidues; i++) {
             vector <double> line;
-            for (unsigned int k = i; k < NResidues; k++) {
+            for (unsigned int k = 0; k < NResidues; k++) {
                 line.push_back(0);
             }
             map.push_back(line);
@@ -170,16 +171,15 @@ int main(int argc, char* argv[]) {
                 if (bonds[i] != 0 && bonds[j] != 0) {
                     if (bonds[i] >= bonds[j]) {
                         
-                        map[bonds[j] - 1][bonds[i] - bonds[j]] += get_mutual(TYPE_BB,i,j,MUTUAL_ARGS);
+                        map[bonds[j] - 1][bonds[i] - 1] += get_mutual(TYPE_BB,i,j,MUTUAL_ARGS);
                 
                     }
                     else {
                         
-                        map[bonds[i] - 1][bonds[j] - bonds[i]] += get_mutual(TYPE_BB,i,j,MUTUAL_ARGS);
+                        map[bonds[i] - 1][bonds[j] - 1] += get_mutual(TYPE_BB,i,j,MUTUAL_ARGS);
                         
                     }
                 }
-                //cout << i << " " << j << "  " << bonds[i] << " " << bonds[j] << endl;
             }
         }
         
@@ -188,12 +188,12 @@ int main(int argc, char* argv[]) {
                 if (bonds[i] != 0 && angles[j] != 0) {
                     if (bonds[i] >= angles[j]) {
                         
-                        map[angles[j] - 1][bonds[i] - angles[j]] += get_mutual(TYPE_BA,i,j,MUTUAL_ARGS);
+                        map[angles[j] - 1][bonds[i] - 1] += get_mutual(TYPE_BA,i,j,MUTUAL_ARGS);
                 
                     }
                     else {
                         
-                        map[bonds[i] - 1][angles[j] - bonds[i]] += get_mutual(TYPE_BA,i,j,MUTUAL_ARGS);
+                        map[bonds[i] - 1][angles[j] - 1] += get_mutual(TYPE_BA,i,j,MUTUAL_ARGS);
                         
                     }
                 }
@@ -205,12 +205,12 @@ int main(int argc, char* argv[]) {
                 if (bonds[i] != 0 && dihedrals[j] != 0) {
                     if (bonds[i] >= dihedrals[j]) {
                         
-                        map[dihedrals[j] - 1][bonds[i] - dihedrals[j]] += get_mutual(TYPE_BD,i,j,MUTUAL_ARGS);
+                        map[dihedrals[j] - 1][bonds[i] - 1] += get_mutual(TYPE_BD,i,j,MUTUAL_ARGS);
                 
                     }
                     else {
                         
-                        map[bonds[i] - 1][dihedrals[j] - bonds[i]] += get_mutual(TYPE_BD,i,j,MUTUAL_ARGS);
+                        map[bonds[i] - 1][dihedrals[j] - 1] += get_mutual(TYPE_BD,i,j,MUTUAL_ARGS);
                         
                     }
                 }
@@ -222,12 +222,12 @@ int main(int argc, char* argv[]) {
                 if (angles[i] != 0 && angles[j] != 0) {
                     if (angles[i] >= angles[j]) {
                         
-                        map[angles[j] - 1][angles[i] - angles[j]] += get_mutual(TYPE_AA,i,j,MUTUAL_ARGS);
+                        map[angles[j] - 1][angles[i] - 1] += get_mutual(TYPE_AA,i,j,MUTUAL_ARGS);
                 
                     }
                     else {
                         
-                        map[angles[i] - 1][angles[j] - angles[i]] += get_mutual(TYPE_AA,i,j,MUTUAL_ARGS);
+                        map[angles[i] - 1][angles[j] - 1] += get_mutual(TYPE_AA,i,j,MUTUAL_ARGS);
                         
                     }
                 }
@@ -236,15 +236,15 @@ int main(int argc, char* argv[]) {
         
         for(int i = 0; i < nDihedrals + 1; i++) { //angle-dihedral pairs
             for(int j = 0; j < nDihedrals; j++) {
-                if (angles[i] != 0 and dihedrals[j] != 0) {
+                if (angles[i] != 0 && dihedrals[j] != 0) {
                     if (angles[i] >= dihedrals[j]) {
                         
-                        map[dihedrals[j] - 1][angles[i] - dihedrals[j]] += get_mutual(TYPE_AD,i,j,MUTUAL_ARGS);
+                        map[dihedrals[j] - 1][angles[i] - 1] += get_mutual(TYPE_AD,i,j,MUTUAL_ARGS);
                 
                     }
                     else {
                         
-                        map[angles[i] - 1][dihedrals[j] - angles[i]] += get_mutual(TYPE_AD,i,j,MUTUAL_ARGS);
+                        map[angles[i] - 1][dihedrals[j] - 1] += get_mutual(TYPE_AD,i,j,MUTUAL_ARGS);
                         
                     }
                 }
@@ -253,22 +253,28 @@ int main(int argc, char* argv[]) {
         
         for(int i = 0; i < nDihedrals - 1; i++) { //dihedral-dihedral pairs
             for(int j = i + 1; j < nDihedrals; j++) {
-                if (dihedrals[i] != 0 and dihedrals[j] != 0) {
+                if (dihedrals[i] != 0 && dihedrals[j] != 0) {
                     if (dihedrals[i] >= dihedrals[j]) {
                         
-                        map[dihedrals[j] - 1][dihedrals[i] - dihedrals[j]] += get_mutual(TYPE_DD,i,j,MUTUAL_ARGS);
-                
+                        map[dihedrals[j] - 1][dihedrals[i] - 1] += get_mutual(TYPE_DD,i,j,MUTUAL_ARGS);
+                        
                     }
                     else {
                         
-                        map[dihedrals[i] - 1][dihedrals[j] - dihedrals[i]] += get_mutual(TYPE_DD,i,j,MUTUAL_ARGS);
+                        map[dihedrals[i] - 1][dihedrals[j] - 1] += get_mutual(TYPE_DD,i,j,MUTUAL_ARGS);
                         
                     }
                 }
             }
         }
         
-        save_map(NResidues, map, names);
+        for (unsigned int i = 0; i < NResidues; i++) {
+            for (unsigned int k = i; k < NResidues; k++) {
+                map[k][i] = map[i][k];
+            }
+        }
+        
+        save_map(NResidues, map, names, real_numbers, arg_parser.get("-n"));
     }
     else {
         cerr<<"ERROR: COULD NOT OPEN FILE !\n\nUSAGE:\n"<<argv[0]<<" input.par"<<endl;

@@ -27,14 +27,14 @@ int main(int argc, char* argv[]){
     
     Arg_Parser arg_parser(argc, argv);
   
-    if( !( arg_parser.exists( string("-f") ) && (argc==3) ) ){
-        cerr<<"USAGE:\n"<<argv[0]<<" -f input.par"<<endl;
+    if( !( arg_parser.exists( string("-f") ) && arg_parser.exists( string("-n") ) && (argc==5) ) ){
+        cerr<<"USAGE:\n"<<argv[0]<<" -f input.par -n name"<<endl;
         return 1;
     }
     
     if ( strcmp( arg_parser.get_ext( arg_parser.get("-f") ) , "par") ) {
     // check for the extensions of the input file
-    cerr<<"USAGE:\n"<<argv[0]<<" -f input.par"<<endl;
+    cerr<<"USAGE:\n"<<argv[0]<<" -f input.par -n name"<<endl;
     exit(EXIT_FAILURE);
    }
     
@@ -52,7 +52,7 @@ int main(int argc, char* argv[]){
         vector <double> mie;
         names.push_back(rep.getResidueName(resid1));
         
-        for (unsigned int resid2 = resid1; resid2 <= NResidues; resid2++) {
+        for (unsigned int resid2 = 1; resid2 <= NResidues; resid2++) {
             
             vector <vector< int > >dofs1;
             dofs1.push_back(rep.getBonds(resid1));
@@ -86,7 +86,12 @@ int main(int argc, char* argv[]){
         map.push_back(mie);
     }
     
-    save_map(NResidues, map, names);
+    vector <int> real_numbers;
+    for (unsigned int i = 0; i < NResidues; i++) {
+        real_numbers.push_back(rep.getResidueNumber(i + 1));
+    }
+    
+    save_map(NResidues, map, names, real_numbers, arg_parser.get("-n"));
 
     return 0;
 }

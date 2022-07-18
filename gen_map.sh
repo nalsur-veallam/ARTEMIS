@@ -10,6 +10,7 @@ mkdir output
 mkdir output/map/
 mkdir output/opt_num_of_clust/
 
+
 if [[ "GPU"  == "${VERSION}" ]]; then # Obtaining a matrix of mutual information between residuals from a binary file
     bin/get_map_gpu -f ${SOURCE_PAR} -n ${NAME}
 else

@@ -10,7 +10,7 @@ if not (sys.argv[1] == "-n" and len(sys.argv) == 3):
     exit()
     
 name = sys.argv[2]
-map_path = "output/map/map"
+map_path = "output/map/" + name + "_map"
 out_path = "output/map/" + name
 
 with open(map_path + '.json') as json_file:

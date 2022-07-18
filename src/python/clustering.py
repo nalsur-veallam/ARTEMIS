@@ -21,7 +21,7 @@ if not (name and NClusters):
     print("USAGE:\n"+sys.argv[0]+" -n name -nclust num_of_clust")
     exit()
 
-map_path = "output/map/map"
+map_path = "output/map/" + name + "_map"
 out_path = "output/clustering/" + name
 
 with open(map_path + '.json') as json_file:
@@ -103,7 +103,7 @@ for i in range(NResidues):
 
 plot_dendrogram(new_clustering, truncate_mode="level", orientation="right", labels=labels)
 
-plt.title('Dendrogram for ' + name + " with " + NClusters + " clusters", fontsize=20)
+plt.title('Dendrogram for ' + name, fontsize=20)
 plt.xlabel('Distance', fontsize=16)
 plt.ylabel('Residue', fontsize=16)
-fig.savefig(out_path + "_"+ NClusters + '_dendrogram.pdf')
+fig.savefig(out_path + '_dendrogram.pdf')

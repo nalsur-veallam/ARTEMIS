@@ -49,16 +49,16 @@ int main(int argc, char* argv[]) {
     
     Arg_Parser arg_parser(argc, argv);
   
-    if( !( arg_parser.exists( string("-f") ) && (argc==3) ) ){
-        cerr<<"USAGE:\n"<<argv[0]<<" -f input.par"<<endl;
+    if( !( arg_parser.exists( string("-f") ) && arg_parser.exists( string("-n") ) && (argc==5) ) ){
+        cerr<<"USAGE:\n"<<argv[0]<<" -f input.par -n name"<<endl;
         return 1;
     }
     
     if ( strcmp( arg_parser.get_ext( arg_parser.get("-f") ) , "par") ) {
     // check for the extensions of the input file
-    cerr<<"USAGE:\n"<<argv[0]<<" -f input.par"<<endl;
+    cerr<<"USAGE:\n"<<argv[0]<<" -f input.par -n name"<<endl;
     exit(EXIT_FAILURE);
-    }
+   }
 
     int double_prec, numFrames, nDihedrals;
     int version, bDens, aDens, dDens, bDens1D, aDens1D, dDens1D;
@@ -274,7 +274,7 @@ int main(int argc, char* argv[]) {
             }
         }
         
-        save_map(NResidues, map, names, real_numbers);
+        save_map(NResidues, map, names, real_numbers, arg_parser.get("-n"));
     }
     else {
         cerr<<"ERROR: COULD NOT OPEN FILE !\n\nUSAGE:\n"<<argv[0]<<" input.par"<<endl;

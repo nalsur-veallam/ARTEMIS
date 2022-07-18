@@ -27,14 +27,14 @@ int main(int argc, char* argv[]){
     
     Arg_Parser arg_parser(argc, argv);
   
-    if( !( arg_parser.exists( string("-f") ) && (argc==3) ) ){
-        cerr<<"USAGE:\n"<<argv[0]<<" -f input.par"<<endl;
+    if( !( arg_parser.exists( string("-f") ) && arg_parser.exists( string("-n") ) && (argc==5) ) ){
+        cerr<<"USAGE:\n"<<argv[0]<<" -f input.par -n name"<<endl;
         return 1;
     }
     
     if ( strcmp( arg_parser.get_ext( arg_parser.get("-f") ) , "par") ) {
     // check for the extensions of the input file
-    cerr<<"USAGE:\n"<<argv[0]<<" -f input.par"<<endl;
+    cerr<<"USAGE:\n"<<argv[0]<<" -f input.par -n name"<<endl;
     exit(EXIT_FAILURE);
    }
     
@@ -91,7 +91,7 @@ int main(int argc, char* argv[]){
         real_numbers.push_back(rep.getResidueNumber(i + 1));
     }
     
-    save_map(NResidues, map, names, real_numbers);
+    save_map(NResidues, map, names, real_numbers, arg_parser.get("-n"));
 
     return 0;
 }

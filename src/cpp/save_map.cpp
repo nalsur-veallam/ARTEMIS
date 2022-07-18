@@ -7,7 +7,7 @@
 
 using nlohmann::json;
 
-void save_map(unsigned int NResidues, std::vector <std::vector <double>> map, std::vector <std::string> names, std::vector <int> real_numbers) {
+void save_map(unsigned int NResidues, std::vector <std::vector <double>> map, std::vector <std::string> names, std::vector <int> real_numbers, std::string name) {
     json save;
     save["NResidues"] = NResidues;
     save["names"] = names;
@@ -15,6 +15,6 @@ void save_map(unsigned int NResidues, std::vector <std::vector <double>> map, st
     save["real_numbers"] = real_numbers;
     
     std::fstream file;
-    file.open("output/map/map.json", std::ios::trunc | std::ios::out);
+    file.open("output/map/" + name + "_map.json", std::ios::trunc | std::ios::out);
     file << std::setw(0) << save;
 }

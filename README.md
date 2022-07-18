@@ -4,7 +4,7 @@ A framework with scripts for the analysis and clustering of molecular systems ac
 You will need g++ and python libraries to work: numpy, pandas, seaborn, json, pylab, sklearn and scipy
 
 ## QUICK START
-Set the necessary parameters in the ff.sh and hh.sh scripts and run in turn:
+Set the necessary parameters in the gen_map.sh, clustering.sh and analysis.sh scripts and run in turn:
 > bash gen_map.sh
 
 > bash clustering.sh

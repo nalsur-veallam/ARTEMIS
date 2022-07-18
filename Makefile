@@ -25,7 +25,6 @@ get_map_cpu: bin/get_map_cpu
 clean :
 	- rm -r bin
 	- rm -r obj
-	- rm map.json
 
 obj :
 	mkdir obj

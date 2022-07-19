@@ -6,10 +6,9 @@ PYTHON="python3" # Your python launch codeword version >=3
 make clean
 make
 
-mkdir output
-mkdir output/map/
-mkdir output/opt_num_of_clust/
-
+mkdir output &> /dev/null
+mkdir output/map/ &> /dev/null
+mkdir output/opt_num_of_clust/ &> /dev/null
 
 if [[ "GPU"  == "${VERSION}" ]]; then # Obtaining a matrix of mutual information between residuals from a binary file
     bin/get_map_gpu -f ${SOURCE_PAR} -n ${NAME}

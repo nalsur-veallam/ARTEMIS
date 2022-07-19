@@ -3,9 +3,8 @@ PYTHON="python3" # Your python launch codeword version >=3
 NUM_OF_CLUST=5 # Desired number of clusters in the system
 SOURCE_PDB="test_system/v536e.pdb" # Path to pdb file to create a pymol session with clustering (you must have pymol installed!!!)
 
-mkdir output
-mkdir output/clustering/
-
+mkdir output &> /dev/null
+mkdir output/clustering/ &> /dev/null
 
 ${PYTHON} src/python/clustering.py -n ${NAME} -nclust ${NUM_OF_CLUST} # Calculates the clustering of the system and builds a dendrogram (in future versions I will add clustering by cutoff)
 

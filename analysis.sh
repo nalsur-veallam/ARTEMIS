@@ -7,8 +7,8 @@ ACTIVE_SITE_NAME="active_site" # List name in json file
 SOURCE_CUSTOM_MAP="test_system/v536e_map.json" # Path to additional matrix for comparison
 MAT_NAME="map" # Matrix name in json file
 
-mkdir output
-mkdir output/analysis
+mkdir output &> /dev/null
+mkdir output/analysis &> /dev/null
 
 ${PYTHON} src/python/matrix_comparison.py -n ${NAME} -f ${SOURCE_CUSTOM_MAP} -matname ${MAT_NAME}  # Calculates the Frobenius norm of matrices and draws the difference matrix 
                                                                             # of the normalized matrices in the ./output/analysis/ directory

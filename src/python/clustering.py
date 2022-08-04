@@ -94,7 +94,7 @@ def plot_dendrogram(model, **kwargs):
 
 new_clustering = AgglomerativeClustering(distance_threshold=0, n_clusters=None).fit(pd.DataFrame(data=distances, index=names, columns=names))
 
-fig, axs = plt.subplots(figsize=(10,10), constrained_layout=True)
+fig, axs = plt.subplots(figsize=(15,20), constrained_layout=True)
 
 support = np.arange(1, NResidues+1)
 labels = []

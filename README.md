@@ -1,4 +1,4 @@
-# UPD: Recently updated the repository, but did not change the README
+# UPD: Recently updated the repository, but did not change the README (CAREFULLY! YOU NEED TO PROVIDE RAM AT LEAST THE SIZE OF THE .PAR FILE!)
 
 
 # CLUSTERING

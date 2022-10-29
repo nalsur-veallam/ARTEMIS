@@ -18,7 +18,13 @@ with open(map_path + '.json') as json_file:
 
 map_ = np.array(data['map'])
 names = np.array(data['names'])
-MIE = pd.DataFrame(data=map_[::-1, :], index=names[::-1], columns=names)
+real_numbers = np.array(data['real_numbers'])
+
+labels = []
+for i in range(len(names)):
+    labels.append(names[i] + " (" + str(real_numbers[i]) + ")")
+
+MIE = pd.DataFrame(data=map_[::-1, :], index=np.array(labels)[::-1], columns=np.array(labels))
 
 fig, axs = plt.subplots(figsize=(10,10), constrained_layout=True)
 

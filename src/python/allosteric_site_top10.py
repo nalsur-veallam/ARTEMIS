@@ -5,7 +5,24 @@ import pylab as plt
 import seaborn as sns
 import pandas as pd
 
-width = .6
+width = 0.6
+
+def max10(array):
+    size = len(array)
+    top10 = int(0.1*size)
+    
+    supp = np.ones(size)
+    for i in range(top10):
+        supp[i] = 1
+    
+    d = {'data':array, 'index':np.arange(0,NResidues)}
+    
+    df = pd.DataFrame(data=d)
+    df = df.sort_values(by=['data'], ascending=False)
+    df['data'] = df['data']*supp
+    df = df.sort_values(by=['index'])
+    return np.array(df['data'])
+    
 
 if not ("-asn" in sys.argv and "-f" in sys.argv and "-n" in sys.argv and len(sys.argv) == 7):
     print("USAGE:\n"+sys.argv[0]+" -f active_site.json -n name -asn active_site_name")
@@ -40,15 +57,16 @@ with open(path) as json_file:
 
 active_site = np.array(your_data[as_name])
 
-intensity = []
-for i in range(NResidues):
+intensity = np.zeros(NResidues)
+
+for resid in active_site:
+    inten = []
+    for i in range(NResidues):
         if i + 1 in active_site:
-            intensity.append(0)
+            inten.append(0)
         else:
-            inten = 0
-            for resid in active_site:
-                inten += map_[resid - 1][i]
-            intensity.append(inten)
+            inten.append(map_[resid - 1][i])
+    intensity += max10(inten)
 
 new_names = []
 for i in range(NResidues):
@@ -66,13 +84,13 @@ axs.legend_.remove()
 plt.tick_params(axis='both', which='major', labelsize=16)
 
 plt.title('Intensity of connectivity of residues with the active site for ' + name, fontsize=40)
-fig.savefig(out_path + '_intensity.pdf')
+fig.savefig(out_path + '_intensity_top10.pdf')
 
 new_data = {}
 new_data['name'] = name
 new_data['names'] = data['names']
 new_data['NResidues'] = NResidues
 new_data['active_site'] = your_data[as_name]
-new_data['intensity'] = intensity
-with open(out_path + '_intensity.json', 'w') as outfile:
+new_data['intensity'] = intensity.tolist()
+with open(out_path + '_intensity_top10.json', 'w') as outfile:
     json.dump(new_data, outfile)

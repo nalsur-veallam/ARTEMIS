@@ -33,7 +33,6 @@ with open(map_path + '.json') as json_file:
 map_ = np.array(data['map'])
 names = np.array(data['names'])
 NResidues = data['NResidues']
-real_numbers = np.array(data['real_numbers'])
 
 with open(path) as json_file:
     your_data = json.load(json_file)
@@ -52,7 +51,7 @@ for i in range(NResidues):
 
 new_names = []
 for i in range(NResidues):
-    new_names.append(names[i] + "\n(" + str(real_numbers[i]) +")")
+    new_names.append(names[i] + "\n(" + str(i+1) +")")
 
 INTENSITY = {}
 INTENSITY["Intensity"] = np.array(intensity) / np.sqrt(sum(abs(np.array(intensity).flatten())**2))

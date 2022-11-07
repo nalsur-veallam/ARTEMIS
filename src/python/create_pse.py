@@ -51,8 +51,7 @@ def transl_to_text(group, group_names):
 cmd.load(path)
 
 for i in range(NClusters):
-    for j in range(len(groups[i])):
-        text = "resi " + str(groups[i][j])  # + " & resn " + str(group_names[i][j])  # transl_to_text(groups[i], group_names[i])
-        cmd.select("cluster_" + str(i+1), text, merge=1)
+    text = transl_to_text(groups[i], group_names[i])
+    cmd.select("cluster_" + str(i+1), text)
 
 cmd.save(out_path + "_" + str(NClusters) + "_session.pse")

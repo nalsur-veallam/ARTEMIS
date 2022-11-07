@@ -7,7 +7,6 @@ from sklearn.cluster import AgglomerativeClustering
 from scipy.cluster.hierarchy import dendrogram
 import json
 
-heigh = .1
 
 if not ("-n" in sys.argv and "-nclust" in  sys.argv  and len(sys.argv) == 5):
     print("USAGE:\n"+sys.argv[0]+" -n name -nclust num_of_clust")
@@ -31,7 +30,6 @@ with open(map_path + '.json') as json_file:
 map_ = np.array(data['map'])
 names = np.array(data['names'])
 NResidues = data['NResidues']
-real_numbers = np.array(data['real_numbers'])
 
 frob = np.sqrt(sum(abs(map_.flatten())**2)) #Frobenius norm of a matrix
 
@@ -46,11 +44,7 @@ for j in range(NResidues):
         if clustering.labels_[k] == clustering.labels_[j]:
             MAP[k][j] = clustering.labels_[k] + 1
             
-labels = []
-for i in range(NResidues):
-    labels.append(names[i] + " (" + str(real_numbers[i]) + ")")
-            
-CLUSTERING = pd.DataFrame(data=MAP[::-1, :], index=np.array(labels)[::-1], columns=np.array(labels))
+CLUSTERING = pd.DataFrame(data=MAP[::-1, :], index=names[::-1], columns=names)
 
 fig, axs = plt.subplots(figsize=(10,10), constrained_layout=True)
 
@@ -100,15 +94,16 @@ def plot_dendrogram(model, **kwargs):
 
 new_clustering = AgglomerativeClustering(distance_threshold=0, n_clusters=None).fit(pd.DataFrame(data=distances, index=names, columns=names))
 
-fig, axs = plt.subplots(figsize=(12, heigh*NResidues), constrained_layout=True)
-plt.tick_params(axis='both', which='major', labelsize=20)
+fig, axs = plt.subplots(figsize=(15,20), constrained_layout=True)
+
+support = np.arange(1, NResidues+1)
 labels = []
 for i in range(NResidues):
-    labels.append(names[i] + " (" + str(real_numbers[i]) + ")")
+    labels.append(names[i] + " (" + str(support[i]) + ")")
 
 plot_dendrogram(new_clustering, truncate_mode="level", orientation="right", labels=labels)
 
 plt.title('Dendrogram for ' + name, fontsize=20)
-plt.xlabel('Distance', fontsize=20)
-plt.ylabel('Residue', fontsize=20)
+plt.xlabel('Distance', fontsize=16)
+plt.ylabel('Residue', fontsize=16)
 fig.savefig(out_path + '_dendrogram.pdf')

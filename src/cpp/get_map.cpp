@@ -15,7 +15,6 @@
 
 #include <iostream>
 #include <string>
-#include <cmath>
 
 #include "util/Residue_Representation.h"
 #include "util/Arg_Parser.h"
@@ -23,7 +22,6 @@
 
 using namespace std;
 
-#define h 6.62607015e-34
 
 int main(int argc, char* argv[]){
     
@@ -129,7 +127,7 @@ int main(int argc, char* argv[]){
                 }
                 else {
                     for(unsigned int idx1 = 0; idx1 < dofs[type1].size(); idx1++){ // and all dofs of the current type of the first member of the dof pair
-                        for(unsigned int idx2 = idx1+1; idx2 < dofs[type2].size(); idx2++ ){ // and all "later" dofs for the second member of the dof pair
+                        for(unsigned int idx2 = idx1; idx2 < dofs[type2].size(); idx2++ ){ // and all "later" dofs for the second member of the dof pair
                                 
                             mutual += mat->getMutual(type1, type2, dofs[type1][idx1], dofs[type2][idx2]);
                                     
@@ -139,9 +137,7 @@ int main(int argc, char* argv[]){
             }
         }
         
-        int s  = dofs[0].size() + dofs[1].size() + dofs[2].size();
-        
-        entropies.push_back(entropy - mutual - s * log(h));
+        entropies.push_back(entropy - mutual);
         
     }
     

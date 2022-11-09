@@ -16,11 +16,11 @@
 CXX = g++
 CXXFLAGS = -O3 -Wall
 
-all : get_map_gpu get_map_cpu
+all : get_map ac
 
-get_map_gpu: bin/get_map_gpu
+get_map: bin/get_map
 
-get_map_cpu: bin/get_map_cpu
+ac: bin/ac
 
 clean :
 	- rm -r bin
@@ -33,33 +33,36 @@ bin :
 	mkdir bin
 
 # All packages for gpu
-obj/Entropy_Matrix.o: src/cpp/gpu/util/Entropy_Matrix.cpp src/cpp/gpu/util/Entropy_Matrix.h | obj    
-	$(CXX) -std=c++11 -c src/cpp/gpu/util/Entropy_Matrix.cpp -o obj/Entropy_Matrix.o $(CXXFLAGS)
+obj/Entropy_Matrix.o: src/cpp/util/Entropy_Matrix.cpp src/cpp/util/Entropy_Matrix.h | obj    
+	$(CXX) -std=c++11 -c src/cpp/util/Entropy_Matrix.cpp -o obj/Entropy_Matrix.o $(CXXFLAGS)
     
-obj/Arg_Parser.o: src/cpp/gpu/util/Arg_Parser.cpp src/cpp/gpu/util/Arg_Parser.h | obj
-	$(CXX) -c src/cpp/gpu/util/Arg_Parser.cpp -o obj/Arg_Parser.o $(CXXFLAGS)
+obj/Arg_Parser.o: src/cpp/util/Arg_Parser.cpp src/cpp/util/Arg_Parser.h | obj
+	$(CXX) -c src/cpp/util/Arg_Parser.cpp -o obj/Arg_Parser.o $(CXXFLAGS)
     
-obj/util_gpu.o: src/cpp/gpu/util/util.cpp src/cpp/gpu/util/util.h | obj
-	$(CXX) -c src/cpp/gpu/util/util.cpp -o obj/util_gpu.o $(CXXFLAGS)
+obj/util.o: src/cpp/util/util.cpp src/cpp/util/util.h | obj
+	$(CXX) -c src/cpp/util/util.cpp -o obj/util.o $(CXXFLAGS)
     
-obj/Residue_Representation.o: src/cpp/gpu/util/Residue_Representation.cpp src/cpp/gpu/util/Residue_Representation.h | obj
-	$(CXX) --std=c++11 -c src/cpp/gpu/util/Residue_Representation.cpp -o obj/Residue_Representation.o $(CXXFLAGS)
+obj/Residue_Representation.o: src/cpp/util/Residue_Representation.cpp src/cpp/util/Residue_Representation.h | obj
+	$(CXX) --std=c++11 -c src/cpp/util/Residue_Representation.cpp -o obj/Residue_Representation.o $(CXXFLAGS)
     
-bin/get_map_gpu: src/cpp/gpu/get_map_gpu.cpp obj/Residue_Representation.o obj/Entropy_Matrix.o obj/Arg_Parser.o obj/util_gpu.o | bin
-	$(CXX) --std=c++11 -O3 src/cpp/gpu/get_map_gpu.cpp obj/Residue_Representation.o obj/Entropy_Matrix.o obj/Arg_Parser.o obj/util_gpu.o -o bin/get_map_gpu $(CXXFLAGS)
-
-# All packages for cpu
-obj/io_binary.o : src/cpp/cpu/util/io_binary.cpp src/cpp/cpu/util/io_binary.h | obj
-	$(CXX) -c src/cpp/cpu/util/io_binary.cpp -o obj/io_binary.o $(CXXFLAGS)
+bin/get_map: src/cpp/get_map.cpp obj/Residue_Representation.o obj/Entropy_Matrix.o obj/Arg_Parser.o obj/util.o | bin
+	$(CXX) --std=c++11 -O3 src/cpp/get_map.cpp obj/Residue_Representation.o obj/Entropy_Matrix.o obj/Arg_Parser.o obj/util.o -o bin/get_map $(CXXFLAGS)
     
-obj/io_text.o : src/cpp/cpu/util/io_text.cpp src/cpp/cpu/util/io_text.h | obj
-	$(CXX) -c src/cpp/cpu/util/io_text.cpp -o obj/io_text.o $(CXXFLAGS)
+# All packages for autocorrelator
+obj/Arg_Parser_ac.o: src/cpp/ac/util/Arg_Parser.cpp src/cpp/ac/util/Arg_Parser.h | obj
+	$(CXX) --std=c++17 -c src/cpp/ac/util/Arg_Parser.cpp -o obj/Arg_Parser_ac.o $(CXXFLAGS)
+    
+obj/io_binary.o : src/cpp/ac/util/io_binary.cpp src/cpp/ac/util/io_binary.h | obj
+	$(CXX) --std=c++17 -c src/cpp/ac/util/io_binary.cpp -o obj/io_binary.o $(CXXFLAGS)
+    
+obj/io_text.o : src/cpp/ac/util/io_text.cpp src/cpp/ac/util/io_text.h | obj
+	$(CXX) --std=c++17 -c src/cpp/ac/util/io_text.cpp -o obj/io_text.o $(CXXFLAGS)
     
 obj/io.o : obj/io_binary.o obj/io_text.o | obj
 	ld -r obj/io_binary.o obj/io_text.o -o obj/io.o
     
-obj/util_cpu.o : src/cpp/cpu/util/util.cpp src/cpp/cpu/util/util.h | obj
-	$(CXX) -c src/cpp/cpu/util/util.cpp -o obj/util_cpu.o $(CXXFLAGS)
+obj/util_ac.o : src/cpp/ac/util/util.cpp src/cpp/ac/util/util.h | obj
+	$(CXX) --std=c++17 -c src/cpp/ac/util/util.cpp -o obj/util_ac.o $(CXXFLAGS)
     
-bin/get_map_cpu: src/cpp/cpu/get_map_cpu.cpp obj/io.o obj/util_cpu.o obj/Arg_Parser.o | bin
-	$(CXX) src/cpp/cpu/get_map_cpu.cpp obj/io.o obj/util_cpu.o  obj/Arg_Parser.o -o bin/get_map_cpu $(CXXFLAGS)
+bin/ac: src/cpp/ac/ac.cpp obj/io.o obj/util_ac.o obj/Arg_Parser_ac.o | bin
+	$(CXX) --std=c++17 src/cpp/ac/ac.cpp obj/io.o obj/util_ac.o  obj/Arg_Parser_ac.o -o bin/ac $(CXXFLAGS)

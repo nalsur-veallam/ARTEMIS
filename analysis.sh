@@ -1,5 +1,6 @@
 NAME="v536" # Project name
 PYTHON="python3" # Your python launch codeword version >=3
+
 SOURCE_ACTIVE_SITE="test_system/v536_active_site.json" # Path to a json file with a list of active site amino acid residues in the PARENT order 
                                                         # (can be understood from a json file obtained from a binary file using the "names" and "real _numbers" lists)
 SOURCE_ALLOSTERIC_SITE="test_system/v536_allosteric_site.json"
@@ -11,6 +12,7 @@ MAT_NAME="map" # Matrix name in json file
 
 mkdir output &> /dev/null
 mkdir output/analysis &> /dev/null
+
 
 #${PYTHON} src/python/matrix_comparison.py -n ${NAME} -f ${SOURCE_CUSTOM_MAP} -matname ${MAT_NAME}  # Calculates the Frobenius norm of matrices and draws the difference matrix 
                                                                                           #         of the normalized matrices in the ./output/analysis/ directory

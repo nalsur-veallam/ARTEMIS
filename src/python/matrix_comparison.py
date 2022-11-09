@@ -57,7 +57,7 @@ MAT = pd.DataFrame(data=mat[::-1, :], index=names[::-1], columns=names)
 
 fig, axs = plt.subplots(figsize=(10,10), constrained_layout=True)
 
-sns.heatmap(MAT, annot=False, cmap="bwr")
+sns.heatmap(MAT, annot=False, cmap="bwr", center=0)
 
 plt.title('Difference matrix of normalized matrices for ' + name, fontsize=20)
 fig.savefig(out_path + '_matrix_comparison.pdf')

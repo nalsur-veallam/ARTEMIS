@@ -4,6 +4,7 @@ import numpy as np
 import pylab as plt
 import seaborn as sns
 import pandas as pd
+from scipy.stats import zscore
 
 width = .6
 
@@ -33,7 +34,6 @@ with open(map_path + '.json') as json_file:
 map_ = np.array(data['map'])
 names = np.array(data['names'])
 NResidues = data['NResidues']
-real_numbers = np.array(data['real_numbers'])
 
 with open(path) as json_file:
     your_data = json.load(json_file)
@@ -49,30 +49,38 @@ for i in range(NResidues):
             for resid in active_site:
                 inten += map_[resid - 1][i]
             intensity.append(inten)
+            
+fig, axs = plt.subplots(figsize=(20, 15), constrained_layout=True)
+axs.hist(intensity, bins=50)
+plt.tick_params(axis='both', which='major', labelsize=16)
+plt.title('Histogram for intensity of connectivity of residues\nwith the active site for ' + name, fontsize=40)
+fig.savefig(out_path + '_intensity_hist.pdf')
+            
+intensity = zscore(intensity)
 
 new_names = []
 for i in range(NResidues):
-    new_names.append(names[i] + "\n(" + str(real_numbers[i]) +")")
+    new_names.append(names[i] + "\n(" + str(i+1) +")")
 
 INTENSITY = {}
-INTENSITY["Intensity"] = np.array(intensity) / np.sqrt(sum(abs(np.array(intensity).flatten())**2))
+INTENSITY["Z-score intensity"] = np.array(intensity)
 INTENSITY["Residue"] = new_names
 
 
 #INTENSITY = pd.DataFrame(data=np.array([intensity, np.linspace(1, NResidues, NResidues)]).T, columns=["Intensity", "Residue"])
 fig, axs = plt.subplots(figsize=(NResidues*width, 20), constrained_layout=True)
-axs = sns.barplot(x="Residue", y="Intensity", data=INTENSITY, palette="viridis", dodge=False, hue="Intensity")
+axs = sns.barplot(x="Residue", y="Z-score intensity", data=INTENSITY, palette="viridis", dodge=False, hue="Z-score intensity")
 axs.legend_.remove()
 plt.tick_params(axis='both', which='major', labelsize=16)
 
-plt.title('Intensity of connectivity of residues with the active site for ' + name, fontsize=40)
-fig.savefig(out_path + '_intensity.pdf')
+plt.title('Intensity of connectivity of residues with the active site zscore for ' + name, fontsize=40)
+fig.savefig(out_path + '_intensity_zscore.pdf')
 
 new_data = {}
 new_data['name'] = name
 new_data['names'] = data['names']
 new_data['NResidues'] = NResidues
 new_data['active_site'] = your_data[as_name]
-new_data['intensity'] = intensity
-with open(out_path + '_intensity.json', 'w') as outfile:
+new_data['Z-score intensity'] = intensity.tolist()
+with open(out_path + '_intensity_zscore.json', 'w') as outfile:
     json.dump(new_data, outfile)

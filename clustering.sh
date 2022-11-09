@@ -1,6 +1,6 @@
 NAME="v536e" # Project name
 PYTHON="python3" # Your python launch codeword version >=3
-NUM_OF_CLUST=5 # Desired number of clusters in the system
+NUM_OF_CLUST=3 # Desired number of clusters in the system
 SOURCE_PDB="test_system/v536e.pdb" # Path to pdb file to create a pymol session with clustering (you must have pymol installed!!!)
 
 mkdir output &> /dev/null

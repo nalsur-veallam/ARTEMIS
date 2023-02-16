@@ -1,4 +1,5 @@
 import json
+import numpy as np
 
 if not ("-matname" in sys.argv and "-f" in sys.argv and len(sys.argv) == 5:
     print("USAGE:\n"+sys.argv[0]+" -f matrix.json -matname matrix_name")

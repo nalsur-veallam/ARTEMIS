@@ -8,9 +8,11 @@ act = True
 alls = True
 filt = False
 sasa_filt = False
+noseq = 0
 
 if not ("-strc" in sys.argv and "-asn" in sys.argv and "-f_act" in sys.argv and "-n" in sys.argv and len(sys.argv) >= 9):
-    print("USAGE:\n"+sys.argv[0]+" -f_act active_site.json -n name -asn active_site_name -f_all allosteric_site.json -allsn allosteric_site_name -strc sctructure.pdb(.gro ...) -filt -sasa_filt")
+    print("USAGE:\n"+sys.argv[0]+" -f_act active_site.json -n name -asn active_site_name -f_all allosteric_site.json 
+          -allsn allosteric_site_name -strc sctructure.pdb(.gro ...) -filt -sasa_filt -noseq num_of_res(default 0)")
     exit()
     
 for i in range(1, len(sys.argv)) :
@@ -26,6 +28,8 @@ for i in range(1, len(sys.argv)) :
         all_path = sys.argv[i+1]
     if sys.argv[i] == "-strc":
         str_path = sys.argv[i+1]
+    if sys.argv[i] == "-noseq":
+        noseq = int(sys.argv[i+1])
     if sys.argv[i] == "-filt":
         filt = True
     if sys.argv[i] == "-sasa_filt":
@@ -63,8 +67,9 @@ for i in range(NResidues):
     else:
         inten = 0
         for resid in active_site:
-            inten += map_[resid - 1][i]
-        intensity.append(inten)
+            if np.abs(resid - 1 - i) >= noseq:
+                inten += map_[resid - 1][i]
+            intensity.append(inten)
 
 if ("alls_name" not in locals() and "all_path" not in locals()):
     print("ATTENTION, you did not specify an allosteric site. The program will continue without it.")

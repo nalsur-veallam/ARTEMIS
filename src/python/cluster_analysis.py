@@ -8,12 +8,14 @@ from scipy.cluster.hierarchy import dendrogram
 import json
 
 heigh = .1
+noseq = 0
 colors = ['blue', 'red', 'green', 'cyan', 'hotpink', 'orange', 'olive', 'aquamarine', 'yellow', 'gray', 'purple']
 
-if not ("-allsn" in sys.argv and "-f_all" in sys.argv and "-asn" in sys.argv and "-f_act" in sys.argv and "-n" in sys.argv and "-nclust" in  sys.argv  and len(sys.argv) == 13):
-    print("USAGE:\n"+sys.argv[0]+" -f_act active_site.json -asn active_site_name -f_all allosteric_site.json -allsn allosteric_site_name -n name -nclust num_of_clust")
+if not ("-allsn" in sys.argv and "-f_all" in sys.argv and "-asn" in sys.argv and "-f_act" in sys.argv and "-n" in sys.argv and "-nclust" in  sys.argv  and len(sys.argv) >= 13):
+    print("USAGE:\n"+sys.argv[0]+" -f_act active_site.json -asn active_site_name 
+          -f_all allosteric_site.json -allsn allosteric_site_name -n name -nclust num_of_clust -noseq num_of_res(default 0)")
     exit()
-for i in range(1, 13) :
+for i in range(1, len(sys.argv)) :
     if sys.argv[i] == "-n":
         name = sys.argv[i+1]
     if sys.argv[i] == "-nclust":
@@ -26,6 +28,8 @@ for i in range(1, 13) :
         alls_name = sys.argv[i+1]
     if sys.argv[i] == "-f_all":
         all_path = sys.argv[i+1]
+    if sys.argv[i] == "-noseq":
+        noseq = int(sys.argv[i+1])
         
 if not (name and as_name and act_path and all_path and alls_name and NClusters):
     print("USAGE:\n"+sys.argv[0]+"USAGE:\n"+sys.argv[0]+" -f_act active_site.json -asn active_site_name -f_all allosteric_site.json -allsn allosteric_site_name -n name -nclust num_of_clust")
@@ -102,11 +106,11 @@ for i in range(NResidues):
             MIE[labels[i]-1, labels[j]-1] += map_[i,j]
             MIE[labels[j]-1, labels[i]-1] += map_[i,j]
             
-        if j in active_site:
+        if j in active_site and np.abs(j - i) >= noseq:
             intensity_act[labels[i]-1] += map_[i,j]
             intensity_act_[labels[i]-1] += map_[i,j]/quantity[labels[i]-1]
             
-        if j in all_site:
+        if j in all_site and np.abs(j - i) >= noseq:
             intensity_all[labels[i]-1] += map_[i,j]
             intensity_all_[labels[i]-1] += map_[i,j]/quantity[labels[i]-1]
 

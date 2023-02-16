@@ -7,6 +7,7 @@ import pandas as pd
 visual = "Y"
 act = True
 alls = True
+noseq = 0
 
 def max10(array):
     size = len(array)
@@ -30,7 +31,8 @@ def max10(array):
     return np.array(df['data'])
 
 if not ("-strc" in sys.argv and "-asn" in sys.argv and "-f_act" in sys.argv and "-n" in sys.argv and len(sys.argv) >= 9):
-    print("USAGE:\n"+sys.argv[0]+" -f_act active_site.json -n name -asn active_site_name -f_all allosteric_site.json -allsn allosteric_site_name -strc sctructure.pdb(.gro ...)")
+    print("USAGE:\n"+sys.argv[0]+" -f_act active_site.json -n name -asn active_site_name -f_all allosteric_site.json 
+          -allsn allosteric_site_name -strc sctructure.pdb(.gro ...) -noseq num_of_res(default 0)")
     exit()
     
 for i in range(1, len(sys.argv)) :
@@ -46,6 +48,8 @@ for i in range(1, len(sys.argv)) :
         all_path = sys.argv[i+1]
     if sys.argv[i] == "-strc":
         str_path = sys.argv[i+1]
+    if sys.argv[i] == "-noseq":
+        noseq = int(sys.argv[i+1])
         
 if not (name and as_name and act_path and str_path):
     print("USAGE:\n"+sys.argv[0]+" -f_act active_site.json -n name -asn active_site_name -f_all allosteric_site.json -allsn allosteric_site_name -strc sctructure.pdb(.gro ...)")
@@ -72,7 +76,7 @@ for resid in active_site:
     for i in range(NResidues):
         if i + 1 in active_site:
             inten.append(-1)
-        else:
+        elif np.abs(resid - 1 - i) >= noseq:
             inten.append(map_[resid - 1][i])
     intensity += max10(inten)
 

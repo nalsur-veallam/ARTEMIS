@@ -5,12 +5,13 @@ import json
 import itertools as itt
 
 width = .6
+noseq = 0
 
-if not ("-allsn" in sys.argv and "-f_all" in sys.argv and "-asn" in sys.argv and "-f_act" in sys.argv and "-n" in sys.argv and len(sys.argv) == 11):
-    print("USAGE:\n"+sys.argv[0]+" -f_act active_site.json -n name -asn active_site_name -f_all allosteric_site.json -allsn allosteric_site_name")
+if not ("-allsn" in sys.argv and "-f_all" in sys.argv and "-asn" in sys.argv and "-f_act" in sys.argv and "-n" in sys.argv and len(sys.argv) >= 11):
+    print("USAGE:\n"+sys.argv[0]+" -f_act active_site.json -n name -asn active_site_name -f_all allosteric_site.json -allsn allosteric_site_name -noseq num_of_res(default 0)")
     exit()
     
-for i in range(1, 11) :
+for i in range(1, len(sys.argv)) :
     if sys.argv[i] == "-n":
         name = sys.argv[i+1]
     if sys.argv[i] == "-asn":
@@ -21,6 +22,8 @@ for i in range(1, 11) :
         alls_name = sys.argv[i+1]
     if sys.argv[i] == "-f_all":
         all_path = sys.argv[i+1]
+    if sys.argv[i] == "-noseq":
+        noseq = int(sys.argv[i+1])
         
 if not (name and as_name and act_path and all_path and alls_name):
     print("USAGE:\n"+sys.argv[0]+" -f_act active_site.json -n name -asn active_site_name -f_all allosteric_site.json -allsn allosteric_site_name")
@@ -76,7 +79,8 @@ for combinations in Combinations:
             else:
                 inten = 0
                 for resid in active_site:
-                    inten += map_[resid - 1][i]
+                    if np.abs(resid - 1 - i) >= noseq:
+                        inten += map_[resid - 1][i]
                 intensity.append(inten)
 
         new_names = []

@@ -5,17 +5,19 @@ import json
 
 width = .6
 
-if not ("-asn" in sys.argv and "-f_act" in sys.argv and "-n" in sys.argv and len(sys.argv) == 7):
-    print("USAGE:\n"+sys.argv[0]+" -f_act active_site.json -n name -asn active_site_name")
+if not ("-asn" in sys.argv and "-f_act" in sys.argv and "-n" in sys.argv and len(sys.argv) >= 7):
+    print("USAGE:\n"+sys.argv[0]+" -f_act active_site.json -n name -asn active_site_name -noseq num_of_res(default 0)")
     exit()
     
-for i in range(1, 7) :
+for i in range(1, len(sys.argv)) :
     if sys.argv[i] == "-n":
         name = sys.argv[i+1]
     if sys.argv[i] == "-asn":
         as_name = sys.argv[i+1]
     if sys.argv[i] == "-f_act":
         act_path = sys.argv[i+1]
+    if sys.argv[i] == "-noseq":
+        noseq = int(sys.argv[i+1])
         
 if not (name and as_name and act_path):
     print("USAGE:\n"+sys.argv[0]+" -f_act active_site.json -n name -asn active_site_name")
@@ -53,8 +55,9 @@ for i in range(NResidues):
         inten = 0
         k = 0
         for resid in active_site:
-            inten += map_[resid - 1][i]
-            int_act_site[i, k] = map_[resid - 1][i]
+            if np.abs(resid - 1 - i) >= noseq:
+                inten += map_[resid - 1][i]
+                int_act_site[i, k] = map_[resid - 1][i]
             k += 1
         intensity.append(inten)
 

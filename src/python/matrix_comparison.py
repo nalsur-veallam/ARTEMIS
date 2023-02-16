@@ -22,13 +22,14 @@ if not (name and matrix_name and path):
     exit()
     
     
-map_path = "output/map/" + name + "_map"
-out_path = "output/analysis/" + name
+map_path =  "output/" + name + "/map/" + name + "_map"
+out_path =  "output/" + name + "/analysis/" + name
 
 with open(map_path + '.json') as json_file:
     data = json.load(json_file)
 
 map_ = np.array(data['map'])
+map_ = map_ - np.diag(np.diag(map_))
 names = np.array(data['names'])
 NResidues = data['NResidues']
 
@@ -36,6 +37,7 @@ with open(path) as json_file:
     data = json.load(json_file)
 
 your_map = np.array(data[matrix_name])
+your_map = your_map - np.diag(np.diag(your_map))
 
 if (np.shape(your_map) != np.shape(map_)):
     print('Error: matrices have different size (' + str(np.shape(map_)) +' and ' +str(np.shape(your_map)) + ')')

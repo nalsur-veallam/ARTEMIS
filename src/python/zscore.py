@@ -25,8 +25,8 @@ if not (name and as_name and path):
     exit()
     
     
-map_path = "output/map/" + name + "_map"
-out_path = "output/analysis/" + name
+map_path =  "output/" + name + "/map/" + name + "_map"
+out_path =  "output/" + name + "/analysis/" + name
 
 with open(map_path + '.json') as json_file:
     data = json.load(json_file)

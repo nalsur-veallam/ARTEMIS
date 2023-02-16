@@ -41,8 +41,8 @@ if not (name and as_name and path):
     exit()
     
     
-map_path = "output/map/" + name + "_map"
-out_path = "output/analysis/" + name
+map_path =  "output/" + name + "/map/" + name + "_map"
+out_path =  "output/" + name + "/analysis/" + name
 
 with open(map_path + '.json') as json_file:
     data = json.load(json_file)
@@ -62,7 +62,7 @@ intensity = np.zeros(NResidues)
 for resid in active_site:
     inten = []
     for i in range(NResidues):
-        if i + 1 in active_site:
+        if real_numbers[i] in active_site:
             inten.append(0)
         else:
             inten.append(map_[resid - 1][i])

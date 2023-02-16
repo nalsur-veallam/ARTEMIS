@@ -21,8 +21,8 @@ for i in range(1, len(sys.argv)) :
         max_of_clust = int(sys.argv[i+1])
     
 name = sys.argv[2]
-map_path = "output/map/" + name + "_map"
-out_path = "output/opt_num_of_clust/" + name
+map_path =  "output/" + name + "/map/" + name + "_map"
+out_path =  "output/" + name + "/opt_num_of_clust/" + name
 
 with open(map_path + '.json') as json_file:
     data = json.load(json_file)

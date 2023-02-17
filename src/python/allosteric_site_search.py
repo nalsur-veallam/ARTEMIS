@@ -74,11 +74,12 @@ INTENSITY = {}
 INTENSITY["Intensity"] = np.array(intensity) / np.sqrt(sum(abs(np.array(intensity).flatten())**2))
 INTENSITY["Residue"] = new_names
 
+colors = plt.cm.viridis(INTENSITY["Intensity"]/np.max(INTENSITY["Intensity"]))
+colors = sns.color_palette(colors, as_cmap=True)
 
 #INTENSITY = pd.DataFrame(data=np.array([intensity, np.linspace(1, NResidues, NResidues)]).T, columns=["Intensity", "Residue"])
 fig, axs = plt.subplots(figsize=(NResidues*width, 20), constrained_layout=True)
-axs = sns.barplot(x="Residue", y="Intensity", data=INTENSITY, palette="viridis", dodge=False, hue="Intensity")
-axs.legend_.remove()
+axs = sns.barplot(x="Residue", y="Intensity", data=INTENSITY, palette=colors, dodge=False)
 plt.tick_params(axis='both', which='major', labelsize=16)
 
 plt.title('Intensity of connectivity of residues with the active site for ' + name, fontsize=40)

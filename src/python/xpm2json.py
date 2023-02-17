@@ -56,7 +56,7 @@ for row in f:
             nrow += 1
 f.close()
 
-DM = pd.DataFrame(data=(-1*Mat + np.max(Mat)))
+DM = pd.DataFrame(data=(-1*Mat + np.max(Mat)), index=np.arange(Mat.shape[0])[::-1])
 
 fig, axs = plt.subplots(figsize=(10,10), constrained_layout=True)
 

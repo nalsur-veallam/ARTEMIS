@@ -11,8 +11,7 @@ sasa_filt = False
 noseq = 0
 
 if not ("-strc" in sys.argv and "-asn" in sys.argv and "-f_act" in sys.argv and "-n" in sys.argv and len(sys.argv) >= 9):
-    print("USAGE:\n"+sys.argv[0]+" -f_act active_site.json -n name -asn active_site_name -f_all allosteric_site.json 
-          -allsn allosteric_site_name -strc sctructure.pdb(.gro ...) -filt -sasa_filt -noseq num_of_res(default 0)")
+    print("USAGE:\n"+sys.argv[0]+" -f_act active_site.json -n name -asn active_site_name -f_all allosteric_site.json -allsn allosteric_site_name -strc sctructure.pdb(.gro ...) -filt -sasa_filt -noseq num_of_res(default 0)")
     exit()
     
 for i in range(1, len(sys.argv)) :
@@ -69,7 +68,7 @@ for i in range(NResidues):
         for resid in active_site:
             if np.abs(resid - 1 - i) >= noseq:
                 inten += map_[resid - 1][i]
-            intensity.append(inten)
+        intensity.append(inten)
 
 if ("alls_name" not in locals() and "all_path" not in locals()):
     print("ATTENTION, you did not specify an allosteric site. The program will continue without it.")
@@ -101,7 +100,7 @@ def renumbering(resi, resn, b):
         global k
         k+=1
         
-        if intensity[k-1] == -1:
+        if intensity[k-1] < 0:
             group.append(resi)
             group_names.append(resn)
         

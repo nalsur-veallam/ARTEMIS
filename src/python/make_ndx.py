@@ -7,26 +7,19 @@ K = 5
 K_1 = 4
 N = 15
 
-if not ("-strc" in sys.argv and "-grn" in sys.argv and "-f" in sys.argv and "-n" in sys.argv and len(sys.argv) == 9):
-    print("USAGE:\n"+sys.argv[0]+" -f group.json -strc sctructure.pdb(.gro ...) -n name -grn group_name")
+if not ("-strc" in sys.argv and "-grn" in sys.argv and "-f" in sys.argv and "-o" in sys.argv and len(sys.argv) == 9):
+    print("USAGE:\n"+sys.argv[0]+" -f group.json -strc sctructure.pdb(.gro ...) -o out_path -grn group_name")
     exit()
     
 for i in range(1, 9) :
-    if sys.argv[i] == "-n":
-        name = sys.argv[i+1]
+    if sys.argv[i] == "-o":
+        out_path = sys.argv[i+1]
     if sys.argv[i] == "-grn":
         gr_name = sys.argv[i+1]
     if sys.argv[i] == "-f":
         path = sys.argv[i+1]
     if sys.argv[i] == "-strc":
         str_path = sys.argv[i+1]
-        
-if not (name and gr_name and path and str_path):
-    print("USAGE:\n"+sys.argv[0]+" -f active_site.json -n name -asn active_site_name")
-    exit()
-    
-    
-out_path =  "output/" + name + "/analysis/" + name
 
 with open(path) as json_file:
     your_data = json.load(json_file)
@@ -65,10 +58,9 @@ def do_line(arr):
     
 n = len(group) // N
 group = np.array(group)
-print(len(group))
 
 f = open(out_path + '.ndx', 'w')
-f.write('['+name+']\n')
+f.write('['+gr_name+']\n')
 for i in range(n):
     line = do_line(group[N*i : N*(i+1)])
     f.write("".join(map(str,line)) + '\n')

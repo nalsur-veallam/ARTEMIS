@@ -74,7 +74,7 @@ leng = 0
 for combinations in Combinations:
     leng += 1
     if leng > cut:
-        print("The size of the active site is too big")
+        print("\n\nWarning (zscore_top.py): The size of the active site is too big. Combinations of at most " + str(cut) + " remainders are investigated.\n\n")
         break
     
     for active_site in combinations:

@@ -70,11 +70,13 @@ INTENSITY = {}
 INTENSITY["Z-score intensity"] = np.array(intensity)
 INTENSITY["Residue"] = new_names
 
+colarr = INTENSITY["Z-score intensity"] - np.min(INTENSITY["Z-score intensity"])
+colors = plt.cm.viridis(colarr/np.max(colarr))
+colors = sns.color_palette(colors, as_cmap=True)
 
 #INTENSITY = pd.DataFrame(data=np.array([intensity, np.linspace(1, NResidues, NResidues)]).T, columns=["Intensity", "Residue"])
 fig, axs = plt.subplots(figsize=(NResidues*width, 20), constrained_layout=True)
-axs = sns.barplot(x="Residue", y="Z-score intensity", data=INTENSITY, palette="viridis", dodge=False, hue="Z-score intensity")
-axs.legend_.remove()
+axs = sns.barplot(x="Residue", y="Z-score intensity", data=INTENSITY, palette=colors, dodge=False)
 plt.tick_params(axis='both', which='major', labelsize=16)
 
 plt.title('Intensity of connectivity of residues with the active site zscore for ' + name, fontsize=40)

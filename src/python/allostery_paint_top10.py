@@ -31,8 +31,7 @@ def max10(array):
     return np.array(df['data'])
 
 if not ("-strc" in sys.argv and "-asn" in sys.argv and "-f_act" in sys.argv and "-n" in sys.argv and len(sys.argv) >= 9):
-    print("USAGE:\n"+sys.argv[0]+" -f_act active_site.json -n name -asn active_site_name -f_all allosteric_site.json 
-          -allsn allosteric_site_name -strc sctructure.pdb(.gro ...) -noseq num_of_res(default 0)")
+    print("USAGE:\n"+sys.argv[0]+" -f_act active_site.json -n name -asn active_site_name -f_all allosteric_site.json -allsn allosteric_site_name -strc sctructure.pdb(.gro ...) -noseq num_of_res(default 0)")
     exit()
     
 for i in range(1, len(sys.argv)) :

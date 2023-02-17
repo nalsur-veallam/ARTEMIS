@@ -22,7 +22,7 @@ for i in range(1, len(sys.argv)) :
     
 name = sys.argv[2]
 map_path =  "output/" + name + "/map/" + name + "_map"
-out_path =  "output/" + name + "/opt_num_of_clust/" + name
+out_path =  "output/" + name + "/clustering/" + name
 
 with open(map_path + '.json') as json_file:
     data = json.load(json_file)

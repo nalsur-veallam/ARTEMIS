@@ -31,7 +31,7 @@ fig, axs = plt.subplots(figsize=(10,10), constrained_layout=True)
 
 sns.heatmap(MIE, annot=False, cmap="icefire")
 
-plt.title('AlphaFold map for ' + name, fontsize=20)
+plt.title('AlphaFold map', fontsize=20)
 fig.savefig(o_file+'.pdf')
 
 new_data = {}

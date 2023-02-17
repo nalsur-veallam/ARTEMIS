@@ -6,7 +6,7 @@ import pandas as pd
 import json
 from pymol import cmd, stored
 
-max_sasa = [121, 265, 187, 187, 148, 214, 214, 97, 216, 195, 191, 230, 203, 228, 154, 143, 163, 264, 255, 165]
+max_sasa = [257.7, 348.8, 287, 264.8, 268, 272.8, 316.9, 227.3, 340.4, 283.1, 308.6, 365.5, 309.1, 367.7, 285.3, 244.1, 267.1, 397.4, 349, 264.8]
 rnames = ['ALA', 'ARG', 'ASN', 'ASP', 'CYS', 'GLU', 'GLN', 'GLY', 'HIS', 'ILE', 'LEU', 'LYS', 'MET', 'PHE', 'PRO', 'SER', 'THR', 'TRP', 'TYR', 'VAL']
 
 if not ("-sasa" in sys.argv and "-cutoff" in sys.argv and "-strc" in sys.argv and sys.argv[1] == "-n" and len(sys.argv) == 9):

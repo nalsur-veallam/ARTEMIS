@@ -12,8 +12,7 @@ noseq = 0
 colors = ['blue', 'red', 'green', 'cyan', 'hotpink', 'orange', 'olive', 'aquamarine', 'yellow', 'gray', 'purple']
 
 if not ("-allsn" in sys.argv and "-f_all" in sys.argv and "-asn" in sys.argv and "-f_act" in sys.argv and "-n" in sys.argv and "-nclust" in  sys.argv  and len(sys.argv) >= 13):
-    print("USAGE:\n"+sys.argv[0]+" -f_act active_site.json -asn active_site_name 
-          -f_all allosteric_site.json -allsn allosteric_site_name -n name -nclust num_of_clust -noseq num_of_res(default 0)")
+    print("USAGE:\n"+sys.argv[0]+" -f_act active_site.json -asn active_site_name -f_all allosteric_site.json -allsn allosteric_site_name -n name -nclust num_of_clust -noseq num_of_res(default 0)")
     exit()
 for i in range(1, len(sys.argv)) :
     if sys.argv[i] == "-n":

@@ -4,6 +4,7 @@ import pandas as pd
 import json
 
 width = .6
+noseq=0
 
 if not ("-asn" in sys.argv and "-f_act" in sys.argv and "-n" in sys.argv and len(sys.argv) >= 7):
     print("USAGE:\n"+sys.argv[0]+" -f_act active_site.json -n name -asn active_site_name -noseq num_of_res(default 0)")

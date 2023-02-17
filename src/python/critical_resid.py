@@ -56,10 +56,11 @@ INTENSITY = {}
 INTENSITY["Intensity"] = np.array(intensity) #/ np.sqrt(sum(abs(np.array(intensity).flatten())**2))
 INTENSITY["Residue"] = labels
 
+colors = plt.cm.viridis(INTENSITY["Intensity"]/np.max(INTENSITY["Intensity"]))
+colors = sns.color_palette(colors, as_cmap=True)
 
 fig, axs = plt.subplots(figsize=(NResidues*width, 20), constrained_layout=True)
-axs = sns.barplot(x="Residue", y="Intensity", data=INTENSITY, palette="viridis", dodge=False, hue="Intensity")
-axs.legend_.remove()
+axs = sns.barplot(x="Residue", y="Intensity", data=INTENSITY, palette=colors, dodge=False)
 plt.tick_params(axis='both', which='major', labelsize=16)
 
 plt.title('The importance of residues for ' + name, fontsize=40)
@@ -70,10 +71,11 @@ INTENSITY = {}
 INTENSITY["Intensity"] = np.array(Max_mie)
 INTENSITY["Residue"] = labels
 
+colors = plt.cm.viridis(INTENSITY["Intensity"]/np.max(INTENSITY["Intensity"]))
+colors = sns.color_palette(colors, as_cmap=True)
 
 fig, axs = plt.subplots(figsize=(NResidues*width, 20), constrained_layout=True)
-axs = sns.barplot(x="Residue", y="Intensity", data=INTENSITY, palette="viridis", dodge=False, hue="Intensity")
-axs.legend_.remove()
+axs = sns.barplot(x="Residue", y="Intensity", data=INTENSITY, palette=colors, dodge=False)
 plt.tick_params(axis='both', which='major', labelsize=16)
 
 plt.title('Max MIE of residues for ' + name, fontsize=40)
@@ -83,10 +85,11 @@ INTENSITY = {}
 INTENSITY["Intensity"] = np.array(Mie)
 INTENSITY["Residue"] = labels
 
+colors = plt.cm.viridis(INTENSITY["Intensity"]/np.max(INTENSITY["Intensity"]))
+colors = sns.color_palette(colors, as_cmap=True)
 
 fig, axs = plt.subplots(figsize=(NResidues*width, 20), constrained_layout=True)
-axs = sns.barplot(x="Residue", y="Intensity", data=INTENSITY, palette="viridis", dodge=False, hue="Intensity")
-axs.legend_.remove()
+axs = sns.barplot(x="Residue", y="Intensity", data=INTENSITY, palette=colors, dodge=False)
 plt.tick_params(axis='both', which='major', labelsize=16)
 
 plt.title('MIE of residues for ' + name, fontsize=40)

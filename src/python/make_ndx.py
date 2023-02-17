@@ -26,7 +26,7 @@ if not (name and gr_name and path and str_path):
     exit()
     
     
-out_path = "output/analysis/" + name
+out_path =  "output/" + name + "/analysis/" + name
 
 with open(path) as json_file:
     your_data = json.load(json_file)

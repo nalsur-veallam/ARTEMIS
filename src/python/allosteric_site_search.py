@@ -6,26 +6,41 @@ import seaborn as sns
 import pandas as pd
 
 width = .6
+filt = False
+sasa_filt = False
+noseq = 0
 
-if not ("-asn" in sys.argv and "-f" in sys.argv and "-n" in sys.argv and len(sys.argv) == 7):
-    print("USAGE:\n"+sys.argv[0]+" -f active_site.json -n name -asn active_site_name")
+if not ("-asn" in sys.argv and "-f" in sys.argv and "-n" in sys.argv and len(sys.argv) >= 7):
+    print("USAGE:\n"+sys.argv[0]+" -f active_site.json -n name -asn active_site_name -filt -sasa_filt -noseq num_of_res(default 0)")
     exit()
     
-for i in range(1, 7) :
+for i in range(1, len(sys.argv)) :
     if sys.argv[i] == "-n":
         name = sys.argv[i+1]
     if sys.argv[i] == "-asn":
         as_name = sys.argv[i+1]
     if sys.argv[i] == "-f":
         path = sys.argv[i+1]
+    if sys.argv[i] == "-filt":
+        filt = True
+    if sys.argv[i] == "-noseq":
+        noseq = int(sys.argv[i+1])
+    if sys.argv[i] == "-sasa_filt":
+        sasa_filt = True
         
 if not (name and as_name and path):
-    print("USAGE:\n"+sys.argv[0]+" -f active_site.json -n name -asn active_site_name")
+    print("USAGE:\n"+sys.argv[0]+" -f active_site.json -n name -asn active_site_name -filt -sasa_filt")
     exit()
     
-    
-map_path = "output/map/" + name + "_map"
-out_path = "output/analysis/" + name
+if sasa_filt:
+    map_path =  "output/" + name + "/map/" + name + "_sasa_filt_map"
+    out_path =  "output/" + name + "/analysis/" + name + "_sasa_filt"
+elif filt:
+    map_path =  "output/" + name + "/map/" + name + "_filt_map"
+    out_path =  "output/" + name + "/analysis/" + name + "_filt"
+else:
+    map_path =  "output/" + name + "/map/" + name + "_map"
+    out_path =  "output/" + name + "/analysis/" + name
 
 with open(map_path + '.json') as json_file:
     data = json.load(json_file)
@@ -47,7 +62,8 @@ for i in range(NResidues):
         else:
             inten = 0
             for resid in active_site:
-                inten += map_[resid - 1][i]
+                if np.abs(resid - 1 - i) >= noseq:
+                    inten += map_[resid - 1][i]
             intensity.append(inten)
 
 new_names = []
@@ -74,5 +90,6 @@ new_data['names'] = data['names']
 new_data['NResidues'] = NResidues
 new_data['active_site'] = your_data[as_name]
 new_data['intensity'] = intensity
+new_data['filtration'] = filt
 with open(out_path + '_intensity.json', 'w') as outfile:
     json.dump(new_data, outfile)

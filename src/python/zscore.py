@@ -7,26 +7,29 @@ import pandas as pd
 from scipy.stats import zscore
 
 width = .6
+noseq = 0
 
-if not ("-asn" in sys.argv and "-f" in sys.argv and "-n" in sys.argv and len(sys.argv) == 7):
-    print("USAGE:\n"+sys.argv[0]+" -f active_site.json -n name -asn active_site_name")
+if not ("-asn" in sys.argv and "-f" in sys.argv and "-n" in sys.argv and len(sys.argv) >= 7):
+    print("USAGE:\n"+sys.argv[0]+" -f active_site.json -n name -asn active_site_name -noseq num_of_res(default 0)")
     exit()
     
-for i in range(1, 7) :
+for i in range(1, len(sys.argv)) :
     if sys.argv[i] == "-n":
         name = sys.argv[i+1]
     if sys.argv[i] == "-asn":
         as_name = sys.argv[i+1]
     if sys.argv[i] == "-f":
         path = sys.argv[i+1]
+    if sys.argv[i] == "-noseq":
+        noseq = int(sys.argv[i+1])
         
 if not (name and as_name and path):
     print("USAGE:\n"+sys.argv[0]+" -f active_site.json -n name -asn active_site_name")
     exit()
     
     
-map_path = "output/map/" + name + "_map"
-out_path = "output/analysis/" + name
+map_path =  "output/" + name + "/map/" + name + "_map"
+out_path =  "output/" + name + "/analysis/" + name
 
 with open(map_path + '.json') as json_file:
     data = json.load(json_file)
@@ -47,7 +50,8 @@ for i in range(NResidues):
         else:
             inten = 0
             for resid in active_site:
-                inten += map_[resid - 1][i]
+                if np.abs(resid - 1 - i) >= noseq:
+                    inten += map_[resid - 1][i]
             intensity.append(inten)
             
 fig, axs = plt.subplots(figsize=(20, 15), constrained_layout=True)

@@ -4,10 +4,11 @@ import pylab as plt
 import seaborn as sns
 import pandas as pd
 from sklearn.cluster import AgglomerativeClustering
-from scipy.cluster.hierarchy import dendrogram
+from scipy.cluster.hierarchy import dendrogram, set_link_color_palette
 import json
 
 heigh = .1
+colors = ['blue', 'red', 'green', 'cyan', 'hotpink', 'orange', 'olive', 'aquamarine', 'yellow', 'gray', 'purple']
 
 if not ("-n" in sys.argv and "-nclust" in  sys.argv  and len(sys.argv) == 5):
     print("USAGE:\n"+sys.argv[0]+" -n name -nclust num_of_clust")
@@ -22,8 +23,8 @@ if not (name and NClusters):
     print("USAGE:\n"+sys.argv[0]+" -n name -nclust num_of_clust")
     exit()
 
-map_path = "output/map/" + name + "_map"
-out_path = "output/clustering/" + name
+map_path =  "output/" + name + "/map/" + name + "_map"
+out_path =  "output/" + name + "/clustering/" + name
 
 with open(map_path + '.json') as json_file:
     data = json.load(json_file)
@@ -49,12 +50,16 @@ for j in range(NResidues):
 labels = []
 for i in range(NResidues):
     labels.append(names[i] + " (" + str(real_numbers[i]) + ")")
+    
+clColors = []
+for i in range(int(NClusters)):
+    clColors.append(colors[i])
             
 CLUSTERING = pd.DataFrame(data=MAP[::-1, :], index=np.array(labels)[::-1], columns=np.array(labels))
 
 fig, axs = plt.subplots(figsize=(10,10), constrained_layout=True)
 
-sns.heatmap(CLUSTERING, annot=False, cmap="tab20b", linecolor='black')#, linewidths = 0.1)
+sns.heatmap(CLUSTERING, annot=False, cmap=clColors, linecolor='black', cbar=False)#, linewidths = 0.1)
 
 plt.title('Clustering matrix for ' + name + " with " + NClusters + " clusters", fontsize=20)
 fig.savefig(out_path + "_"+ NClusters + '_clustering.pdf')
@@ -102,6 +107,7 @@ new_clustering = AgglomerativeClustering(distance_threshold=0, n_clusters=None).
 
 fig, axs = plt.subplots(figsize=(12, heigh*NResidues), constrained_layout=True)
 plt.tick_params(axis='both', which='major', labelsize=20)
+
 labels = []
 for i in range(NResidues):
     labels.append(names[i] + " (" + str(real_numbers[i]) + ")")

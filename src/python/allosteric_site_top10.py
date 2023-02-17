@@ -6,6 +6,7 @@ import seaborn as sns
 import pandas as pd
 
 width = 0.6
+noseq = 0
 
 def max10(array):
     size = len(array)
@@ -24,15 +25,17 @@ def max10(array):
     return np.array(df['data'])
     
 
-if not ("-asn" in sys.argv and "-f" in sys.argv and "-n" in sys.argv and len(sys.argv) == 7):
-    print("USAGE:\n"+sys.argv[0]+" -f active_site.json -n name -asn active_site_name")
+if not ("-asn" in sys.argv and "-f" in sys.argv and "-n" in sys.argv and len(sys.argv) >= 7):
+    print("USAGE:\n"+sys.argv[0]+" -f active_site.json -n name -asn active_site_name -noseq num_of_res(default 0)")
     exit()
     
-for i in range(1, 7) :
+for i in range(1, len(sys.argv)) :
     if sys.argv[i] == "-n":
         name = sys.argv[i+1]
     if sys.argv[i] == "-asn":
         as_name = sys.argv[i+1]
+    if sys.argv[i] == "-noseq":
+        noseq = int(sys.argv[i+1])
     if sys.argv[i] == "-f":
         path = sys.argv[i+1]
         
@@ -41,8 +44,8 @@ if not (name and as_name and path):
     exit()
     
     
-map_path = "output/map/" + name + "_map"
-out_path = "output/analysis/" + name
+map_path =  "output/" + name + "/map/" + name + "_map"
+out_path =  "output/" + name + "/analysis/" + name
 
 with open(map_path + '.json') as json_file:
     data = json.load(json_file)
@@ -62,9 +65,9 @@ intensity = np.zeros(NResidues)
 for resid in active_site:
     inten = []
     for i in range(NResidues):
-        if i + 1 in active_site:
+        if real_numbers[i] in active_site:
             inten.append(0)
-        else:
+        elif np.abs(resid - 1 - i) >= noseq:
             inten.append(map_[resid - 1][i])
     intensity += max10(inten)
 

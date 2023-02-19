@@ -8,7 +8,7 @@ import pandas as pd
 diag = True
 
 if not ("-f1" in sys.argv and "-f2" in sys.argv and "-o" in sys.argv and len(sys.argv) >= 7):
-    print("USAGE:\n"+sys.argv[0]+" -f1 intensity1.json -f2 intensity2.json -o output -nodiag")
+    print("USAGE:\n"+sys.argv[0]+" -f1 matrix1.json -f2 matrix2.json -o output -nodiag")
     exit()
     
 for i in range(1, len(sys.argv)) :

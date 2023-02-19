@@ -4,8 +4,8 @@ PYTHON="python3" # Your python launch codeword version >=3
 SOURCE_PDB="test_system/1v4s_clean.pdb"
 SOURCE_SASA="test_system/resarea.xvg"
 
-# make clean
-# make
+make clean
+make
 
 mkdir output &> /dev/null
 mkdir output/${NAME} &> /dev/null

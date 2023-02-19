@@ -7,7 +7,7 @@ tchain = False
 
 if not ("-f" in sys.argv and "-sn" in sys.argv and "-cutoff" in sys.argv and "-strc" in sys.argv and "-chain" in sys.argv 
         and ("-ligname" in sys.argv or "-chain2" in sys.argv) and len(sys.argv) == 13):
-    print("USAGE:\n"+sys.argv[0]+"-f source_json -sn site_name -chain protein_chain_name -ligname ligand_name -strc sctructure.pdb(.gro ...) -cutoff cutoff(Angstrom)")
+    print("USAGE:\n"+sys.argv[0]+"-f source.json -sn site_name -chain protein_chain_name -ligname ligand_name -strc sctructure.pdb(.gro ...) -cutoff cutoff(Angstrom)")
     exit()
     
 for i in range(1, 13) :

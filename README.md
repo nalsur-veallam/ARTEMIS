@@ -176,10 +176,44 @@ The **-noseq** flag is also available. To run use:
 
 ## 4) OTHER USEFUL TOOLS (present in tools.sh) :
 
-### COMPARISON WITH USER MATRIX
+### 4.1) CREATING A GROUP OF CONTACTS FOR A LIGAND
 
-The calculation of the Frobenius norm of a given matrix and the user matrix and drawing the difference matrix of these normalized matrices is done using the src/python/matrix_comparison.py script, which receives a json file with the saved user matrix as input after the **-f** flag, as well as the name of the matrix in this file after the **-matname** flag, and after saves everything to the ./output/analysis/ directory. To run use:
+The program creates a group of protein residues in the file by the **-f** flag with the **-sn** key, which are at the cutoff distance (in angstroms) passed by the **-cutoff** flag from the ligand named **- ligname** in the protein structure file **-strc**. You also need to specify the chain that belongs to the protein by the **-chain** flag. If the lignad is a protein, then instead of the **-ligname** flag, the **-chain2** flag is indicated and the chain number for the ligand protein is given. To run, use:
 
-> python src/python/matrix_comparison.py -f input.json -n project_name -nclust num_of_clust -matname matrix_name
+> python3 src/python/find_area.py -f source.json -sn site_name -chain protein_chain -ligname ligand_name -strc sctructure.pdb(.gro ...) -cutoff cutoff(Angstrom)
 
+### 4.2) MATRIX COMPARISON
 
+The calculation of the Frobenius norm of a given matrix and a custom matrix and the construction of a difference matrix of these normalized matrices is performed using the src/python/matrix_comparison.py script, which receives two json files as input with saved custom matrices after **-f1** and **-f2** and then saves everything to the output passed to the program with the **-o** flag. The **-nodiag** flag is also available. To run, use:
+
+> python3 src/python/matrix_comparison.py -f1 matrix1.json -f2 matrix2.json -o output -nodiag
+
+### 4.3) INTENSITIES COMPARISON
+
+The calculation of the Frobenius norm of a given intensity and a custom intensity and the construction of a difference intensity of these normalized intensities is performed using the src/python/compare_intensities.py script, which receives two json files as input with saved custom intensities after **-f1** and **-f2** and then saves everything to the output passed to the program with the **-o** flag. The **-nodiag** flag is also available. To run, use:
+
+> python3 src/python/compare_intensities.py -f1 intensity1.json -f2 intensity2.json -o output
+
+### 4.4) ALPHAFOLD MATRIX CONVERTER
+
+The script receives as input a matrix from AlphaFold in .json format after the **-f** flag and the path for the output file according to the **-o** flag. The program simply draws this matrix and translates it into the format used by this framework. To run, use:
+
+> python3 src/python/alf2json.py -f matrix.json -o output
+
+### 4.5) XPM MATRIX CONVERTER
+
+The script receives as input a matrix from GROMACS in .xpm format after the **-f** flag and the path for the output file according to the **-o** flag. The program simply draws this matrix and translates it into the format used by this framework. To run, use:
+
+> python3 src/python/xpm2json.py -f matrix.xpm -o output
+
+### 4.6) DRAWING 2D PROJECTION OF THE MD TRAJECTORY
+
+The program draws a two-dimensional projection of the trajectory onto two eigenvectors according to the GROMACS data obtained using gmx anaeig and passed after the **-f** flag in .xvg format and creates an html file with an interactive map in the output passed after the **-o** flag. The plotly library is required to work. To run, use:
+
+> python3 src/python/2dplot.py -f 2dproj.xvg -o output
+
+### 4.7) CREATING A GROMACS INDEX FILE
+
+The script creates an index file in the .ndx GROMACS format for the group passed in the file in the format of this framework after the **-f** flag with the group name specified by the **-grn** flag. The group is created according to the structure data using the **-strc** flag. To run, use:
+
+> python3 src/python/allostery_paint.py -strc sctructure.pdb(.gro ...) -f group.json -grn group_name -o output

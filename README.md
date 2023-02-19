@@ -1,3 +1,6 @@
+# UPD: Recently updated the repository, but did not change the README (CAREFULLY! YOU NEED TO PROVIDE RAM AT LEAST THE SIZE OF THE .PAR FILE!)
+
+
 # CLUSTERING
 A framework with scripts for the analysis and clustering of molecular systems according to data obtained using the [PARENT](https://github.com/markusfleck/PARENT) or [PARENT_GPU](https://github.com/markusfleck/PARENT_GPU) package.
 
@@ -20,7 +23,7 @@ Set the necessary parameters in the gen_map.sh, tools.sh, clustering.sh and anal
 
 ## 1) BUILDING A MATRIX OF MUTUAL INFORMATION (present in gen_map.sh):
 
-### 1.1) CONVERTER (YOU NEED TO PROVIDE RAM AT LEAST THE SIZE OF THE .PAR FILE!)
+### 1.1) CONVERTER
 
 The converter from a binary .par file produces a matrix of mutual information between amino acid residues in json format. The converter is completely written in C ++. No libraries other than STL are required to run this code. To run, specify your C++ compiler in the Makefile (g++ by default). Next use (present in gen_map.sh):
 

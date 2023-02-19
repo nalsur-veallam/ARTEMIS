@@ -45,6 +45,7 @@ draws a matrix to the ./output/${project_name}/map/ directory. You can also use 
 
 * Script src/python/filtration.py can filter the matrix of mutual information by the exposure of amino acid residues. This script uses pymol to run: the user specifies cutoff as a fraction of the maximum exposure that an amino acid residue in the structure must take in order to be filtered. Pymol calculates the solvent contact surface for each residue and compares it to the maximum value for each residue. To run use:
 
+
 > python3 src/python/filtration.py -n project_name -strc sctructure.pdb(.gro ...) -cutoff cutoff
 
 draws a matrix to the ./output/${project_name}/map/ directory. The structure must match the molecular dynamics trajectory that was used to derive the PARENT value. Cutoff is specified as a decimal fraction of the total exposure required for a residue to be considered "on the surface" of the protein (example: -cutoff 0.3, to cut out residues with an exposure ratio greater than 30%)
@@ -216,4 +217,4 @@ The program draws a two-dimensional projection of the trajectory onto two eigenv
 
 The script creates an index file in the .ndx GROMACS format for the group passed in the file in the format of this framework after the **-f** flag with the group name specified by the **-grn** flag. The group is created according to the structure data using the **-strc** flag. To run, use:
 
-> python3 src/python/allostery_paint.py -strc sctructure.pdb(.gro ...) -f group.json -grn group_name -o output
+> python3 src/python/find_area.py -f source.json -sn site_name -chain protein_chain -ligname ligand_name -strc sctructure.pdb(.gro ...) -cutoff cutoff(Angstrom)

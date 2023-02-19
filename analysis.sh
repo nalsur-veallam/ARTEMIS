@@ -12,7 +12,7 @@ mkdir output/${NAME} &> /dev/null
 mkdir output/${NAME}/analysis &> /dev/null
 
 ${PYTHON} src/python/allosteric_site_search.py -n ${NAME} -f ${SOURCE_ACTIVE_SITE} -asn ${ACTIVE_SITE_NAME} # Draws the intensity of association 
-#                                                         of amino acid residues with the active site (Set the -sasa or -sasa_filt flag to use a filtered matrix)
+#                                                         of amino acid residues with the active site (Set the -filt or -sasa_filt flag to use a filtered matrix)
 #                                                                      (Add the -noseq flag to ignore the interaction of adjacent residues in sequence)
 
 ${PYTHON} src/python/allosteric_site_top10.py -n ${NAME} -f ${SOURCE_ACTIVE_SITE} -asn ${ACTIVE_SITE_NAME} # Draws top 10% intensity of association 
@@ -21,13 +21,13 @@ ${PYTHON} src/python/allosteric_site_top10.py -n ${NAME} -f ${SOURCE_ACTIVE_SITE
 ${PYTHON} src/python/zscore.py -n ${NAME} -f ${SOURCE_ACTIVE_SITE} -asn ${ACTIVE_SITE_NAME} # Draws zscore of intensity of association 
 #                                                of amino acid residues with the active site (Add the -noseq flag to ignore the interaction of adjacent residues in sequence)
 
-${PYTHON} src/python/critical_resid.py -n ${NAME} # Draws the informational entropy of each residue and the mutual information of each residue with the entire protein
+${PYTHON} src/python/critical_resid.py -n ${NAME} -noseq 3 # Draws the informational entropy of each residue and the mutual information of each residue with the entire protein
 
 ${PYTHON} src/python/allostery_paint_top10.py -strc ${SOURCE_PDB} -n ${NAME} -f_act ${SOURCE_ACTIVE_SITE} -asn ${ACTIVE_SITE_NAME} -allsn ${ALLOSTERIC_SITE_NAME} -f_all ${SOURCE_ALLOSTERIC_SITE} # Draws top 10% intensity of association of amino acid residues with the active site in a pymol session
 #                                                 (Add the -noseq flag to ignore the interaction of adjacent residues in sequence)
 
 ${PYTHON} src/python/allostery_paint.py -strc ${SOURCE_PDB} -n ${NAME} -f_act ${SOURCE_ACTIVE_SITE} -asn ${ACTIVE_SITE_NAME} -allsn ${ALLOSTERIC_SITE_NAME} -f_all ${SOURCE_ALLOSTERIC_SITE}
-#                  Draws the intensity of association of amino acid residues with the active site in a pymol session (Set the -sasa or -sasa_filt flag to use a filtered matrix)
+#                  Draws the intensity of association of amino acid residues with the active site in a pymol session (Set the -filt or -sasa_filt flag to use a filtered matrix)
 #                                                                      (Add the -noseq flag to ignore the interaction of adjacent residues in sequence)
 
 ${PYTHON} src/python/zscore_top.py -n ${NAME} -f_act ${SOURCE_ACTIVE_SITE} -asn ${ACTIVE_SITE_NAME} -allsn ${ALLOSTERIC_SITE_NAME} -f_all ${SOURCE_ALLOSTERIC_SITE}

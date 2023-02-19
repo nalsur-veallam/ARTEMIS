@@ -18,6 +18,9 @@ Set the necessary parameters in the gen_map.sh, tools.sh, clustering.sh and anal
 > bash analysis.sh
 
 ## SHORT DESCRIPTION
+
+![Framework scheme](framework_scheme.png) 
+
 The last report with a description is in **"report.pdf"** file. Here is a brief description of the framework blocks:
 
 ## BUILDING A MATRIX OF MUTUAL INFORMATION (present in gen_map.sh):

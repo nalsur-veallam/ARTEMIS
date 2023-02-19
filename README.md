@@ -214,4 +214,4 @@ The program draws a two-dimensional projection of the trajectory onto two eigenv
 
 The script creates an index file in the .ndx GROMACS format for the group passed in the file in the format of this framework after the **-f** flag with the group name specified by the **-grn** flag. The group is created according to the structure data using the **-strc** flag. To run, use:
 
-> python3 src/python/find_area.py -f source.json -sn site_name -chain protein_chain -ligname ligand_name -strc sctructure.pdb(.gro ...) -cutoff cutoff(Angstrom)
+> python3 src/python/make_ndx.py -f group.json -strc sctructure.pdb(.gro ...) -o out_path -grn group_name

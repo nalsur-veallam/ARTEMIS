@@ -6,12 +6,18 @@ import pandas as pd
 import json
 
 width = .6
+noseq = 0
 
-if not (sys.argv[1] == "-n" and len(sys.argv) == 3):
-    print("USAGE:\n"+sys.argv[0]+" -n name")
+if not (sys.argv[1] == "-n" and len(sys.argv) >= 3):
+    print("USAGE:\n"+sys.argv[0]+" -n name -noseq num_of_res(default 0)")
     exit()
     
-name = sys.argv[2]
+for i in range(1, len(sys.argv)) :
+    if sys.argv[i] == "-n":
+        name = sys.argv[i+1]
+    if sys.argv[i] == "-noseq":
+        noseq = int(sys.argv[i+1])
+        
 map_path =  "output/" + name + "/map/" + name + "_map"
 out_path =  "output/" + name + "/analysis/" + name
 
@@ -43,7 +49,7 @@ for i in range(NResidues):
         if i != j:
             mie += map_[i, j]
             
-        if map_[i, j] > max_mie:
+        if map_[i, j] > max_mie and np.abs(i-j) > noseq:
             max_mie = map_[i, j]
             idx = labels[i] + "\nwith\n" + labels[j]
             
@@ -68,8 +74,8 @@ fig.savefig(out_path + '_entropy.pdf')
 
 
 INTENSITY = {}
-INTENSITY["Intensity"] = np.array(Max_mie)
-INTENSITY["Residue"] = labels
+INTENSITY["Intensity"] = np.array(Max_mie)/np.array(intensity)
+INTENSITY["Residue"] = np.array(Max_idx)
 
 colors = plt.cm.viridis(INTENSITY["Intensity"]/np.max(INTENSITY["Intensity"]))
 colors = sns.color_palette(colors, as_cmap=True)

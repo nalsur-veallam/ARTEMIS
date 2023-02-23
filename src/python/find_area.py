@@ -2,12 +2,14 @@ import sys
 import json
 import numpy as np
 from pymol import cmd
+from tqdm import tqdm
 
 tchain = False
+print("\nSCRIPT FOR ALLOSTERIC COMMUNICATION INTENSITY Z-SCORE TOP CALCULATION IS LAUNCHED\n")
 
 if not ("-f" in sys.argv and "-sn" in sys.argv and "-cutoff" in sys.argv and "-strc" in sys.argv and "-chain" in sys.argv 
         and ("-ligname" in sys.argv or "-chain2" in sys.argv) and len(sys.argv) == 13):
-    print("USAGE:\n"+sys.argv[0]+"-f source.json -sn site_name -chain protein_chain_name -ligname ligand_name -strc sctructure.pdb(.gro ...) -cutoff cutoff(Angstrom)")
+    print("USAGE:\n"+sys.argv[0]+" -f source.json -sn site_name -chain protein_chain_name -ligname ligand_name -strc sctructure.pdb(.gro ...) -cutoff cutoff(Angstrom)\n")
     exit()
     
 for i in range(1, 13) :
@@ -41,7 +43,7 @@ for i in range(len(m1.atom)):
         resids.append(resid)
 area = []
 resid = ""
-for i in range(len(prot.atom)):
+for i in tqdm(range(len(prot.atom))):
     if prot.atom[i].chain+prot.atom[i].resn+prot.atom[i].resi != resid:
         resid = prot.atom[i].chain+prot.atom[i].resn+prot.atom[i].resi
         if resid in resids and not tchain:
@@ -52,7 +54,7 @@ for i in range(len(prot.atom)):
 if tchain:
     resid = ""
     counter = -1
-    for c1 in range(len(prot.atom)):
+    for c1 in tqdm(range(len(prot.atom))):
         if prot.atom[c1].chain+prot.atom[c1].resn+prot.atom[c1].resi != resid:
             resid = prot.atom[c1].chain+prot.atom[c1].resn+prot.atom[c1].resi
             counter += 1
@@ -74,10 +76,12 @@ try:
     data[sname] = site
     with open(path, 'w') as outfile:
         json.dump(data, outfile)
+    print("\nFile",path,"wrote\n")
 except:
     data = {}
     data[sname] = site
     with open(path, 'w') as outfile:
         json.dump(data, outfile)
+    print("\nFile",path," created\n")
     
 

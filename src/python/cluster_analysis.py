@@ -10,9 +10,10 @@ import json
 heigh = .1
 noseq = 0
 colors = ['blue', 'red', 'green', 'cyan', 'hotpink', 'orange', 'olive', 'aquamarine', 'yellow', 'gray', 'purple']
+print("\nSCRIPT FOR CLUSTER ANALYSIS IS LAUNCHED\n")
 
 if not ("-allsn" in sys.argv and "-f_all" in sys.argv and "-asn" in sys.argv and "-f_act" in sys.argv and "-n" in sys.argv and "-nclust" in  sys.argv  and len(sys.argv) >= 13):
-    print("USAGE:\n"+sys.argv[0]+" -f_act active_site.json -asn active_site_name -f_all allosteric_site.json -allsn allosteric_site_name -n name -nclust num_of_clust -noseq num_of_res(default 0)")
+    print("USAGE:\n"+sys.argv[0]+" -f_act active_site.json -asn active_site_name -f_all allosteric_site.json -allsn allosteric_site_name -n name -nclust num_of_clust -noseq num_of_res(default 0)\n")
     exit()
 for i in range(1, len(sys.argv)) :
     if sys.argv[i] == "-n":
@@ -29,36 +30,64 @@ for i in range(1, len(sys.argv)) :
         all_path = sys.argv[i+1]
     if sys.argv[i] == "-noseq":
         noseq = int(sys.argv[i+1])
-        
-if not (name and as_name and act_path and all_path and alls_name and NClusters):
-    print("USAGE:\n"+sys.argv[0]+"USAGE:\n"+sys.argv[0]+" -f_act active_site.json -asn active_site_name -f_all allosteric_site.json -allsn allosteric_site_name -n name -nclust num_of_clust")
-    exit()
 
 map_path =  "output/" + name + "/map/" + name + "_map"
 labels_path =  "output/" + name + "/clustering/" + name + "_" + str(NClusters) + "_clustering"
 out_path =  "output/" + name + "/clustering/" + name
 
-with open(map_path + '.json') as json_file:
-    data = json.load(json_file)
+try:
+    with open(map_path + '.json') as json_file:
+        data = json.load(json_file)
+except:
+    print("Error reading file", map_path + '.json', ". USAGE:\n"+sys.argv[0]+" -f_act active_site.json -asn active_site_name -f_all allosteric_site.json -allsn allosteric_site_name -n name -nclust num_of_clust -noseq num_of_res(default 0)\n")
+    exit()
 
-map_ = np.array(data['map'])
-names = np.array(data['names'])
-NResidues = data['NResidues']
-
-with open(labels_path + '.json') as json_file:
-    data = json.load(json_file)
+try:
+    map_ = np.array(data['map'])
+except:
+    print("Error: Can't get data from file", map_path + '.json',"by 'map' key\n")
+    exit()
     
-labels = np.array(data['clustering_labels'])
+try:
+    NResidues = int(data['NResidues'])
+except:
+    print("Caution:, Can't get data from file", map_path + '.json',"by 'NResidues' key. Continues without this data.")
+    NResidues = len(map_)
 
-with open(act_path) as json_file:
-    your_data = json.load(json_file)
+try:
+    with open(labels_path + '.json') as json_file:
+        data = json.load(json_file)
 
-active_site = np.array(your_data[as_name])
+    labels = np.array(data['clustering_labels'])
+except:
+    print("Error reading file", labels_path + '.json', ". USAGE:\n"+sys.argv[0]+" -f structure.pdb -n name -nclust num_of_clust\n")
+    exit()
 
-with open(all_path) as json_file:
-    your_data = json.load(json_file)
+try:
+    with open(act_path) as json_file:
+        your_data = json.load(json_file)
+except:
+    print("Error reading file", act_path, ". USAGE:\n"+sys.argv[0]+" -f_act active_site.json -asn active_site_name -f_all allosteric_site.json -allsn allosteric_site_name -n name -nclust num_of_clust -noseq num_of_res(default 0)\n")
+    exit()
+    
+try:
+    active_site = np.array(your_data[as_name])
+except:
+    print("Error: Can't get data from file", act_path,"by '" + str(as_name) + "' key\n")
+    exit()
 
-all_site = np.array(your_data[alls_name])
+try:
+    with open(all_path) as json_file:
+        your_data = json.load(json_file)
+except:
+    print("Error reading file", all_path, ". USAGE:\n"+sys.argv[0]+" -f_act active_site.json -asn active_site_name -f_all allosteric_site.json -allsn allosteric_site_name -n name -nclust num_of_clust -noseq num_of_res(default 0)\n")
+    exit()
+    
+try:
+    all_site = np.array(your_data[alls_name])
+except:
+    print("Error: Can't get data from file", all_path,"by '" + str(alls_name) + "' key\n")
+    exit()
 
 MIi = np.zeros(NClusters)
 MIi_ = np.zeros(NClusters)
@@ -209,7 +238,11 @@ plt.xticks(rotation=45, ha='right');
 
 plt.subplots_adjust(wspace=1, hspace=1)
 
-fig.savefig(out_path + "_"+ str(NClusters) + '_analysis.pdf')
+try:
+    fig.savefig(out_path + "_"+ str(NClusters) + '_analysis.pdf')
+    print("File",out_path + "_"+ str(NClusters) + "_analysis.pdf created\n")
+except:
+    print("Error writing file",out_path + "_"+ str(NClusters) + '_analysis.pdf\n')
        
     
     

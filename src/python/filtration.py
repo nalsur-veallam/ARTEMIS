@@ -5,9 +5,12 @@ import seaborn as sns
 import pandas as pd
 import json
 from pymol import cmd, stored
+from tqdm import tqdm
+
+print("\nSCRIPT FOR MIE MATRIX FILTRATION WITH PYMOL IS LAUNCHED\n")
 
 if not ("-cutoff" in sys.argv and "-strc" in sys.argv and sys.argv[1] == "-n" and len(sys.argv) == 7):
-    print("USAGE:\n"+sys.argv[0]+" -n name -strc sctructure.pdb(.gro ...) -cutoff cutoff")
+    print("USAGE:\n"+sys.argv[0]+" -n name -strc sctructure.pdb(.gro ...) -cutoff cutoff\n")
     exit()
     
 for i in range(1, 7) :
@@ -21,13 +24,36 @@ for i in range(1, 7) :
 map_path =  "output/" + name + "/map/" + name + "_map"
 out_path =  "output/" + name + "/map/" + name + "_filt_map"
 
-with open(map_path + '.json') as json_file:
-    data = json.load(json_file)
+try:
+    with open(map_path + '.json') as json_file:
+        data = json.load(json_file)
+except:
+    print("Error reading file", map_path + '.json', ". USAGE:\n"+sys.argv[0]+" -n name -strc sctructure.pdb(.gro ...) -cutoff cutoff\n")
+    exit()
 
-map_ = np.array(data['map'])
-names = np.array(data['names'])
-real_numbers = np.array(data['real_numbers'])
-NResidues = int(data["NResidues"])
+try:
+    map_ = np.array(data['map'])
+except:
+    print("Error: Can't get data from file", map_path + '.json',"by 'map' key\n")
+    exit()
+    
+try:
+    NResidues = int(data['NResidues'])
+except:
+    print("Caution:, Can't get data from file", map_path + '.json',"by 'NResidues' key. Continues without this data.\n")
+    NResidues = len(map_)
+    
+try:
+    names = np.array(data['names'])
+except:
+    print("Caution:, Can't get data from file", map_path + '.json',"by 'names' key. Continues without this data.\n")
+    names = np.arange(1, NResidues+1)
+    
+try:
+    real_numbers = np.array(data['real_numbers'])
+except:
+    print("Caution:, Can't get data from file", map_path + '.json',"by 'real_numbers' key. Continues without this data.\n")
+    real_numbers = np.empty(NResidues)
 
 labels = []
 for i in range(len(names)):
@@ -51,7 +77,7 @@ cmd.set('dot_solvent', 1)
 cmd.set('dot_density', 4)
 
 sasa_per_residue = []
-for i in range(NResidues):
+for i in tqdm(range(NResidues)):
     sasa_per_residue.append(float(cmd.get_area('resi '+ str(stored.residues[i]) + ' and chain ' + str(stored.reschs[i]))))
 
 for i in range(len(rnames)):
@@ -81,7 +107,11 @@ fig, axs = plt.subplots(figsize=(10,10), constrained_layout=True)
 sns.heatmap(MIE, annot=False, cmap="icefire")
 
 plt.title('Mutual information on residues for ' + name + '\n with filtration', fontsize=20)
-fig.savefig(out_path + '.pdf')
+try:
+    fig.savefig(out_path + '.pdf')
+    print("\nFile",out_path + ".pdf created")
+except:
+    print("\nError writing file",out_path + '.pdf')
 
 new_data = {}
 new_data['names'] = data['names']
@@ -90,5 +120,9 @@ new_data['name'] = name
 new_data['map'] = map_.tolist()
 new_data['real_numbers'] = data['real_numbers']
 new_data['cutoff'] = cutoff
-with open(out_path + '.json', 'w') as outfile:
-    json.dump(new_data, outfile)
+try:
+    with open(out_path + '.json', 'w') as outfile:
+        json.dump(new_data, outfile)
+    print("File",out_path + ".json created\n")
+except:
+    print("Error writing file",out_path + '.json\n')

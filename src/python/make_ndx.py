@@ -6,6 +6,7 @@ from pymol import cmd
 K = 5
 K_1 = 4
 N = 15
+print("\nGROMACS INDEX CREATION SCRIPT IS LAUNCHED\n")
 
 if not ("-strc" in sys.argv and "-grn" in sys.argv and "-f" in sys.argv and "-o" in sys.argv and len(sys.argv) == 9):
     print("USAGE:\n"+sys.argv[0]+" -f group.json -strc sctructure.pdb(.gro ...) -o out_path -grn group_name")
@@ -21,10 +22,18 @@ for i in range(1, 9) :
     if sys.argv[i] == "-strc":
         str_path = sys.argv[i+1]
 
-with open(path) as json_file:
-    your_data = json.load(json_file)
+try:
+    with open(path) as json_file:
+        your_data = json.load(json_file)
+except:
+    print("Error reading file", path, ". USAGE:\n"+sys.argv[0]+" -f group.json -strc sctructure.pdb(.gro ...) -o out_path -grn group_name\n")
+    exit()
 
-group_site = np.array(your_data[gr_name])
+try:
+    group_site = np.array(your_data[gr_name])
+except:
+    print("Error: Can't get data from file", path,"by",gr_name, "key\n")
+    exit()
 
 group = []
 
@@ -59,14 +68,19 @@ def do_line(arr):
 n = len(group) // N
 group = np.array(group)
 
-f = open(out_path + '.ndx', 'w')
-f.write('['+gr_name+']\n')
-for i in range(n):
-    line = do_line(group[N*i : N*(i+1)])
-    f.write("".join(map(str,line)) + '\n')
-line = do_line(group[(n)*N :-1])
-f.write("".join(map(str,line)))
-f.close()
+try:
+    f = open(out_path + '.ndx', 'w')
+    f.write('['+gr_name+']\n')
+    for i in range(n):
+        line = do_line(group[N*i : N*(i+1)])
+        f.write("".join(map(str,line)) + '\n')
+    line = do_line(group[(n)*N :-1])
+    f.write("".join(map(str,line)))
+    f.close()
+    print("File",out_path + ".ndx created\n")
+except:
+    print("Error writing file", out_path + ".ndx\n")
+    exit()
     
     
 

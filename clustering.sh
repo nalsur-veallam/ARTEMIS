@@ -1,4 +1,4 @@
-NAME="glu1" # Project name
+NAME="glu2" # Project name
 PYTHON="python3" # Your python launch codeword version >=3
 NUM_OF_CLUST=3 # Desired number of clusters in the system
 SOURCE_PDB="test_system/1v4s_clean.pdb" # Path to pdb file to create a pymol session with clustering (you must have pymol installed!!!)
@@ -12,7 +12,7 @@ mkdir output &> /dev/null
 mkdir output/${NAME} &> /dev/null
 mkdir output/${NAME}/clustering/ &> /dev/null
 
-${PYTHON} src/python/opt_num_of_clust.py -n ${NAME} -max 20 # Graphs of the metric are drawn to obtain the optimal number of clusters in the directory ./output/opt_num_of_clust/
+${PYTHON} src/python/opt_num_of_clust.py -n ${NAME} -max 10 # Graphs of the metric are drawn to obtain the optimal number of clusters in the directory ./output/opt_num_of_clust/
 # If you want to change the range in which the metric graph is built, then add the -min and -max flags with the corresponding minimum and maximum number of clusters for the system
 # Example: ${PYTHON} src/python/opt_num_of_clust.py -n ${NAME} -min 2 -max 10
 

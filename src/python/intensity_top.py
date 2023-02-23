@@ -3,9 +3,14 @@ import numpy as np
 import pandas as pd
 import json
 import itertools as itt
+from scipy.special import comb
+from tqdm import tqdm
 
 width = .6
 noseq = 0
+max_iters=10000
+
+print("\nSCRIPT FOR ALLOSTERIC COMMUNICATION INTENSITY TOP CALCULATION IS LAUNCHED\n")
 
 if not ("-allsn" in sys.argv and "-f_all" in sys.argv and "-asn" in sys.argv and "-f_act" in sys.argv and "-n" in sys.argv and len(sys.argv) >= 11):
     print("USAGE:\n"+sys.argv[0]+" -f_act active_site.json -n name -asn active_site_name -f_all allosteric_site.json -allsn allosteric_site_name -noseq num_of_res(default 0)")
@@ -24,35 +29,80 @@ for i in range(1, len(sys.argv)) :
         all_path = sys.argv[i+1]
     if sys.argv[i] == "-noseq":
         noseq = int(sys.argv[i+1])
-        
-if not (name and as_name and act_path and all_path and alls_name):
-    print("USAGE:\n"+sys.argv[0]+" -f_act active_site.json -n name -asn active_site_name -f_all allosteric_site.json -allsn allosteric_site_name")
-    exit()
     
     
 map_path =  "output/" + name + "/map/" + name + "_map"
 out_path =  "output/" + name + "/analysis/" + name
 
-with open(map_path + '.json') as json_file:
-    data = json.load(json_file)
+try:
+    with open(map_path + '.json') as json_file:
+        data = json.load(json_file)
+except:
+    print("Error reading file", map_path + '.json', ". USAGE:\n"+sys.argv[0]+" -f_act active_site.json -n name -asn active_site_name -f_all allosteric_site.json -allsn allosteric_site_name -noseq num_of_res(default 0)\n")
+    exit()
 
-map_ = np.array(data['map'])
-names = np.array(data['names'])
-real_numbers = np.array(data['real_numbers'])
-NResidues = data['NResidues']
+try:
+    map_ = np.array(data['map'])
+except:
+    print("Error: Can't get data from file", map_path + '.json',"by 'map' key\n")
+    exit()
+    
+try:
+    NResidues = int(data['NResidues'])
+except:
+    print("Caution:, Can't get data from file", map_path + '.json',"by 'NResidues' key. Continues without this data.")
+    NResidues = len(map_)
+    
+try:
+    names = np.array(data['names'])
+except:
+    print("Caution:, Can't get data from file", map_path + '.json',"by 'names' key. Continues without this data.")
+    names = np.arange(1, NResidues+1)
+    
+try:
+    real_numbers = np.array(data['real_numbers'])
+except:
+    print("Caution:, Can't get data from file", map_path + '.json',"by 'real_numbers' key. Continues without this data.")
+    real_numbers = np.empty(NResidues)
 
-with open(act_path) as json_file:
-    your_data = json.load(json_file)
 
-active_site = np.array(your_data[as_name])
-
-with open(all_path) as json_file:
-    your_data = json.load(json_file)
-
-all_site = np.array(your_data[alls_name])
+try:
+    with open(act_path) as json_file:
+        your_data = json.load(json_file)
+except:
+    print("Error reading file", act_path, ". USAGE:\n"+sys.argv[0]+" -f_act active_site.json -n name -asn active_site_name -f_all allosteric_site.json -allsn allosteric_site_name -noseq num_of_res(default 0)\n")
+    exit()
+    
+try:
+    active_site = np.array(your_data[as_name])
+except:
+    print("Error: Can't get data from file", act_path,"by '" + str(as_name) + "' key\n")
+    exit()
+    
+try:
+    with open(all_path) as json_file:
+        your_data = json.load(json_file)
+except:
+    print("Error reading file", all_path, ". USAGE:\n"+sys.argv[0]+" -f_act active_site.json -n name -asn active_site_name -f_all allosteric_site.json -allsn allosteric_site_name -noseq num_of_res(default 0)\n")
+    exit()
+    
+try:
+    all_site = np.array(your_data[alls_name])
+except:
+    print("Error: Can't get data from file", all_path,"by '" + str(alls_name) + "' key\n")
+    exit()
 
 
 NSites = len(active_site)
+
+cut = NSites
+iters = 0
+for i in range(NSites):
+    if iters >= max_iters:
+        cut = i
+        print("Warning (intensity_top.py): The size of the active site is too big. Combinations of at most " + str(cut) + " remainders are investigated.\n")
+        break
+    iters += comb(NSites, i+1)
 
 Combinations = []
 for i in range(NSites):
@@ -63,7 +113,12 @@ for i in range(NSites):
 table = pd.DataFrame(columns=['Combination', 'Top10 Residues', 'Top10 Residues names', 'Mean Intensity', 'STD',
                               'top 1 Residue', 'top 2 Residue', 'top 3 Residue'])
 
-for combinations in Combinations:
+leng = 0
+for combinations in tqdm(Combinations):
+    leng += 1
+    if leng > cut:
+        break
+    
     for active_site in combinations:
         intensity = []
         Allosteric = []
@@ -114,4 +169,8 @@ for combinations in Combinations:
         
         table = pd.concat([table, new_row.to_frame().T], ignore_index=True)
         
-table.to_csv(out_path + "_top10.csv")
+try:
+    table.to_csv(out_path + "_top10.csv", index=False)
+    print("\nFile",out_path + "_top10.csv created\n")
+except:
+    print("\nError writing file",out_path + '_top10.csv\n')

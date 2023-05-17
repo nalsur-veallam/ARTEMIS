@@ -8,8 +8,10 @@ import json
 width = .6
 noseq = 0
 
+print("\nMIE ANALYSIS SCRIPT IS LAUNCHED\n")
+
 if not (sys.argv[1] == "-n" and len(sys.argv) >= 3):
-    print("USAGE:\n"+sys.argv[0]+" -n name -noseq num_of_res(default 0)")
+    print("USAGE:\n"+sys.argv[0]+" -n name -noseq num_of_res(default 0)\n")
     exit()
     
 for i in range(1, len(sys.argv)) :
@@ -21,13 +23,36 @@ for i in range(1, len(sys.argv)) :
 map_path =  "output/" + name + "/map/" + name + "_map"
 out_path =  "output/" + name + "/analysis/" + name
 
-with open(map_path + '.json') as json_file:
-    data = json.load(json_file)
+try:
+    with open(map_path + '.json') as json_file:
+        data = json.load(json_file)
+except:
+    print("Error reading file", map_path + '.json', ". USAGE:\n"+sys.argv[0]+" -n name -noseq num_of_res(default 0)\n")
+    exit()
 
-map_ = np.array(data['map'])
-names = np.array(data['names'])
-real_numbers = np.array(data['real_numbers'])
-NResidues = data['NResidues']
+try:
+    map_ = np.array(data['map'])
+except:
+    print("Error: Can't get data from file", map_path + '.json',"by 'map' key\n")
+    exit()
+    
+try:
+    NResidues = int(data['NResidues'])
+except:
+    print("Caution:, Can't get data from file", map_path + '.json',"by 'NResidues' key. Continues without this data.")
+    NResidues = len(map_)
+    
+try:
+    names = np.array(data['names'])
+except:
+    print("Caution:, Can't get data from file", map_path + '.json',"by 'names' key. Continues without this data.")
+    names = np.arange(1, NResidues+1)
+    
+try:
+    real_numbers = np.array(data['real_numbers'])
+except:
+    print("Caution:, Can't get data from file", map_path + '.json',"by 'real_numbers' key. Continues without this data.")
+    real_numbers = np.empty(NResidues)
 
 labels = []
 for i in range(len(names)):
@@ -70,7 +95,11 @@ axs = sns.barplot(x="Residue", y="Intensity", data=INTENSITY, palette=colors, do
 plt.tick_params(axis='both', which='major', labelsize=16)
 
 plt.title('The importance of residues for ' + name, fontsize=40)
-fig.savefig(out_path + '_entropy.pdf')
+try:
+    fig.savefig(out_path + '_entropy.pdf')
+    print("File",out_path + "_entropy.pdf created")
+except:
+    print("Error writing file",out_path + '_entropy.pdf')
 
 
 INTENSITY = {}
@@ -85,7 +114,11 @@ axs = sns.barplot(x="Residue", y="Intensity", data=INTENSITY, palette=colors, do
 plt.tick_params(axis='both', which='major', labelsize=16)
 
 plt.title('Max MIE of residues for ' + name, fontsize=40)
-fig.savefig(out_path + '_maxMie.pdf')
+try:
+    fig.savefig(out_path + '_maxMie.pdf')
+    print("File",out_path + "_maxMie.pdf created")
+except:
+    print("Error writing file",out_path + '_maxMie.pdf')
 
 INTENSITY = {}
 INTENSITY["Intensity"] = np.array(Mie)
@@ -99,4 +132,8 @@ axs = sns.barplot(x="Residue", y="Intensity", data=INTENSITY, palette=colors, do
 plt.tick_params(axis='both', which='major', labelsize=16)
 
 plt.title('MIE of residues for ' + name, fontsize=40)
-fig.savefig(out_path + '_mie.pdf')
+try:
+    fig.savefig(out_path + '_mie.pdf')
+    print("File",out_path + "_mie.pdf created\n")
+except:
+    print("Error writing file",out_path + '_mie.pdf\n')

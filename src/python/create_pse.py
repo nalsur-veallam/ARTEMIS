@@ -3,10 +3,11 @@ import sys
 import json
 import numpy as np
 
+print("\nSCRIPT FOR DISPLAYING CLUSTERS ON THE STRUCTURE IS LAUNCHED\n")
 colors = ['blue', 'red', 'green', 'cyan', 'hotpink', 'orange', 'olive', 'aquamarine', 'yellow', 'gray', 'purple']
 
 if not ("-f" in sys.argv and "-n" in sys.argv and "-nclust" in sys.argv and len(sys.argv) == 7):
-    print("USAGE:\n"+sys.argv[0]+" -f structure.pdb -n name -nclust num_of_clust")
+    print("USAGE:\n"+sys.argv[0]+" -f structure.pdb -n name -nclust num_of_clust\n")
     exit()
 
 for i in range(1, 7) :
@@ -16,18 +17,18 @@ for i in range(1, 7) :
         NClusters = int(sys.argv[i+1])
     if sys.argv[i] == "-f":
         path = sys.argv[i+1]
-        
-if not (name and NClusters and path):
-    print("USAGE:\n"+sys.argv[0]+" -f structure.pdb -n name -nclust num_of_clust")
-    exit()
 
 labels_path =  "output/" + name + "/clustering/" + name + "_"+ str(NClusters) + '_clustering'
 out_path =  "output/" + name + "/clustering/" + name
 
-with open(labels_path + '.json') as json_file:
-    data = json.load(json_file)
+try:
+    with open(labels_path + '.json') as json_file:
+        data = json.load(json_file)
 
-labels = np.array(data['clustering_labels'])
+    labels = np.array(data['clustering_labels'])
+except:
+    print("Error reading file", labels_path + '.json', ". USAGE:\n"+sys.argv[0]+" -f structure.pdb -n name -nclust num_of_clust\n")
+    exit()
 
 it= 0
 lastResi = None
@@ -64,4 +65,8 @@ for i in range(NClusters):
     cmd.color(colors[i], obj)
     cmd.recolor()
 
-cmd.save(out_path + "_" + str(NClusters) + "_clusters.pse")
+try:
+    cmd.save(out_path + "_" + str(NClusters) + "_clusters.pse")
+    print("File",out_path + "_"+ str(NClusters) + "_clustering.pse\n")
+except:
+    print("Error writing file",out_path + "_"+ str(NClusters) + '_clustering.pse\n')

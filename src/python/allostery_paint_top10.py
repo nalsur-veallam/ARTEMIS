@@ -9,8 +9,10 @@ act = True
 alls = True
 noseq = 0
 
+print("\nSCRIPT FOR DISPLAYING TOP 10% ALLOSTERIC COMMUNICATION INTENSITY ON THE STRUCTURE IS LAUNCHED\n")
+
 def max10(array):
-    size = len(array)
+    size = NResidues
     top10 = int(0.1*size)
     
     supp = np.zeros(size)
@@ -31,7 +33,7 @@ def max10(array):
     return np.array(df['data'])
 
 if not ("-strc" in sys.argv and "-asn" in sys.argv and "-f_act" in sys.argv and "-n" in sys.argv and len(sys.argv) >= 9):
-    print("USAGE:\n"+sys.argv[0]+" -f_act active_site.json -n name -asn active_site_name -f_all allosteric_site.json -allsn allosteric_site_name -strc sctructure.pdb(.gro ...) -noseq num_of_res(default 0)")
+    print("USAGE:\n"+sys.argv[0]+" -f_act active_site.json -n name -asn active_site_name -f_all allosteric_site.json -allsn allosteric_site_name -strc sctructure.pdb(.gro ...) -noseq num_of_res(default 0)\n")
     exit()
     
 for i in range(1, len(sys.argv)) :
@@ -49,24 +51,41 @@ for i in range(1, len(sys.argv)) :
         str_path = sys.argv[i+1]
     if sys.argv[i] == "-noseq":
         noseq = int(sys.argv[i+1])
-        
-if not (name and as_name and act_path and str_path):
-    print("USAGE:\n"+sys.argv[0]+" -f_act active_site.json -n name -asn active_site_name -f_all allosteric_site.json -allsn allosteric_site_name -strc sctructure.pdb(.gro ...)")
-    exit()    
     
 map_path =  "output/" + name + "/map/" + name + "_map"
 out_path =  "output/" + name + "/analysis/" + name
 
-with open(map_path + '.json') as json_file:
-    data = json.load(json_file)
+try:
+    with open(map_path + '.json') as json_file:
+        data = json.load(json_file)
+except:
+    print("Error reading file", map_path + '.json', ". USAGE:\n"+sys.argv[0]+" -f_act active_site.json -n name -asn active_site_name -f_all allosteric_site.json -allsn allosteric_site_name -strc sctructure.pdb(.gro ...) -filt -sasa_filt -noseq num_of_res(default 0)\n")
+    exit()
 
-map_ = np.array(data['map'])
-NResidues = data['NResidues']
-
-with open(act_path) as json_file:
-    your_data = json.load(json_file)
-
-active_site = np.array(your_data[as_name])
+try:
+    map_ = np.array(data['map'])
+except:
+    print("Error: Can't get data from file", map_path + '.json',"by 'map' key\n")
+    exit()
+    
+try:
+    NResidues = int(data['NResidues'])
+except:
+    print("Caution:, Can't get data from file", map_path + '.json',"by 'NResidues' key. Continues without this data.")
+    NResidues = len(map_)
+    
+try:
+    with open(act_path) as json_file:
+        your_data = json.load(json_file)
+except:
+    print("Error reading file", act_path, ". USAGE:\n"+sys.argv[0]+" -f_act active_site.json -n name -asn active_site_name -f_all allosteric_site.json -allsn allosteric_site_name -strc sctructure.pdb(.gro ...) -filt -sasa_filt -noseq num_of_res(default 0)\n")
+    exit()
+    
+try:
+    active_site = np.array(your_data[as_name])
+except:
+    print("Error: Can't get data from file", act_path,"by '" + str(as_name) + "' key\n")
+    exit()
 
 intensity = np.zeros(NResidues)
 
@@ -77,16 +96,27 @@ for resid in active_site:
             inten.append(-1)
         elif np.abs(resid - 1 - i) >= noseq:
             inten.append(map_[resid - 1][i])
+        else:
+            inten.append(0)
     intensity += max10(inten)
 
 if ("alls_name" not in locals() and "all_path" not in locals()):
     print("ATTENTION, you did not specify an allosteric site. The program will continue without it.")
     alls = False
 else:
-    with open(all_path) as json_file:
-        your_data = json.load(json_file)
-
-    all_site = np.array(your_data[alls_name])
+    try:
+        with open(all_path) as json_file:
+            your_data = json.load(json_file)
+    except:
+        print("Error reading file", all_path, ". USAGE:\n"+sys.argv[0]+" -f_act active_site.json -n name -asn active_site_name -f_all allosteric_site.json -allsn allosteric_site_name -strc sctructure.pdb(.gro ...) -filt -sasa_filt -noseq num_of_res(default 0)\n")
+        exit()
+        
+    try:
+        all_site = np.array(your_data[alls_name])
+    except:
+        print("Error: Can't get data from file", all_path,"by '" + str(alls_name) + "' key\n")
+        exit()
+        
     alls_arr = []
     group_alls = []
     group_alls_names = []
@@ -153,4 +183,8 @@ if alls:
         text = "resi " + str(group_alls[j]) + "& resn " + str(group_alls_names[j])
         cmd.select("allosteric_site", text, merge=1)
 
-cmd.save(out_path + "_intensity_top10.pse")
+try:
+    cmd.save(out_path + "_intensity_top10.pse")
+    print("File",out_path + "_intensity_top10.pse created\n")
+except:
+    print("Error writing file",out_path + '_intensity_top10.pse\n')

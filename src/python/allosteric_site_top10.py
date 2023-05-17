@@ -120,7 +120,7 @@ plt.tick_params(axis='both', which='major', labelsize=16)
 
 plt.title('Intensity of connectivity of residues with the active site for ' + name, fontsize=40)
 try:
-    fig.savefig(out_path + '_intensity.pdf')
+    fig.savefig(out_path + '_intensity_top10.pdf')
     print("File",out_path + "_intensity_top10.pdf created")
 except:
     print("Error writing file",out_path + '_intensity_top10.pdf')

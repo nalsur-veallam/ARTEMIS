@@ -114,12 +114,12 @@ table = pd.DataFrame(columns=['Combination', 'Top10 Residues', 'Top10 Residues n
                               'top 1 Residue', 'top 2 Residue', 'top 3 Residue'])
 
 leng = 0
-for combinations in tqdm(Combinations):
+for combinations in tqdm(Combinations, desc ="Progress", total=cut):
     leng += 1
     if leng > cut:
         break
     
-    for active_site in combinations:
+    for active_site in tqdm(combinations, desc =f"ActSite size {leng} progress", total=comb(NSites, leng)):
         intensity = []
         Allosteric = []
         for i in range(NResidues):
@@ -164,10 +164,11 @@ for combinations in tqdm(Combinations):
         act_s = np.array(INTENSITY[INTENSITY["Allosteric site"] == True]["Residue"])
 
         new_row = pd.Series({'Combination': ", ".join(map(str,act_s_name)), 'Top10 Residues': t10R, 'Top10 Residues names': ", ".join(map(str,act_s)), 
-                             'Mean Intensity': np.mean(INTENSITY["Intensity"]), 'STD': np.std(INTENSITY["Intensity"]),
-                             'top 1 Residue': top1, 'top 2 Residue': top2, 'top 3 Residue': top3})
+                            'Mean Intensity': np.round(np.mean(INTENSITY["Intensity"]),2), 'STD': np.round(np.std(INTENSITY["Intensity"]), 2),
+                            'top 1 Residue': top1, 'top 2 Residue': top2, 'top 3 Residue': top3})
         
         table = pd.concat([table, new_row.to_frame().T], ignore_index=True)
+    print('\033[F\033[K\033[F')
         
 try:
     table.to_csv(out_path + "_top10.csv", index=False)

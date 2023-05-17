@@ -154,7 +154,7 @@ axs = [None for _ in range(13)]
 axs[0] = plt.subplot2grid((7,4), (0,0),colspan=2, rowspan=2)
 CLUSTERING = pd.DataFrame(data=MIE[::-1, :], index=np.array(clNames)[::-1], columns=np.array(clNames))
 axs[0] = sns.heatmap(CLUSTERING, cmap="OrRd", annot=True, ax=axs[0], cbar=False)
-axs[0].set_title('MIE matrix for ' + name + " with " +str(NClusters) + " clusters")
+axs[0].set_title('MI matrix for ' + name + " with " +str(NClusters) + " clusters")
 
 if NClusters > 7:
     font = {'size'   : 20}
@@ -174,36 +174,32 @@ plt.xticks(rotation=45, ha='right');
 
 axs[3] = plt.subplot2grid((7,4), (2,0),colspan=2, rowspan=1)
 INTENSITY = {"Intensity": np.array(intensity_act) / np.sqrt(sum(abs(np.array(intensity_act).flatten())**2)), "Names": clNames}
-axs[3] = sns.barplot(x="Names", y="Intensity", data=INTENSITY, palette="OrRd", dodge=False, ax=axs[3], hue="Intensity")
-axs[3].legend_.remove()
+axs[3] = sns.barplot(x="Names", y="Intensity", data=INTENSITY, palette=clColors, dodge=False, ax=axs[3])
 axs[3].set_title('Intensity of connectivity of clusters\n with the active site for ' + name)
 plt.xticks(rotation=45, ha='right');
 
 axs[4] = plt.subplot2grid((7,4), (2,2),colspan=2, rowspan=1)
 INTENSITY = {"Intensity": np.array(intensity_act_) / np.sqrt(sum(abs(np.array(intensity_act_).flatten())**2)), "Names": clNames}
-axs[4] = sns.barplot(x="Names", y="Intensity", data=INTENSITY, palette="OrRd", dodge=False, ax=axs[4], hue="Intensity")
-axs[4].legend_.remove()
+axs[4] = sns.barplot(x="Names", y="Intensity", data=INTENSITY, palette=clColors, dodge=False, ax=axs[4])
 axs[4].set_title('Intensity of connectivity (normalized) of clusters\n with the active site for ' + name)
 plt.xticks(rotation=45, ha='right');
 
 axs[5] = plt.subplot2grid((7,4), (3,0),colspan=2, rowspan=1)
 INTENSITY = {"Intensity": np.array(intensity_all) / np.sqrt(sum(abs(np.array(intensity_all).flatten())**2)), "Names": clNames}
-axs[5] = sns.barplot(x="Names", y="Intensity", data=INTENSITY, palette="OrRd", dodge=False, ax=axs[5], hue="Intensity")
-axs[5].legend_.remove()
+axs[5] = sns.barplot(x="Names", y="Intensity", data=INTENSITY, palette=clColors, dodge=False, ax=axs[5])
 axs[5].set_title('Intensity of connectivity of clusters\n with the allosteric site for ' + name)
 plt.xticks(rotation=45, ha='right');
 
 axs[6] = plt.subplot2grid((7,4), (3,2),colspan=2, rowspan=1)
 INTENSITY = {"Intensity": np.array(intensity_all_) / np.sqrt(sum(abs(np.array(intensity_all_).flatten())**2)), "Names": clNames}
-axs[6] = sns.barplot(x="Names", y="Intensity", data=INTENSITY, palette="OrRd", dodge=False, ax=axs[6], hue="Intensity")
-axs[6].legend_.remove()
+axs[6] = sns.barplot(x="Names", y="Intensity", data=INTENSITY, palette=clColors, dodge=False, ax=axs[6])
 axs[6].set_title('Intensity of connectivity (normalized) of clusters\n with the allosteric site for ' + name)
 plt.xticks(rotation=45, ha='right');
 
 axs[7] = plt.subplot2grid((7,4), (4,0),colspan=2, rowspan=1)
 INTENSITY = {"Intensity": np.array(MIi), "Names": clNames}
 axs[7] = sns.barplot(x="Names", y="Intensity", data=INTENSITY, palette=clColors, dodge=False, ax=axs[7])
-axs[7].set_title('Mi inside of clusters ' + name)
+axs[7].set_title('MI inside of clusters ' + name)
 plt.xticks(rotation=45, ha='right');
 
 axs[8] = plt.subplot2grid((7,4), (4,2),colspan=2, rowspan=1)
@@ -215,7 +211,7 @@ plt.xticks(rotation=45, ha='right');
 axs[9] = plt.subplot2grid((7,4), (5,0),colspan=2, rowspan=1)
 INTENSITY = {"Intensity": np.array(MIe), "Names": clNames}
 axs[9] = sns.barplot(x="Names", y="Intensity", data=INTENSITY, palette=clColors, dodge=False, ax=axs[9])
-axs[9].set_title('Mi outside of clusters ' + name)
+axs[9].set_title('MI outside of clusters ' + name)
 plt.xticks(rotation=45, ha='right');
 
 axs[10] = plt.subplot2grid((7,4), (5,2),colspan=2, rowspan=1)

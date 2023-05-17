@@ -38,4 +38,6 @@ ${PYTHON} src/python/xpm2json.py -f ${SOURCE_XPM} -o xpmmap # Draw xmp gromacs m
 ${PYTHON} src/python/find_area.py -f ${SOURCE_ACTIVE_SITE} -sn act_s -chain A -ligname GLC -strc ${SOURCE_PDB} -cutoff 3.5 # Creates a list of residues that are in contact 
 #            with the ligand (to use the protein-protein bond, instead of the -ligname flag, specify the -chain2 flag followed by the name of the second chain (ligand protein))
 
+#${PYTHON} src/python/create_group.py -f output.json -ps source.pse -sel selection_name # Calculates group in JSON file from pymol session by selection.
+
 # If you do not need to execute any of the programs, then just comment out the corresponding line

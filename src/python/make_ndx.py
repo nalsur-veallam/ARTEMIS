@@ -35,17 +35,25 @@ except:
     print("Error: Can't get data from file", path,"by",gr_name, "key\n")
     exit()
 
+k = 0
+resids = []
 group = []
 
-def selection(resi, idx):
-    if not (idx in group) and (int(resi) in group_site):
-        group.append(idx)
+def selection(resi, resn, idx):
+    resid = resi + resn
+    if not(resid in resids):
+        resids.append(resid)
+        global k
+        k+=1
+    
+    if k in group_site:
+            group.append(idx)
         
 
 myspace = {'selection': selection}
 
 cmd.load(str_path)
-cmd.alter("all",'selection(resi, index)', space=myspace)
+cmd.alter("all",'selection(resi, resn, index)', space=myspace)
 
 
 def do_line(arr):
@@ -74,7 +82,7 @@ try:
     for i in range(n):
         line = do_line(group[N*i : N*(i+1)])
         f.write("".join(map(str,line)) + '\n')
-    line = do_line(group[(n)*N :-1])
+    line = do_line(group[(n)*N :])
     f.write("".join(map(str,line)))
     f.close()
     print("File",out_path + ".ndx created\n")

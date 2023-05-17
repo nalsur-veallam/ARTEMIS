@@ -8,7 +8,7 @@ import json
 diag = True
 norm = False
 
-print("\nSCRIPT FOR DRAWING MI MATRIX IS LAUNCHED\n")
+print("\nSCRIPT FOR DRAWING FILTERED MI MATRIX IS LAUNCHED\n")
 
 if not ("-n" in sys.argv and len(sys.argv) >= 3):
     print("USAGE:\n"+sys.argv[0]+" -n name -nodiag -norm\n")
@@ -24,7 +24,7 @@ for i in range(1, len(sys.argv)) :
         
         
 map_path =  "output/" + name + "/map/" + name + "_map"
-out_path =  "output/" + name + "/map/" + name
+out_path =  "output/" + name + "/map/" + name + "_puremap"
 
 try:
     with open(map_path + '.json') as json_file:
@@ -35,7 +35,6 @@ except:
 
 try:
     map_ = np.array(data['map'])
-    NResidues = len(map_)
 except:
     print("Error: Can't get data from file", map_path + '.json',"by 'map' key\n")
     exit()
@@ -51,6 +50,10 @@ try:
 except:
     print("Caution:, Can't get data from file", map_path + '.json',"by 'real_numbers' key. Continues without this data.")
     real_numbers = np.empty(NResidues)
+
+std = np.std(map_.flatten())
+map_[map_ < std] = np.nan
+mp_ = map_.copy()
 
 labels = []
 for i in range(len(names)):
@@ -73,3 +76,16 @@ try:
     print("File",out_path + ".pdf created\n")
 except:
     print("Error writing file",out_path + '.pdf\n')
+    
+new_data = {}
+new_data['names'] = data['names']
+new_data['NResidues'] = data["NResidues"]
+new_data['name'] = name
+new_data['map'] = mp_.tolist()
+new_data['real_numbers'] = data['real_numbers']
+try:
+    with open(out_path + '.json', 'w') as outfile:
+        json.dump(new_data, outfile)
+    print("File",out_path + ".json created\n")
+except:
+    print("Error writing file",out_path + '.json\n')

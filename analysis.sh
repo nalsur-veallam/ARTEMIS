@@ -6,6 +6,7 @@ SOURCE_ALLOSTERIC_SITE="test_system/glu_groups.json" # Path to a json file with 
 SOURCE_PDB="test_system/1v4s_clean.pdb" # Path to pdb file with protein
 ALLOSTERIC_SITE_NAME="all_s" # List name in json file
 ACTIVE_SITE_NAME="act_s" # List name in json file
+OTHER_NAME="glu1"
 
 mkdir output &> /dev/null
 mkdir output/${NAME} &> /dev/null
@@ -40,6 +41,11 @@ ${PYTHON} src/python/intensity_table.py -n ${NAME} -f_act ${SOURCE_ACTIVE_SITE} 
 ${PYTHON} src/python/intensity_top.py -n ${NAME} -f_act ${SOURCE_ACTIVE_SITE} -asn ${ACTIVE_SITE_NAME} -allsn ${ALLOSTERIC_SITE_NAME} -f_all ${SOURCE_ALLOSTERIC_SITE}
 #                                                   Builds a table with an analysis of the interaction between the active and allosteric sites in terms of zscore, 
 #                               and also builds an overlap based on the remnants of the active site (Add the -noseq flag to ignore the interaction of adjacent residues in sequence)
+
+#${PYTHON} src/python/crit_resid.py -strc ${SOURCE_PDB} -n ${NAME} -f_act ${SOURCE_ACTIVE_SITE} -asn ${ACTIVE_SITE_NAME} -allsn ${ALLOSTERIC_SITE_NAME} -f_all ${SOURCE_ALLOSTERIC_SITE}
+#                                                    Finding Critical Remnants of Allosteric Communication Between Sites
+
+#${PYTHON} src/python/compare_systems.py -n1 ${NAME} -n2 ${OTHER_NAME} # Script to compare two systems
 
 # All results are stored in the ./output/${NAME}/analysis/ directory
 # If you do not need to execute any of the programs, then just comment out the corresponding line

@@ -7,7 +7,7 @@ import json
 from pymol import cmd, stored
 from tqdm import tqdm
 
-print("\nSCRIPT FOR MIE MATRIX FILTRATION WITH PYMOL IS LAUNCHED\n")
+print("\nSCRIPT FOR MI MATRIX FILTRATION WITH PYMOL IS LAUNCHED\n")
 
 if not ("-cutoff" in sys.argv and "-strc" in sys.argv and sys.argv[1] == "-n" and len(sys.argv) == 7):
     print("USAGE:\n"+sys.argv[0]+" -n name -strc sctructure.pdb(.gro ...) -cutoff cutoff\n")

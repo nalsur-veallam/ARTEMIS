@@ -87,14 +87,14 @@ except:
 
 intensity = []
 for i in range(NResidues):
-        if i + 1 in active_site:
-            intensity.append(0)
-        else:
-            inten = 0
-            for resid in active_site:
-                if np.abs(resid - 1 - i) >= noseq:
-                    inten += map_[resid - 1][i]
-            intensity.append(inten)
+    if i + 1 in active_site:
+        intensity.append(0)
+    else:
+        inten = 0
+        for resid in active_site:
+            if np.abs(resid - 1 - i) >= noseq:
+                inten += map_[resid - 1][i]
+        intensity.append(inten)
 
 new_names = []
 for i in range(NResidues):
@@ -107,7 +107,6 @@ INTENSITY["Residue"] = new_names
 colors = plt.cm.viridis(INTENSITY["Intensity"]/np.max(INTENSITY["Intensity"]))
 colors = sns.color_palette(colors, as_cmap=True)
 
-#INTENSITY = pd.DataFrame(data=np.array([intensity, np.linspace(1, NResidues, NResidues)]).T, columns=["Intensity", "Residue"])
 fig, axs = plt.subplots(figsize=(NResidues*width, 20), constrained_layout=True)
 axs = sns.barplot(x="Residue", y="Intensity", data=INTENSITY, palette=colors, dodge=False)
 plt.tick_params(axis='both', which='major', labelsize=16)
@@ -126,6 +125,7 @@ new_data['NResidues'] = NResidues
 new_data['active_site'] = your_data[as_name]
 new_data['intensity'] = intensity
 new_data['filtration'] = filt
+new_data['real_numbers'] = data['real_numbers']
 try:
     with open(out_path + '_intensity.json', 'w') as outfile:
         json.dump(new_data, outfile)

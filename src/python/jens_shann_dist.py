@@ -7,7 +7,7 @@ from scipy.spatial import distance
 hist=False
 prob=False
 width = .6
-nbins=100
+nbins=10
 
 print("\nJENSEN SHANNON DISTANCE CALCULATION SCRIPT IS LAUNCHED\n")
 

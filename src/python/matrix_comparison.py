@@ -34,6 +34,8 @@ try:
 except:
     print("Error: Can't get data from file", f1 ,"by 'map' key\n")
     exit()
+    
+map_[np.isnan(map_)] = 0
 
 names = []
 for i in range(len(map_)):
@@ -54,6 +56,9 @@ try:
 except:
     print("Error: Can't get data from file", f2 ,"by 'map' key\n")
     exit()
+    
+your_map[np.isnan(your_map)] = 0    
+
 if not diag:
     your_map = your_map - np.diag(np.diag(your_map))
 
@@ -64,8 +69,10 @@ if (np.shape(your_map) != np.shape(map_)):
 frob1 = np.sqrt(sum(abs(map_.flatten())**2)) #Frobenius norm of a matrix
 frob2 = np.sqrt(sum(abs(your_map.flatten())**2))
 
-mat1 = map_/frob1
-mat2 = your_map/frob2
+if frob1 != 0:
+    mat1 = map_/frob1
+if frob2 != 0:
+    mat2 = your_map/frob2
 mat = mat1-mat2
 
 frob = np.sqrt(sum(abs(mat.flatten())**2))

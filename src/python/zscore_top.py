@@ -118,12 +118,12 @@ more1_all = []
 columns = ["Residue"]
 leng = 0
 
-for combinations in tqdm(Combinations):
+for combinations in tqdm(Combinations, desc ="Progress", total=cut):
     leng += 1
     if leng > cut:
         break
     
-    for active_site in combinations:
+    for active_site in tqdm(combinations, desc =f"ActSite size {leng} progress", total=comb(NSites, leng)):
         intensity = []
         Allosteric = []
         for i in range(NResidues):
@@ -187,6 +187,7 @@ for combinations in tqdm(Combinations):
             more2_.append(np.array(INTENSITY2["Residue"]))
             more1_all.append(np.array(INTENSITY1[INTENSITY1["Allosteric site"] == True]["Residue"]))
             columns.append(", ".join(map(str,act_s_name)))
+    print('\033[F\033[K\033[F')
             
 try:
     table.to_csv(out_path + "_zscore.csv", index=False)

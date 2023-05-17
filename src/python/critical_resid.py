@@ -8,7 +8,7 @@ import json
 width = .6
 noseq = 0
 
-print("\nMIE ANALYSIS SCRIPT IS LAUNCHED\n")
+print("\nMI ANALYSIS SCRIPT IS LAUNCHED\n")
 
 if not (sys.argv[1] == "-n" and len(sys.argv) >= 3):
     print("USAGE:\n"+sys.argv[0]+" -n name -noseq num_of_res(default 0)\n")
@@ -137,3 +137,16 @@ try:
     print("File",out_path + "_mie.pdf created\n")
 except:
     print("Error writing file",out_path + '_mie.pdf\n')
+    
+new_data = {}
+new_data['name'] = name
+new_data['names'] = data['names']
+new_data['NResidues'] = NResidues
+new_data['entropy'] = intensity
+new_data['real_numbers'] = data['real_numbers']
+try:
+    with open(out_path + '_entropy.json', 'w') as outfile:
+        json.dump(new_data, outfile)
+    print("File",out_path + "_entropy.json created\n")
+except:
+    print("Error writing file",out_path + '_entropy.json\n')

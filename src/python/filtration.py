@@ -78,10 +78,16 @@ cmd.set('dot_density', 4)
 
 sasa_per_residue = []
 for i in tqdm(range(NResidues)):
-    sasa_per_residue.append(float(cmd.get_area('resi '+ str(stored.residues[i]) + ' and chain ' + str(stored.reschs[i]))))
+    if stored.reschs[i] == '':
+        sasa_per_residue.append(float(cmd.get_area('resi '+ str(stored.residues[i]))))
+    else:
+        sasa_per_residue.append(float(cmd.get_area('resi '+ str(stored.residues[i]) + ' and chain ' + str(stored.reschs[i]))))
 
 for i in range(len(rnames)):
-    cmd.remove('all and not (resi '+ str(rnumbers[i]) + ' and chain ' + str(rchs[i]) + ')')
+    if rchs[i] == '':
+        cmd.remove('all and not (resi '+ str(rnumbers[i]) + ')')
+    else:
+        cmd.remove('all and not (resi '+ str(rnumbers[i]) + ' and chain ' + str(rchs[i]) + ')')
     cmd.set('dot_solvent', 1)
     cmd.set('dot_density', 4)
     sasa.append(float(cmd.get_area('all')))

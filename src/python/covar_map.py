@@ -40,7 +40,7 @@ cmd.iterate('all', 'stored.residues.append(resi)')
 cmd.iterate('all', 'stored.reschs.append(chain)')
 cmd.iterate('all', 'stored.resnames.append(resn)')
 
-NAtoms = len(stored.residues)
+NAtoms = len(stored.resnames)
 NStr = len(data)
 
 if 3*NAtoms**2 == NStr:
@@ -51,7 +51,12 @@ elif 3*(NAtoms + 1)**2 == NStr:
     stored.residues.append(stored.residues[-1])
     stored.reschs.append(stored.reschs[-1])
     stored.resnames.append(stored.resnames[-1])
-    
+elif 3*(NAtoms - 1)**2 == NStr:
+    All = False
+    NAtoms -= 1
+    stored.residues.pop(-1)
+    stored.reschs.pop(-1)
+    stored.resnames.pop(-1)
 else:
     print("Error! The structure does not fit the data: different number of degrees of freedom\n")
     exit()

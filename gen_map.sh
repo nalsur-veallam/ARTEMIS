@@ -1,9 +1,12 @@
-NAME="glu2" # Project name
-SOURCE_PAR="test_system/linker0.par" # Path to binary file PARENT
+NAME="v536e" # Project name
+SOURCE_PAR="test_system/v536e.par" # Path to binary file PARENT
 PYTHON="python3" # Your python launch codeword version >=3
-SOURCE_PDB="test_system/1v4s_clean.pdb"
+SOURCE_PDB="test_system/v536e.pdb"
 SOURCE_SASA="test_system/resarea.xvg"
-SOURCE_DAT="../chey/covar/covar.dat"
+
+COVAR_MAP_OUTPUT=output/${NAME}/map/covar
+SOURCE_DAT="test_system/covar.dat"
+SOURCE_DIST_MAP="test_system/dist_map"
 
 make clean
 make
@@ -20,15 +23,15 @@ ${PYTHON} src/python/filtration.py -n ${NAME} -strc ${SOURCE_PDB} -cutoff 0.3 # 
 
 ${PYTHON} src/python/sasa_filtration.py -n ${NAME} -strc ${SOURCE_PDB} -sasa ${SOURCE_SASA} -cutoff 0.3 # Filtering the Mutual Information Map by Residue Exposure using gmx sasa data
 
-#${PYTHON} src/python/pure_map.py -n ${NAME} -nodiag -norm # Removes small values from MP matrix
+${PYTHON} src/python/pure_map.py -n ${NAME} -nodiag -norm # Removes small values from MP matrix
 
-#${PYTHON} src/python/mass_map.py -n ${NAME} -nodiag -norm # Calculates the mass product matrix
+${PYTHON} src/python/mass_map.py -n ${NAME} -nodiag -norm # Calculates the mass product matrix
 
-#${PYTHON} src/python/charge_map.py -n ${NAME} -nodiag -norm # Calculates the charge product matrix
+${PYTHON} src/python/charge_map.py -n ${NAME} -nodiag -norm # Calculates the charge product matrix
 
-#${PYTHON} src/python/covar_map.py -f ${SOURCE_DAT} -o covmap -strc ${SOURCE_PDB} # Covariance matrix per remainder according to GROMACS data
+${PYTHON} src/python/covar_map.py -f ${SOURCE_DAT} -o ${COVAR_MAP_OUTPUT} -strc ${SOURCE_PDB} # Covariance matrix per remainder according to GROMACS data
 
-#${PYTHON} src/python/lin_reg_map.py -n ${NAME} -nodiag -dist xpmmap # Builds a linear regression for the MI matrix on the matrices of masses, charges and distances
+${PYTHON} src/python/lin_reg_map.py -n ${NAME} -nodiag -dist ${SOURCE_DIST_MAP} # Builds a linear regression for the MI matrix on the matrices of masses, charges and distances
 
 # All results are stored in the ./output/${NAME}/map/ directory
 # If you do not need to execute any of the programs, then just comment out the corresponding line

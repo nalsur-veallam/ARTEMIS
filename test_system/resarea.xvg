@@ -1,0 +1,83 @@
+# This file was created Thu Jun 15 20:10:20 2023
+# Created by:
+#                        :-) GROMACS - gmx sasa, 2022 (-:
+# 
+# Executable:   /usr/local/gromacs/bin/gmx
+# Data prefix:  /usr/local/gromacs
+# Working dir:  /media/user/_data/mod/tut_2/PDGFRA_BBA2019_trjs/v536_all_cen_l2_cov
+# Command line:
+#   gmx sasa -f v536e.l2_md_centered_prot_fit.xtc -s v536e.l2_md_prot.tpr -or -tu ns -dt 1
+# gmx sasa is part of G R O M A C S:
+#
+# Great Red Oystrich Makes All Chemists Sane
+#
+@    title "Area per residue over the trajectory"
+@    xaxis  label "Residue"
+@    yaxis  label "Area (nm\S2\N)"
+@TYPE xy
+@ view 0.15, 0.15, 0.75, 0.85
+@ legend on
+@ legend box on
+@ legend loctype view
+@ legend 0.78, 0.8
+@ legend length 2
+@ s0 legend "Average (nm\S2\N)"
+@ s1 legend "Standard deviation (nm\S2\N)"
+       1    1.141    0.204
+       2    1.461    0.126
+       3    1.292    0.151
+       4    0.288    0.164
+       5    1.023    0.107
+       6    0.556    0.078
+       7    0.120    0.068
+       8    0.435    0.096
+       9    0.875    0.124
+      10    0.806    0.098
+      11    0.198    0.073
+      12    1.191    0.105
+      13    0.992    0.098
+      14    0.122    0.074
+      15    0.942    0.093
+      16    0.829    0.097
+      17    0.745    0.100
+      18    0.275    0.071
+      19    0.548    0.090
+      20    1.140    0.129
+      21    0.391    0.108
+      22    0.401    0.168
+      23    0.941    0.215
+      24    0.964    0.221
+      25    0.384    0.182
+      26    1.011    0.176
+      27    1.739    0.187
+      28    1.900    0.213
+      29    2.012    0.298
+      30    1.202    0.239
+      31    1.479    0.171
+      32    1.317    0.170
+      33    0.285    0.169
+      34    0.965    0.111
+      35    0.552    0.091
+      36    0.124    0.069
+      37    0.469    0.088
+      38    0.851    0.119
+      39    0.846    0.113
+      40    0.227    0.072
+      41    1.139    0.117
+      42    0.998    0.108
+      43    0.133    0.068
+      44    0.866    0.095
+      45    0.799    0.117
+      46    0.730    0.118
+      47    0.298    0.072
+      48    0.559    0.066
+      49    1.117    0.111
+      50    0.302    0.113
+      51    0.573    0.135
+      52    0.799    0.179
+      53    0.853    0.188
+      54    0.867    0.169
+      55    1.218    0.191
+      56    1.827    0.188
+      57    1.994    0.231
+      58    2.274    0.261

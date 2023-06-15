@@ -1,12 +1,12 @@
-NAME="glu2" # Project name
+NAME="v536e" # Project name
 PYTHON="python3" # Your python launch codeword version >=3
-SOURCE_ACTIVE_SITE="test_system/glu_groups.json" # Path to a json file with a list of active site amino acid residues in the PARENT order 
+SOURCE_ACTIVE_SITE="test_system/v536e_groups.json" # Path to a json file with a list of active site amino acid residues in the PARENT order 
                                                         # (can be understood from a json file obtained from a binary file using the "names" and "real _numbers" lists)
-SOURCE_ALLOSTERIC_SITE="test_system/glu_groups.json" # Path to a json file with a list of allosteric site amino acid residues in the PARENT order 
-SOURCE_PDB="test_system/1v4s_clean.pdb" # Path to pdb file with protein
-ALLOSTERIC_SITE_NAME="all_s" # List name in json file
-ACTIVE_SITE_NAME="act_s" # List name in json file
-OTHER_NAME="glu1"
+SOURCE_ALLOSTERIC_SITE="test_system/v536e_groups.json" # Path to a json file with a list of allosteric site amino acid residues in the PARENT order 
+SOURCE_PDB="test_system/v536e.pdb" # Path to pdb file with protein
+ALLOSTERIC_SITE_NAME="allosteric_site" # List name in json file
+ACTIVE_SITE_NAME="active_site" # List name in json file
+OTHER_NAME="..."
 
 mkdir output &> /dev/null
 mkdir output/${NAME} &> /dev/null
@@ -42,7 +42,7 @@ ${PYTHON} src/python/intensity_top.py -n ${NAME} -f_act ${SOURCE_ACTIVE_SITE} -a
 #                                                   Builds a table with an analysis of the interaction between the active and allosteric sites in terms of zscore, 
 #                               and also builds an overlap based on the remnants of the active site (Add the -noseq flag to ignore the interaction of adjacent residues in sequence)
 
-#${PYTHON} src/python/crit_resid.py -strc ${SOURCE_PDB} -n ${NAME} -f_act ${SOURCE_ACTIVE_SITE} -asn ${ACTIVE_SITE_NAME} -allsn ${ALLOSTERIC_SITE_NAME} -f_all ${SOURCE_ALLOSTERIC_SITE}
+${PYTHON} src/python/crit_resid.py -strc ${SOURCE_PDB} -n ${NAME} -f_act ${SOURCE_ACTIVE_SITE} -asn ${ACTIVE_SITE_NAME} -allsn ${ALLOSTERIC_SITE_NAME} -f_all ${SOURCE_ALLOSTERIC_SITE}
 #                                                    Finding Critical Remnants of Allosteric Communication Between Sites
 
 #${PYTHON} src/python/compare_systems.py -n1 ${NAME} -n2 ${OTHER_NAME} # Script to compare two systems

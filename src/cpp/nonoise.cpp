@@ -73,7 +73,7 @@ int main(int argc, char* argv[]){
                         for(unsigned int idx2 = 0; idx2 < dofs2[type2].size(); idx2++ ){ // and all "later" dofs for the second member of the dof pair
                             
                             mutual += (dt2-dt0)/(dt2-dt1)*mat1->getMutual(type1, type2, dofs1[type1][idx1], dofs2[type2][idx2]);
-                            mutual += (dt1-dt0)/(dt2-dt1)*mat2->getMutual(type1, type2, dofs1[type1][idx1], dofs2[type2][idx2]);
+                            mutual -= (dt1-dt0)/(dt2-dt1)*mat2->getMutual(type1, type2, dofs1[type1][idx1], dofs2[type2][idx2]);
                                 
                         }
                     }

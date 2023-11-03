@@ -17,6 +17,8 @@ mkdir output/${NAME}/map/ &> /dev/null
 
 bin/get_map -f ${SOURCE_PAR} -n ${NAME} # Obtaining a matrix of mutual information between residuals from a binary file
 
+#bin/nonoise -f1 ${SOURCE_PAR} -f2 ${SOURCE_PAR} -dt0 1 -dt1 1 -dt2 2 -n ${NAME} # Filters matrix dt1 to matrix dt0 according to a linear law through noise dt2-dt1
+
 ${PYTHON} src/python/draw_map.py -n ${NAME} -nodiag -norm # A matrix of mutual information on the remains is drawn (You can zero out the diagonal with the -nodiag flag)
 
 ${PYTHON} src/python/filtration.py -n ${NAME} -strc ${SOURCE_PDB} -cutoff 0.3 # Filtering the Mutual Information Map by Residue Exposure with pymol

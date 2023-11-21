@@ -1,5 +1,6 @@
 NAME="v536e" # Project name
-SOURCE_PAR="test_system/v536e.par" # Path to binary file PARENT
+SOURCE_PAR1="test_system/v536e_1ps.par" # Path to binary file PARENT with dt1
+SOURCE_PAR2="test_system/v536e_2ps.par" # Path to binary file PARENT with dt2
 PYTHON="python3" # Your python launch codeword version >=3
 SOURCE_PDB="test_system/v536e.pdb"
 SOURCE_SASA="test_system/resarea.xvg"
@@ -15,9 +16,9 @@ mkdir output &> /dev/null
 mkdir output/${NAME} &> /dev/null
 mkdir output/${NAME}/map/ &> /dev/null
 
-bin/get_map -f ${SOURCE_PAR} -n ${NAME} # Obtaining a matrix of mutual information between residuals from a binary file
+#bin/get_map -f ${SOURCE_PAR1} -n ${NAME} # Obtaining a matrix of mutual information between residuals from a binary file
 
-#bin/nonoise -f1 ${SOURCE_PAR} -f2 ${SOURCE_PAR} -dt0 1 -dt1 1 -dt2 2 -n ${NAME} # Filters matrix dt1 to matrix dt0 according to a linear law through noise dt2-dt1
+bin/nonoise -f1 ${SOURCE_PAR1} -f2 ${SOURCE_PAR2} -dt1 1 -dt2 2 -n ${NAME} # Filters matrix dt1 using matrix dt2 (in ps)
 
 ${PYTHON} src/python/draw_map.py -n ${NAME} -nodiag -norm # A matrix of mutual information on the remains is drawn (You can zero out the diagonal with the -nodiag flag)
 

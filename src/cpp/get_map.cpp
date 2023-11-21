@@ -79,56 +79,7 @@ int main(int argc, char* argv[]){
         real_numbers.push_back(rep.getResidueNumber(i + 1));
     }
     
-    vector <double> entropies;
-    for (unsigned int resid = 1; resid <= NResidues; resid++) {
-        
-        double entropy = 0;
-        
-        vector <vector< int > >dofs;
-        dofs.push_back(rep.getBonds(resid));
-        dofs.push_back(rep.getAngles(resid));
-        dofs.push_back(rep.getDihedrals(resid));
-        
-        for (int i: dofs[TYPE_B]) {
-            entropy += mat->getEntropy(TYPE_B, i);
-        }
-        for (int i: dofs[TYPE_A]) {
-            entropy += mat->getEntropy(TYPE_A, i);
-        }
-        for (int i: dofs[TYPE_D]) {
-            entropy += mat->getEntropy(TYPE_D, i);
-        }
-        
-        double mutual = 0;
-        
-        for (unsigned char type1 = 0; type1 < 3; type1++){ // for bonds, angles and dihedrals of the first member of the dof pair
-            for (unsigned char type2 = type1; type2 < 3; type2++){ // and all "later" types for the second member of the dof pair
-                if (type1 != type2) {
-                    for(unsigned int idx1 = 0; idx1 < dofs[type1].size(); idx1++){ // and all dofs of the current type of the first member of the dof pair
-                        for(unsigned int idx2 = 0; idx2 < dofs[type2].size(); idx2++ ){ // and all "later" dofs for the second member of the dof pair
-                                
-                            mutual += mat->getMutual(type1, type2, dofs[type1][idx1], dofs[type2][idx2]);
-                                    
-                        }
-                    }
-                }
-                else {
-                    for(unsigned int idx1 = 0; idx1 < dofs[type1].size(); idx1++){ // and all dofs of the current type of the first member of the dof pair
-                        for(unsigned int idx2 = idx1+1; idx2 < dofs[type2].size(); idx2++ ){ // and all "later" dofs for the second member of the dof pair
-                                
-                            mutual += mat->getMutual(type1, type2, dofs[type1][idx1], dofs[type2][idx2]);
-                                    
-                        }
-                    }
-                }
-            }
-        }
-        
-        entropies.push_back(entropy - mutual);
-        
-    }
-    
-    save_map(NResidues, map, names, real_numbers, arg_parser.get("-n"), entropies);
+    save_map(NResidues, map, names, real_numbers, arg_parser.get("-n"));
 
     return 0;
 }

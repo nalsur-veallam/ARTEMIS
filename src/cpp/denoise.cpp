@@ -40,7 +40,7 @@ int main(int argc, char* argv[]){
     
     double dt1 = std::stod(arg_parser.get("-dt1"));
     double dt2 = std::stod(arg_parser.get("-dt2"));
-    double dt0 = 0.2;
+    double dt0 = 0.0;
     if (arg_parser.exists("-dt0")) {dt0 = std::stod(arg_parser.get("-dt0"));}
 
     double C1 = 1;

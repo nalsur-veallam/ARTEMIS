@@ -21,7 +21,7 @@ mkdir output/${NAME}/map/ &> /dev/null
 bin/denoise -f1 ${SOURCE_PAR1} -f2 ${SOURCE_PAR2} -dt1 1 -dt2 2 -n ${NAME} # Filters matrix dt1 using matrix dt2 (in ps);
 #                                                                     If you want to use a linear approximation law, use the -lin flag.
 #                                                                     To specify the timestep for the filtered matrix, use the -dt0 flag
-#                                                                     (optional; default is 0.2; not yet used for power law approximation)
+#                                                                     (optional; default is 0.0; not yet used for power law approximation)
 
 ${PYTHON} src/python/draw_map.py -n ${NAME} -nodiag -norm # A matrix of mutual information on the remains is drawn (You can zero out the diagonal with the -nodiag flag)
 

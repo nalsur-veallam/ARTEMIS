@@ -46,10 +46,35 @@ int main(int argc, char* argv[]){
     double C1 = 1;
     double C2 = 1;
     double C = 1;
+    double C0 = 1;
+    double Cc = 0;
 
     if (!lin) {
+        unsigned int it0 = 0;
         unsigned int it1 = 0;
         unsigned int it2 = 0;
+
+        if (std::find(data::dts.begin(), data::dts.end(), dt0) != data::dts.end()) {
+
+            it0 = std::find(data::dts.begin(), data::dts.end(), dt0) - data::dts.begin();
+
+        } else {
+
+            double diff = std::abs(data::dts[it0] - dt0);
+
+            for (size_t it = 0; it < data::dts.size(); it++) {
+                if (diff > std::abs(data::dts[it] - dt0) ) {
+
+                    it0 = (unsigned int) it;
+                    diff = std::abs(data::dts[it] - dt0);
+
+                }
+            }
+
+            if (dt0 < 1) { C0 = data::approx(dt0, it0);} // TODO: parabolic approximation
+            else { C0 = data::approx(dt0, it0);}
+
+        }
 
         if (std::find(data::dts.begin(), data::dts.end(), dt1) != data::dts.end()) {
 
@@ -68,7 +93,7 @@ int main(int argc, char* argv[]){
                 }
             }
 
-            if (dt1 < 1) { C1 = data::approx_linear(dt1, it1);}
+            if (dt1 < 1) { C1 = data::approx(dt1, it1);} // TODO: parabolic approximation
             else { C1 = data::approx(dt1, it1);}
 
         }
@@ -90,11 +115,12 @@ int main(int argc, char* argv[]){
                 }
             }
 
-            if (dt2 < 1) { C2 = data::approx_linear(dt2, it2);}
+            if (dt2 < 1) { C2 = data::approx(dt2, it2);} // TODO: parabolic approximation
             else { C2 = data::approx(dt2, it2);}
         }
 
         C = data::noise[it2]/data::noise[it1];
+        Cc = data::noise[it0]/data::noise[it1];
     }
 
     
@@ -137,8 +163,8 @@ int main(int argc, char* argv[]){
                         for (unsigned char type2 = 0; type2 < 3; type2++){ // and all "later" types for the second member of the dof pair
                             for(unsigned int idx2 = 0; idx2 < dofs2[type2].size(); idx2++ ){ // and all "later" dofs for the second member of the dof pair
 
-                                mutual -= (C2*C/(C1 - C2*C)) * (mat1->getMutual(type1, type2, dofs1[type1][idx1], dofs2[type2][idx2]));
-                                mutual += (C1/(C1 - C2*C)) * (mat2->getMutual(type1, type2, dofs1[type1][idx1], dofs2[type2][idx2]));
+                                mutual += ((Cc*C0 - C2*C)/(C1 - C2*C)) * (mat1->getMutual(type1, type2, dofs1[type1][idx1], dofs2[type2][idx2]));
+                                mutual +=  ((C1-C0*Cc)/(C1 - C2*C)) * (mat2->getMutual(type1, type2, dofs1[type1][idx1], dofs2[type2][idx2]));
 
                             }
                         }

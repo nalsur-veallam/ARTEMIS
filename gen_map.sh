@@ -18,7 +18,7 @@ mkdir output/${NAME}/map/ &> /dev/null
 
 #bin/get_map -f ${SOURCE_PAR1} -n ${NAME} # Obtaining a matrix of mutual information between residuals from a binary file
 
-bin/denoise -f1 ${SOURCE_PAR1} -f2 ${SOURCE_PAR2} -dt1 1 -dt2 2 -n ${NAME} # Filters matrix dt1 using matrix dt2 (in ps);
+bin/denoise -f1 ${SOURCE_PAR1} -f2 ${SOURCE_PAR2} -dt1 1 -dt2 2 -n ${NAME} -lin # Filters matrix dt1 using matrix dt2 (in ps);
 #                                                                     If you want to use a linear approximation law, use the -lin flag.
 #                                                                     To specify the timestep for the filtered matrix, use the -dt0 flag
 #                                                                     (optional; default is 0.0; not yet used for power law approximation)

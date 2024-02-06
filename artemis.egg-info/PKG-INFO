@@ -1,0 +1,19 @@
+Metadata-Version: 2.1
+Name: artemis
+Version: 0.0.1
+Summary: Molecular allostery Toolkit
+Home-page: https://github.com/nalsur-veallam/ARTEMIS
+Author: Rislan A. Mallaev
+Author-email: mallaev.ra@phustech.edu
+License: unkown
+Classifier: Development Status :: 1 - Planning
+Classifier: Intended Audience :: Science/Research
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Programming Language :: Python :: 3.8.10
+Requires-Python: >=3.8
+License-File: LICENSE
+Requires-Dist: numpy
+Requires-Dist: matplotlib
+Requires-Dist: scipy
+Requires-Dist: seaborn
+Requires-Dist: pandas

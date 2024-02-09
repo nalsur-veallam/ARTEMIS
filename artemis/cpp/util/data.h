@@ -1,3 +1,6 @@
+#ifndef DATA_H
+#define DATA_H
+
 #include <vector>
 #include <cmath>
 
@@ -41,3 +44,5 @@ double approx_linear(double dt, unsigned int id) {
 }
 
 }
+
+#endif

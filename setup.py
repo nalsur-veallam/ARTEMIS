@@ -34,5 +34,4 @@ setup(
         'Operating System :: Ubuntu',
         'Programming Language :: Python :: 3.8.10',
     ],
-    ext_modules = [ext1],
 )

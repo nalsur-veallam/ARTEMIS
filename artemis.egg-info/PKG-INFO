@@ -4,7 +4,7 @@ Version: 0.0.1
 Summary: Molecular allostery Toolkit
 Home-page: https://github.com/nalsur-veallam/ARTEMIS
 Author: Ruslan A. Mallaev
-Author-email: mallaev.ra@phustech.edu
+Author-email: mallaev.ra@phystech.edu
 License: unkown
 Classifier: Development Status :: 1 - Planning
 Classifier: Intended Audience :: Science/Research
@@ -16,4 +16,3 @@ Requires-Dist: numpy
 Requires-Dist: matplotlib
 Requires-Dist: seaborn
 Requires-Dist: pandas
-Requires-Dist: pybind11

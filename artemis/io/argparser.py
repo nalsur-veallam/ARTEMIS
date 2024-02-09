@@ -38,10 +38,25 @@ def parse_map():
                               help='Draw map')
 
       parser.add_argument('--denoise', action='store_true',
-                              help='Create denoise map')
+                              help='Create denoised map.')
 
       parser.add_argument('--gen', action='store_true',
-                              help='Generate MI map from .par-file')
+                              help='Generate MI map (json) from .par-file.')
+
+      parser.add_argument('-dt0', type=float,
+                              help='Denoised map dt.')
+
+      parser.add_argument('-dt1', type=float,
+                              help='First custom map dt.')
+
+      parser.add_argument('-dt2', type=float,
+                              help='Second custom map dt.')
+
+      parser.add_argument('-o', type=str,
+                              help='Output path.')
+
+      parser.add_argument('-lin', action='store_true',
+                              help='Linear denoising.')
 
 
       args = parser.parse_args()

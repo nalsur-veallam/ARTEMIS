@@ -1,6 +1,7 @@
 LICENSE
 setup.py
 artemis/__init__.py
+artemis/_modules.py
 artemis/main.py
 artemis.egg-info/PKG-INFO
 artemis.egg-info/SOURCES.txt

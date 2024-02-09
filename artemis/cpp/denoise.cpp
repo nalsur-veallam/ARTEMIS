@@ -18,20 +18,20 @@ int main(int argc, char* argv[]){
     bool lin = false;
 //     bool par = false;
   
-    if( !( arg_parser.exists( string("-f1") ) && arg_parser.exists( string("-f2") ) && arg_parser.exists( string("-dt1") ) && arg_parser.exists( string("-dt2") ) && arg_parser.exists( string("-n") ) && (argc>=11) ) ){
-        cerr<<"USAGE:\n"<<argv[0]<<" -f1 input1.par -f2 input2.par -dt0 dt0 -dt1 dt1 -dt2 dt2 -n name -lin"<<endl;
+    if( !( arg_parser.exists( string("-f1") ) && arg_parser.exists( string("-f2") ) && arg_parser.exists( string("-dt1") ) && arg_parser.exists( string("-dt2") ) && arg_parser.exists( string("-o") ) && (argc>=11) ) ){
+        cerr<<"USAGE:\n"<<argv[0]<<" -f1 input1.par -f2 input2.par -dt0 dt0 -dt1 dt1 -dt2 dt2 -o output.json -lin"<<endl;
         return 1;
     }
     
     if ( strcmp( arg_parser.get_ext( arg_parser.get("-f1") ) , "par") ) {
     // check for the extensions of the input file
-    cerr<<"USAGE:\n"<<argv[0]<<" -f1 input1.par -f2 input2.par -dt0 dt0 -dt1 dt1 -dt2 dt2 -n name -lin"<<endl;
+    cerr<<"USAGE:\n"<<argv[0]<<" -f1 input1.par -f2 input2.par -dt0 dt0 -dt1 dt1 -dt2 dt2 -o output.json -lin"<<endl;
     exit(EXIT_FAILURE);
     }
    
    if ( strcmp( arg_parser.get_ext( arg_parser.get("-f2") ) , "par") ) {
     // check for the extensions of the input file
-    cerr<<"USAGE:\n"<<argv[0]<<" -f1 input1.par -f2 input2.par -dt0 dt0 -dt1 dt1 -dt2 dt2 -n name -lin"<<endl;
+    cerr<<"USAGE:\n"<<argv[0]<<" -f1 input1.par -f2 input2.par -dt0 dt0 -dt1 dt1 -dt2 dt2 -o output.json -lin"<<endl;
     exit(EXIT_FAILURE);
     }
 
@@ -199,7 +199,7 @@ int main(int argc, char* argv[]){
         real_numbers.push_back(rep1.getResidueNumber(i + 1));
     }
     
-    save_map(NResidues, map, names, real_numbers, arg_parser.get("-n"));
+    save_map(NResidues, map, names, real_numbers, arg_parser.get("-o"));
 
     return 0;
 }

@@ -15,6 +15,6 @@ void save_map(unsigned int NResidues, std::vector <std::vector <double>> map, st
     save["real_numbers"] = real_numbers;
     
     std::fstream file;
-    file.open("output/"+ name + "/map/" + name + "_map.json", std::ios::trunc | std::ios::out);
+    file.open(name, std::ios::trunc | std::ios::out);
     file << std::setw(0) << save;
 }

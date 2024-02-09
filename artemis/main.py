@@ -1,6 +1,7 @@
 from artemis.io.argparser import parse, parse_map, parse_allostery
-#from artemis.datatypes import Map
-from artemis.tools.draw_map import draw_map
+from artemis.datatypes import Map
+from artemis.map.map import map
+from artemis.allostery.draw import draw
 import sys
 
 def main():

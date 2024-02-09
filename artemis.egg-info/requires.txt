@@ -1,5 +1,5 @@
 numpy
 matplotlib
-scipy
 seaborn
 pandas
+pybind11

@@ -14,14 +14,14 @@ int main(int argc, char* argv[]){
     
     Arg_Parser arg_parser(argc, argv);
   
-    if( !( arg_parser.exists( string("-f") ) && arg_parser.exists( string("-n") ) && (argc==5) ) ){
-        cerr<<"USAGE:\n"<<argv[0]<<" -f input.par -n name"<<endl;
+    if( !( arg_parser.exists( string("-f") ) && arg_parser.exists( string("-o") ) && (argc==5) ) ){
+        cerr<<"USAGE:\n"<<argv[0]<<" -f input.par -o outfile.json"<<endl;
         return 1;
     }
     
     if ( strcmp( arg_parser.get_ext( arg_parser.get("-f") ) , "par") ) {
     // check for the extensions of the input file
-    cerr<<"USAGE:\n"<<argv[0]<<" -f input.par -n name"<<endl;
+    cerr<<"USAGE:\n"<<argv[0]<<" -f input.par -o outfile.json"<<endl;
     exit(EXIT_FAILURE);
    }
     
@@ -79,7 +79,7 @@ int main(int argc, char* argv[]){
         real_numbers.push_back(rep.getResidueNumber(i + 1));
     }
     
-    save_map(NResidues, map, names, real_numbers, arg_parser.get("-n"));
+    save_map(NResidues, map, names, real_numbers, arg_parser.get("-o"));
 
     return 0;
 }

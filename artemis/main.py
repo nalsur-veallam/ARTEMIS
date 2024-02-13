@@ -1,33 +1,11 @@
-from artemis.io.argparser import parse, parse_map, parse_allostery
-#from artemis.datatypes import Map
-from artemis._modules import allostery, convert, _map
+from artemis.io.argparser import parse
 import sys
 
 def main():
 
-    if sys.argv[1] == 'allostery':
+    args = parse()
 
-        args = parse_allostery()
-
-        allostery(args)
-
-        #raise ValueError('Please select runtype.')
-
-    elif sys.argv[1] == 'map':
-
-        args = parse_map()
-
-        _map(args)
-
-    elif sys.argv[1] == 'convert':
-
-        args = parse_convert(args)
-
-        convert(args)
-
-    else:
-        args = parse()
-
+    args.func(args)
 
 
 if __name__ == "__main__":

@@ -2,6 +2,7 @@ LICENSE
 setup.py
 artemis/__init__.py
 artemis/_modules.py
+artemis/datatypes.py
 artemis/main.py
 artemis.egg-info/PKG-INFO
 artemis.egg-info/SOURCES.txt
@@ -10,4 +11,3 @@ artemis.egg-info/entry_points.txt
 artemis.egg-info/requires.txt
 artemis.egg-info/top_level.txt
 artemis/cpp/denoise.cpp
-artemis/cpp/test.cpp

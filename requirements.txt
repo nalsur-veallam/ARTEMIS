@@ -6,4 +6,3 @@ seaborn
 pandas
 tqdm
 pymol
-itertools

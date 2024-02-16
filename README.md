@@ -31,3 +31,21 @@ After this, the ARTEMIS program will be installed on your computer. Run
 > artemis -h
 
 to view available modules.
+
+## 1) EXAMPLE
+
+To test use:
+
+> cd example
+
+> mkdir output
+
+> artemis map v536e_1ps.par v536e_2ps.par -dt1 1 -dt2 2 --denoise -o output/map.json
+
+> artemis map output/map.json --draw -norm -o output/map.pdf
+
+> artemis allostery output/map.json v536e_groups.json --search -noseq 2 -o output/v536_intensity.pdf
+
+> artemis allostery output/v536_intensity.json --draw -strc v536e.pdb -o output/v536_intensity.pse -noseq 2
+
+> artemis allostery output/v536_intensity.json --analysis -o output/v536_intensity.pdf -noseq 2 -zscore

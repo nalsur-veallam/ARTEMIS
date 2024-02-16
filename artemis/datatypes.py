@@ -101,7 +101,7 @@ class MAP:
         if self.exist() and self.is_ok():
             data = {}
             data['names'] = self.names.tolist()
-            data['NResidues'] = NResidues
+            data['NResidues'] = self.NResidues
             data['map'] = self.map_.tolist()
             data['real_numbers'] = self.real_numbers.tolist()
             try:
@@ -184,6 +184,7 @@ class ALLOSTERY:
         self.real_numbers = None
         self.active_site = None
         self.allosteric_site = None
+        self.intensity = None
 
         if filename is not None:
 
@@ -232,10 +233,16 @@ class ALLOSTERY:
             self.errors.append(ValueError(f"Can't get data from file {filename} by 'active_site' key."))
 
         try:
-            self.allosteric_site = np.array(data['active_site'])
+            self.allosteric_site = np.array(data['allosteric_site'])
         except:
             print(f"Caution: Can't get data from file {filename} by 'allosteric_site' key. Continues without this data.")
             self.allosteric_site = None
+
+        try:
+            self.intensity = np.array(data['intensity'])
+        except:
+            print(f"Caution: Can't get data from file {filename} by 'intensity' key. Continues without this data.")
+            self.intensity = None
 
     def check(self) -> None:
 
@@ -253,6 +260,9 @@ class ALLOSTERY:
 
         if self.allosteric_site is not None and (max(self.allosteric_site) > self.NResidues or min(self.allosteric_site) < 1 or len(self.allosteric_site) == 0):
             self.errors.append(ValueError(f"The received data is broken: incorrect allosteric site format."))
+
+        if self.intensity is not None and min(self.intensity) < 0:
+            self.errors.append(ValueError(f"The received data is broken: incorrect intensity data."))
 
     def is_ok(self) -> bool:
         if self.errors == []:
@@ -306,12 +316,14 @@ class ALLOSTERY:
         if self.exist() and self.is_ok():
             data = {}
             data['names'] = self.names.tolist()
-            data['NResidues'] = NResidues
+            data['NResidues'] = self.NResidues
             data['map'] = self.map_.tolist()
             data['real_numbers'] = self.real_numbers.tolist()
             data['active_site'] = self.active_site.tolist()
             if self.allosteric_site is not None:
                 data['allosteric_site'] = self.allosteric_site.tolist()
+            if self.intensity is not None:
+                data['intensity'] = self.intensity.tolist()
             try:
                 with open(out_path, 'w') as outfile:
                     json.dump(data, outfile)

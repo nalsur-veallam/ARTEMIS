@@ -5,10 +5,6 @@ from pymol import cmd
 from tqdm import tqdm
 import pandas as pd
 
-visual = "Y"
-act = True
-alls = True
-noseq = 0
 k = 0
 
 def max_top(array, top):
@@ -34,6 +30,10 @@ def max_top(array, top):
 
 def draw_allostery(Allostery, out_path, top, noseq, str_path):
 
+    visual = "Y"
+    act = True
+    alls = True
+
     print("\nSCRIPT FOR DISPLAYING ALLOSTERIC COMMUNICATION INTENSITY ON THE STRUCTURE IS LAUNCHED\n")
 
     if Allostery.allosteric_site is None:
@@ -43,7 +43,7 @@ def draw_allostery(Allostery, out_path, top, noseq, str_path):
         group_alls = []
         group_alls_names = []
 
-        for i in range(NResidues):
+        for i in range(Allostery.NResidues):
             if i + 1 in Allostery.allosteric_site:
                 alls_arr.append(1)
             else:

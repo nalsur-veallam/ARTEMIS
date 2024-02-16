@@ -5,6 +5,7 @@ import os
 import subprocess
 from artemis.modules.allostery.search import search_allostery
 from artemis.modules.allostery.paint import draw_allostery
+from artemis.modules.allostery.analysis import analyze_allostery
 
 def allostery(args):
 
@@ -48,25 +49,16 @@ def allostery(args):
 
         draw_allostery(Allostery, args.o, args.top, args.noseq, args.strc)
 
+    if args.analysis:
+        if args.o is None:
+            args.o = 'allosteric_analysis.pdf'
 
+        analyze_allostery(Allostery, args.o, args.top, args.noseq, args.zscore)
 
-    pass
 
 def _map(args):
-    if args.draw:
 
-        if args.o is None:
-            args.o = 'map.pdf'
-
-        for f in args.files:
-            Map = MAP(f)
-            if Map.is_ok():
-                break
-        if not Map.is_ok():
-            Map.interrupt()
-
-        draw_map(Map, args.o, args.diag, args.norm)
-    elif args.denoise:
+    if args.denoise:
         path = os.path.dirname(artemis.__file__)
 
         if args.o is None:
@@ -84,6 +76,20 @@ def _map(args):
             args.o = 'map.json'
 
         subprocess.run(path+"/../bin/get_map -o " + str(args.o) + " -f " + str(args.files[0]), shell=True)
+
+    elif args.draw:
+
+        if args.o is None:
+            args.o = 'map.pdf'
+
+        for f in args.files:
+            Map = MAP(f)
+            if Map.is_ok():
+                break
+        if not Map.is_ok():
+            Map.interrupt()
+
+        draw_map(Map, args.o, args.diag, args.norm)
 
 
 def convert(args):

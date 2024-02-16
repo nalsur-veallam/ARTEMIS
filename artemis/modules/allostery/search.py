@@ -71,6 +71,8 @@ def search_allostery(Allostery, out_path, top, noseq, Zscore):
 
     if top is None and not Zscore:
 
+        Allostery.intensity = np.array(intensity)
+
         INTENSITY = {}
         INTENSITY["Intensity"] = np.array(intensity) / np.sqrt(sum(abs(np.array(intensity).flatten())**2))
         INTENSITY["Residue"] = new_names
@@ -94,6 +96,8 @@ def search_allostery(Allostery, out_path, top, noseq, Zscore):
 
         intensity = zscore(intensity)
 
+        Allostery.intensity = np.array(intensity)
+
         INTENSITY = {}
         INTENSITY["Z-score intensity"] = np.array(intensity)
         INTENSITY["Residue"] = new_names
@@ -115,6 +119,8 @@ def search_allostery(Allostery, out_path, top, noseq, Zscore):
 
     else:
 
+        Allostery.intensity = np.array(intensity)
+
         INTENSITY = {}
         INTENSITY["Intensity"] = np.array(intensity) / np.sqrt(sum(abs(np.array(intensity).flatten())**2))
         INTENSITY["Residue"] = new_names
@@ -126,11 +132,15 @@ def search_allostery(Allostery, out_path, top, noseq, Zscore):
         axs = sns.barplot(x="Residue", y="Intensity", data=INTENSITY, palette=colors, dodge=False, hue="Residue", legend=False)
         plt.tick_params(axis='both', which='major', labelsize=16)
 
-        plt.title('Intensity of connectivity of residues with the active site', fontsize=40)
+        plt.title('Intensity of connectivity of residues with the active site top ' +str(top) + '%', fontsize=40)
         try:
             fig.savefig(out_path)
             print("File",out_path + " created")
         except:
             print("Error writing file",out_path)
 
-
+    if out_path == "allosteric_intensity.pdf":
+        fname = "allostery.json"
+    else:
+        fname = ''.join(out_path.split('.')[:-1]) + '.json'
+    Allostery.write(fname)

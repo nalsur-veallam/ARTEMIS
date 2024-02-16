@@ -5,4 +5,3 @@ setuptools
 seaborn
 pandas
 tqdm
-pymol

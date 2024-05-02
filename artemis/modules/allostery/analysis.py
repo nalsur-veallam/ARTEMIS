@@ -12,11 +12,11 @@ from tqdm import tqdm
 width = 2
 top = None
 width2 = .6
-max_iters = 10000
-
-print("\nSCRIPT FOR ALLOSTERY ANALYSIS IS LAUNCHED\n")
+max_iters = 1000
 
 def analyze_allostery(Allostery, out_path, top, noseq, Zscore):
+
+    print("\nSCRIPT FOR ALLOSTERY ANALYSIS IS LAUNCHED\n")
 
     if Allostery.allosteric_site is None:
         print("It is not possible to perform the analysis without an allosteric site. Interrupted.\n")
@@ -217,11 +217,11 @@ def analyze_allostery(Allostery, out_path, top, noseq, Zscore):
                     else:
                         Allosteric.append(False)
 
-                    if i + 1 in Allostery.active_site:
+                    if i + 1 in active_site:
                         intensity.append(0)
                     else:
                         inten = 0
-                        for resid in Allostery.active_site:
+                        for resid in active_site:
                             if np.abs(resid - 1 - i) >= noseq:
                                 inten += Allostery.map_[resid - 1][i]
                         intensity.append(inten)
@@ -255,7 +255,7 @@ def analyze_allostery(Allostery, out_path, top, noseq, Zscore):
                 top3 = str(INTENSITY['Residue'][2]) + " [" +  str(np.round(INTENSITY['Intensity'][2], 2)) + "]"
 
                 act_s_name = []
-                for i in Allostery.active_site:
+                for i in active_site:
                     act_s_name.append(Allostery.names[i-1] + " (" + str(Allostery.real_numbers[i-1]) +")")
 
                 unique, counts = np.unique(act_s_name, return_counts=True)

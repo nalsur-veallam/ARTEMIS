@@ -1,11 +1,16 @@
 from artemis.modules.map.draw import draw_map
-from artemis.datatypes import MAP, GROUPS, ALLOSTERY
+from artemis.datatypes import MAP, GROUPS, ALLOSTERY, CLUSTERS
 import artemis
 import os
 import subprocess
 from artemis.modules.allostery.search import search_allostery
 from artemis.modules.allostery.paint import draw_allostery
 from artemis.modules.allostery.analysis import analyze_allostery
+from artemis.modules.cluster.clustering import do_clustering
+from artemis.modules.cluster.clustering import do_spectral_clustering
+from artemis.modules.cluster.paint import draw_clustering
+from artemis.modules.cluster.study import study_clustering
+from artemis.modules.cluster.analysis import analyze_clustering
 
 def allostery(args):
 
@@ -40,7 +45,23 @@ def allostery(args):
         if args.o is None:
             args.o = 'allosteric_intensity.pdf'
 
-        search_allostery(Allostery, args.o, args.top, args.noseq, args.zscore)
+        if args.cluster is not None:
+            calculated = False
+
+            for f in args.files:
+                Clusters = CLUSTERS(f)
+                if Clusters.is_ok() and Clusters.exist() and Clusters.clustering_labels is not None:
+                    search_allostery(Allostery, args.o, args.top, args.noseq, args.zscore, Clusters.clustering_labels, args.cluster)
+                    calculated = True
+                    break
+                else:
+                    pass
+
+            if not calculated:
+                search_allostery(Allostery, args.o, args.top, args.noseq, args.zscore)
+
+        else:
+            search_allostery(Allostery, args.o, args.top, args.noseq, args.zscore)
 
     if args.draw:
 
@@ -90,6 +111,75 @@ def _map(args):
             Map.interrupt()
 
         draw_map(Map, args.o, args.diag, args.norm)
+
+def cluster(args):
+    for f in args.files:
+        Clusters = CLUSTERS(f, NClusters=args.nclust)
+        if Clusters.is_ok() and Clusters.exist():
+            for f in args.files:
+                Groups = GROUPS(f)
+                if Groups.is_ok():
+                     Clusters.read_groups(Groups)
+            break
+
+    if not (Clusters.is_ok() and Clusters.exist()):
+
+        for f in args.files:
+            Map = MAP(f)
+            if Map.is_ok():
+                break
+        if not Map.is_ok():
+            Clusters.interrupt()
+        else:
+            for f in args.files:
+                Groups = GROUPS(f)
+                if Groups.is_ok() and "reference_group" in Groups.data.keys():
+                    break
+            if Groups.is_ok() and "restriction_group" in Groups.data.keys():
+                Clusters = CLUSTERS()
+                Clusters.from_map_and_groups(Map, Groups)
+            else:
+                Clusters = CLUSTERS(NClusters=args.nclust)
+                Clusters.from_map_and_groups(Map, Groups)
+
+            if not Clusters.is_ok():
+                Clusters.interrupt()
+
+    if args.cluster:
+
+        if args.spectral:
+            if args.o is None:
+                args.o = 'spectral_clustering.pdf'
+
+            do_spectral_clustering(Clusters, args.o)
+
+        else:
+
+            if args.o is None:
+                args.o = 'clustering.pdf'
+
+            do_clustering(Clusters, args.o)
+
+    if args.draw:
+
+        if args.o is None:
+            args.o = 'clustering.pse'
+
+        draw_clustering(Clusters, args.o, args.strc)
+
+    if args.analysis:
+
+        if args.o is None:
+            args.o = 'clusters_analysis.pdf'
+
+        analyze_clustering(Clusters, args.noseq, args.o)
+
+    if args.study:
+
+        if args.o is None:
+            args.o = 'clustering.pdf'
+
+        study_clustering(Clusters, args.min, args.max, args.o, args.spectral)
 
 
 def convert(args):

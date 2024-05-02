@@ -8,19 +8,19 @@ from scipy.stats import zscore
 width = .6
 
 def max_top(array, top):
-    size = NResidues
+    size = len(array)
     top10 = int(top/100*size)
 
     supp = np.zeros(size)
     for i in range(top10):
         supp[i] = 1
 
-    d = {'data':array, 'index':np.arange(0,NResidues)}
+    d = {'data':array, 'index':np.arange(0,size)}
 
     df = pd.DataFrame(data=d)
     df = df.sort_values(by=['data'], ascending=False)
 
-    for i in range(NResidues):
+    for i in range(size):
         if np.array(df['data'])[i] < 0:
             supp[i] = 1
 
@@ -28,20 +28,34 @@ def max_top(array, top):
     df = df.sort_values(by=['index'])
     return np.array(df['data'])
 
-def search_allostery(Allostery, out_path, top, noseq, Zscore):
+def search_allostery(Allostery, out_path, top, noseq, Zscore, Clustering=None, ClusterIdx=None):
 
     print("\nSCRIPT FOR ALLOSTERIC COMMUNICATION INTENSITY CALCULATION IS LAUNCHED\n")
+
+    if Clustering is None or ClusterIdx is None:
+
+        mask = np.ones(Allostery.NResidues)
+        for resid in Allostery.active_site:
+            for i in range(int(max(0, resid-1-noseq)), int(min(Allostery.NResidues, resid+noseq))):
+                mask[i] = 0
+    else:
+
+        mask = np.zeros(Allostery.NResidues)
+        mask[np.argwhere(Clustering==ClusterIdx)] = 1
+
+        for resid in Allostery.active_site:
+            for i in range(max(0, resid-1-noseq), min(Allostery.NResidues, resid+noseq)):
+                mask[i] = 0
 
     if top is None:
         intensity = []
         for i in range(Allostery.NResidues):
-            if i + 1 in Allostery.active_site:
+            if i + 1 in Allostery.active_site or mask[i] == 0:
                 intensity.append(0)
             else:
                 inten = 0
                 for resid in Allostery.active_site:
-                    if np.abs(resid - 1 - i) >= noseq:
-                        inten += Allostery.map_[resid - 1][i]
+                    inten += Allostery.map_[resid - 1][i]
                 intensity.append(inten)
     else:
         intensity = np.zeros(Allostery.NResidues)
@@ -49,12 +63,10 @@ def search_allostery(Allostery, out_path, top, noseq, Zscore):
         for resid in Allostery.active_site:
             inten = []
             for i in range(Allostery.NResidues):
-                if i+1 in Allostery.active_site:
+                if i+1 in Allostery.active_site or mask[i] == 0:
                     inten.append(0)
-                elif np.abs(resid - 1 - i) >= noseq:
-                    inten.append(Allostery.map_[resid - 1][i])
                 else:
-                    inten.append(0)
+                    inten.append(Allostery.map_[resid - 1][i])
             intensity += max_top(inten, top)
 
     new_names = []

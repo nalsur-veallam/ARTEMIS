@@ -49,33 +49,11 @@ def draw_allostery(Allostery, out_path, top, noseq, str_path):
             else:
                 alls_arr.append(0)
 
-    if top is None:
-        intensity = []
-        for i in range(Allostery.NResidues):
-            if i + 1 in Allostery.active_site:
-                intensity.append(-1)
-            else:
-                inten = 0
-                for resid in Allostery.active_site:
-                    if np.abs(resid - 1 - i) >= noseq:
-                        inten += Allostery.map_[resid - 1][i]
-                intensity.append(inten)
-    else:
-        intensity = np.zeros(Allostery.NResidues)
 
-        for resid in Allostery.active_site:
-            inten = []
-            for i in range(Allostery.NResidues):
-                if i + 1 in Allostery.active_site:
-                    inten.append(-1)
-                elif np.abs(resid - 1 - i) >= noseq:
-                    inten.append(Allostery.map_[resid - 1][i])
-                else:
-                    inten.append(0)
-            intensity += max_top(inten, top)
-
-
-    intensity = np.array(intensity)
+    intensity = np.array(Allostery.intensity)
+    for i in range(Allostery.NResidues):
+        if i + 1 in Allostery.active_site:
+            intensity[i] = -1
     intensity[intensity < 0] = -1
 
     resids = []

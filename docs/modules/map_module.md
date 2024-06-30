@@ -6,4 +6,4 @@ Module for constructing and processing a matrix of mutual information based on P
 artemis map -h
 ```
 
-***A description of the module will be added in the near future. To see an example of use, look at the tutorial for using the program at the [link](https://nalsur-veallam.github.io/TestPages/tutorial.html).***
+***A description of the module will be added in the near future. To see an example of use, look at the tutorial for using the program at the [link](https://nalsur-veallam.github.io/ARTEMIS/tutorial.html).***

@@ -26,6 +26,8 @@ try:
 except:
     print("Error: Can't get data from file", path,"by", matrix_name, "key\n")
     exit()
+    
+your_map[np.isnan(your_map)] = 0
 
 frob = np.sqrt(sum(abs(your_map.flatten())**2)) #Frobenius norm of a matrix
 print('The Frobenius norm of your matrix is', frob, '\n')

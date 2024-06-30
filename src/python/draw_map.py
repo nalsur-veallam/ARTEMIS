@@ -8,7 +8,7 @@ import json
 diag = True
 norm = False
 
-print("\nSCRIPT FOR DRAWING MIE MATRIX IS LAUNCHED\n")
+print("\nSCRIPT FOR DRAWING MI MATRIX IS LAUNCHED\n")
 
 if not ("-n" in sys.argv and len(sys.argv) >= 3):
     print("USAGE:\n"+sys.argv[0]+" -n name -nodiag -norm\n")
@@ -35,6 +35,7 @@ except:
 
 try:
     map_ = np.array(data['map'])
+    NResidues = len(map_)
 except:
     print("Error: Can't get data from file", map_path + '.json',"by 'map' key\n")
     exit()

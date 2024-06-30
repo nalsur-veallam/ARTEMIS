@@ -1,4 +1,7 @@
 # ARTEMIS
+
+# ATTENTION: The program has not been updated for a long time, as well as its manual. The latest version of the program, as well as its documentation, will be published on June 30th.
+
 A framework with scripts for the analysis and clustering of molecular systems according to data obtained using the [PARENT](https://github.com/markusfleck/PARENT) or [PARENT_GPU](https://github.com/markusfleck/PARENT_GPU) package.
 
 You will need g++ and python libraries to work: numpy, pandas, seaborn, json, pylab, sklearn and scipy.

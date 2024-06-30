@@ -1,9 +1,11 @@
 CXX = g++
 CXXFLAGS = -O3 -Wall
 
-all : get_map
+all : get_map denoise
 
 get_map: bin/get_map
+
+denoise: bin/denoise
 
 clean :
 	- rm -r bin
@@ -31,3 +33,5 @@ obj/Residue_Representation.o: src/cpp/util/Residue_Representation.cpp src/cpp/ut
 bin/get_map: src/cpp/get_map.cpp obj/Residue_Representation.o obj/Entropy_Matrix.o obj/Arg_Parser.o obj/util.o | bin
 	$(CXX) --std=c++11 -O3 src/cpp/get_map.cpp obj/Residue_Representation.o obj/Entropy_Matrix.o obj/Arg_Parser.o obj/util.o -o bin/get_map $(CXXFLAGS)
     
+bin/denoise: src/cpp/denoise.cpp obj/Residue_Representation.o obj/Entropy_Matrix.o obj/Arg_Parser.o obj/util.o | bin
+	$(CXX) --std=c++11 -O3 src/cpp/denoise.cpp obj/Residue_Representation.o obj/Entropy_Matrix.o obj/Arg_Parser.o obj/util.o -o bin/denoise $(CXXFLAGS)

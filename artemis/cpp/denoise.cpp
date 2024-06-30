@@ -134,7 +134,59 @@ int main(int argc, char* argv[]){
     vector <string> names;
     
     unsigned int NResidues = rep1.getNResidues();  // TODO: Errors 
-    
+
+    // Mean noise calculation
+    double Coeff = 0;
+    double iter = 0;
+
+    for (unsigned int resid1 = 1; resid1 <= NResidues; resid1++) {
+
+        for (unsigned int resid2 = 1; resid2 <= NResidues; resid2++) {
+
+            vector <vector< int > >dofs1;
+            dofs1.push_back(rep1.getBonds(resid1));
+            dofs1.push_back(rep1.getAngles(resid1));
+            dofs1.push_back(rep1.getDihedrals(resid1));
+
+            vector <vector< int > >dofs2;
+            dofs2.push_back(rep1.getBonds(resid2));
+            dofs2.push_back(rep1.getAngles(resid2));
+            dofs2.push_back(rep1.getDihedrals(resid2));
+
+
+            if (!lin) {
+                for (unsigned char type1 = 0; type1 < 3; type1++){ // for bonds, angles and dihedrals of the first member of the dof pair
+                    for(unsigned int idx1 = 0; idx1 < dofs1[type1].size(); idx1++){ // and all dofs of the current type of the first member of the dof pair
+                        for (unsigned char type2 = 0; type2 < 3; type2++){ // and all "later" types for the second member of the dof pair
+                            for(unsigned int idx2 = 0; idx2 < dofs2[type2].size(); idx2++ ){ // and all "later" dofs for the second member of the dof pair
+
+                                iter += 1;
+                                Coeff += 1/(C2*C-C1)*(mat2->getMutual(type1, type2, dofs1[type1][idx1], dofs2[type2][idx2]));
+                                Coeff -= 1/(C2*C-C1)*(mat1->getMutual(type1, type2, dofs1[type1][idx1], dofs2[type2][idx2]));
+
+                            }
+                        }
+                    }
+                }
+            }
+            else {
+                for (unsigned char type1 = 0; type1 < 3; type1++){ // for bonds, angles and dihedrals of the first member of the dof pair
+                    for(unsigned int idx1 = 0; idx1 < dofs1[type1].size(); idx1++){ // and all dofs of the current type of the first member of the dof pair
+                        for (unsigned char type2 = 0; type2 < 3; type2++){ // and all "later" types for the second member of the dof pair
+                            for(unsigned int idx2 = 0; idx2 < dofs2[type2].size(); idx2++ ){ // and all "later" dofs for the second member of the dof pair
+
+                                iter += 1;
+                                Coeff += 1/(dt2-dt1)*(mat2->getMutual(type1, type2, dofs1[type1][idx1], dofs2[type2][idx2]));
+                                Coeff -= 1/(dt2-dt1)*(mat1->getMutual(type1, type2, dofs1[type1][idx1], dofs2[type2][idx2]));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    Coeff = Coeff/iter;
     
     for (unsigned int resid1 = 1; resid1 <= NResidues; resid1++) {
         
@@ -163,8 +215,7 @@ int main(int argc, char* argv[]){
                         for (unsigned char type2 = 0; type2 < 3; type2++){ // and all "later" types for the second member of the dof pair
                             for(unsigned int idx2 = 0; idx2 < dofs2[type2].size(); idx2++ ){ // and all "later" dofs for the second member of the dof pair
 
-                                mutual += ((Cc*C0 - C2*C)/(C1 - C2*C)) * (mat1->getMutual(type1, type2, dofs1[type1][idx1], dofs2[type2][idx2]));
-                                mutual +=  ((C1-C0*Cc)/(C1 - C2*C)) * (mat2->getMutual(type1, type2, dofs1[type1][idx1], dofs2[type2][idx2]));
+                                mutual += mat1->getMutual(type1, type2, dofs1[type1][idx1], dofs2[type2][idx2]) - Coeff*(C1-Cc*C0);
 
                             }
                         }
@@ -177,8 +228,7 @@ int main(int argc, char* argv[]){
                         for (unsigned char type2 = 0; type2 < 3; type2++){ // and all "later" types for the second member of the dof pair
                             for(unsigned int idx2 = 0; idx2 < dofs2[type2].size(); idx2++ ){ // and all "later" dofs for the second member of the dof pair
 
-                                mutual += (dt2-dt0)/(dt2-dt1)*mat1->getMutual(type1, type2, dofs1[type1][idx1], dofs2[type2][idx2]);
-                                mutual -= (dt1-dt0)/(dt2-dt1)*mat2->getMutual(type1, type2, dofs1[type1][idx1], dofs2[type2][idx2]);
+                                mutual += mat1->getMutual(type1, type2, dofs1[type1][idx1], dofs2[type2][idx2]) - Coeff*(dt1-dt0);
 
                             }
                         }

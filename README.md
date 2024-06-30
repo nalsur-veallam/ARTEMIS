@@ -8,7 +8,7 @@ You will need g++ and python libraries to work: numpy, pandas, seaborn, json, ma
 ## 0) INSTALLATION
 To download the console-app version, use:
 
-> git clone https://github.com/nalsur-veallam/ARTEMIS.git -b console-app
+> git clone https://github.com/nalsur-veallam/ARTEMIS.git
 
 After that, enter the directory with the library
 
@@ -32,20 +32,6 @@ After this, the ARTEMIS program will be installed on your computer. Run
 
 to view available modules.
 
-## 1) EXAMPLE
+## 1) MANUAL AND TUTORIAL
 
-To test use:
-
-> cd example
-
-> mkdir output
-
-> artemis map v536e_1ps.par v536e_2ps.par -dt1 1 -dt2 2 --denoise -o output/map.json
-
-> artemis map output/map.json --draw -norm -o output/map.pdf
-
-> artemis allostery output/map.json v536e_groups.json --search -noseq 2 -o output/v536_intensity.pdf
-
-> artemis allostery output/v536_intensity.json --draw -strc v536e.pdb -o output/v536_intensity.pse -noseq 2
-
-> artemis allostery output/v536_intensity.json --analysis -o output/v536_intensity.pdf -noseq 2 -zscore
+Uploaded via [link](https://nalsur-veallam.github.io/TestPages/).

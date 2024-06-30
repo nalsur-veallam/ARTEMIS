@@ -2,26 +2,38 @@
 
 To download the console-app version, use:
 
-> git clone https://github.com/nalsur-veallam/ARTEMIS.git
+```bash
+git clone https://github.com/nalsur-veallam/ARTEMIS.git
+```
 
 After that, enter the directory with the library
 
-> cd ARTEMIS
+```bash
+cd ARTEMIS
+```
 
 And compile the C++ part of the library using make:
 
-> make
+```bash
+make
+```
 
 Next, you can install all the dependencies for Python. Use:
 
-> pip3 install -r requirements.txt
+```bash
+pip3 install -r requirements.txt
+```
 
 To install the library completely, run:
 
-> pip3 install -e .
+```bash
+pip3 install -e .
+```
 
 After this, the ARTEMIS program will be installed on your computer. Run
 
-> artemis -h
+```bash
+artemis -h
+```
 
 to view available modules.

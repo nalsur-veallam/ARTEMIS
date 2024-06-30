@@ -3,6 +3,7 @@
 Here we look at how ARTEMIS can be applied in practice. To do this, let's analyze a small biomolecule consisting of 58 amino acid residues (968 atoms). All used files are located in the `./example/` directory. First, go to the directory and create a folder for the output files:
 
 > cd example
+
 > mkdir output
 
 ### MD trajectory

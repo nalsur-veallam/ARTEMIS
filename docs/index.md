@@ -1,4 +1,4 @@
-### ARTEMIS - a universal information-theoretic approach to the study of intramolecular communication
+### ARTEMIS - a universal information-theoretic approach to study communication in molecular systems
 
 1. [Overview](./getting-started.md)
 2. [Installation](./installation.md)

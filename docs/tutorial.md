@@ -10,7 +10,7 @@ mkdir output
 
 ### MD trajectory
 
-The study begins with molecular dynamics calculations. The molecular dynamics trajectory was obtained using the [GROMACS](https://www.gromacs.org/) 2022 program. The Amber99SB-ILDN force field was used for the calculation, and the standard TIP3P water model was used for solvation of the structure in a cubic cell with periodic boundary conditions. Sodium and chlorine ions were used to neutralize the system. A short (50,000 steps) energy minimization was previously carried out. The temperature of 300K is maintained by a V-rescale thermostat with a coupling constant of 0.1 ps, and the pressure of 1 bar is set by a Parrinello-Rahman barostat with isotropic pressure coupling and a coupling constant of 0.1 ps. After calculating the MD, the protein is centered and the water is removed so that only the trajectory of the protein remains.
+The study begins with molecular dynamics calculations. Here we will use exemplar 0.2 µs all-atom MD trajectory obtained for the dimer of the mutant transmembrane domains of PDGFRA (details: [DOI](https://doi.org/10.1016/j.bbagen.2018.09.011))
 
 ### PARENT calculation
 

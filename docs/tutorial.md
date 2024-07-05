@@ -14,14 +14,18 @@ The study begins with molecular dynamics calculations. Here we will use exemplar
 
 ### PARENT calculation
 
-PARENT calculation was carried out using the GPU version of the program ([GitHub](https://github.com/markusfleck/PARENT_GPU)). For the calculation, we used the MD trajectory with a length of 200 ns, calculated as indicated above, which was recorded for two different timesteps of 1 and 2 picoseconds, respectively.
+PARENT calculation was carried out using the GPU version of the program ([GitHub](https://github.com/markusfleck/PARENT_GPU)). For the calculation, we used the MD trajectory with a length of 200 ns, calculated as indicated above, which was recorded for two different timesteps of 1 and 2 picoseconds (2e5 and 1e5 number of frames, respectively), respectively.
 
 ### MI Matrix Calculation
 
 We will immediately calculate the matrix without noise. To do this, run:
 
 ```bash
-artemis map v536e_1ps.par v536e_2ps.par -dt1 5 -dt2 10 --denoise -o output/map.json
+artemis map v536e_1ps.par v536e_2ps.par -n1 200000 -n2 100000 --denoise -o output/map.json
+```
+or
+```bash
+artemis map v536e_1ps.par v536e_2ps.par -n1 2e5 -n2 1e5 --denoise -o output/map.json
 ```
 
 By executing the code, you will receive a mutual information matrix in an internal ARTEMIS format. To draw the matrix run:

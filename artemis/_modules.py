@@ -86,9 +86,15 @@ def _map(args):
             args.o = 'map.json'
 
         if args.lin:
-            subprocess.run(path+"/../bin/denoise -o " + str(args.o) + " -lin -dt0 " + str(args.dt0) + " -dt1 " + str(args.dt1) + " -dt2 " + str(args.dt2) + " -f1 " + args.files[0] + " -f2 " + args.files[1], shell=True)
+            if args.n0 is None:
+                subprocess.run(path+"/../bin/denoise -o " + str(args.o) + " -lin -n1 " + str(args.n1) + " -n2 " + str(args.n2) + " -f1 " + args.files[0] + " -f2 " + args.files[1], shell=True)
+            else:
+                subprocess.run(path+"/../bin/denoise -o " + str(args.o) + " -lin -n0 " + str(args.n0) + " -n1 " + str(args.n1) + " -n2 " + str(args.n2) + " -f1 " + args.files[0] + " -f2 " + args.files[1], shell=True)
         else:
-            subprocess.run(path+"/../bin/denoise -o " + str(args.o) + " -dt0 " + str(args.dt0) + " -dt1 " + str(args.dt1) + " -dt2 " + str(args.dt2) + " -f1 " + args.files[0] + " -f2 " + args.files[1], shell=True)
+            if args.n0 is None:
+                subprocess.run(path+"/../bin/denoise -o " + str(args.o) + " -n1 " + str(args.n1) + " -n2 " + str(args.n2) + " -f1 " + args.files[0] + " -f2 " + args.files[1], shell=True)
+            else:
+                subprocess.run(path+"/../bin/denoise -o " + str(args.o) + " -n0 " + str(args.n0) + " -n1 " + str(args.n1) + " -n2 " + str(args.n2) + " -f1 " + args.files[0] + " -f2 " + args.files[1], shell=True)
 
     elif args.gen:
         path = os.path.dirname(artemis.__file__)

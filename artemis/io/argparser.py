@@ -37,14 +37,14 @@ def parse():
       map_parser.add_argument('--gen', action='store_true',
                               help='Generate MI map (json) from .par-file.')
 
-      map_parser.add_argument('-dt0', type=float, default=0,
-                              help='Denoised map dt (default is 0).')
+      map_parser.add_argument('-n0', type=float, default=None,
+                              help='Denoised map number of frames (default is inf).')
 
-      map_parser.add_argument('-dt1', type=float,
-                              help='First custom map dt.')
+      map_parser.add_argument('-n1', type=float,
+                              help='First custom number of frames.')
 
-      map_parser.add_argument('-dt2', type=float,
-                              help='Second custom map dt.')
+      map_parser.add_argument('-n2', type=float,
+                              help='Second custom number of frames.')
 
       map_parser.add_argument('-o', type=str,
                               help='Outfile path.')

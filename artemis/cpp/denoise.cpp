@@ -18,30 +18,30 @@ int main(int argc, char* argv[]){
     bool lin = false;
 //     bool par = false;
   
-    if( !( arg_parser.exists( string("-f1") ) && arg_parser.exists( string("-f2") ) && arg_parser.exists( string("-dt1") ) && arg_parser.exists( string("-dt2") ) && arg_parser.exists( string("-o") ) && (argc>=11) ) ){
-        cerr<<"USAGE:\n"<<argv[0]<<" -f1 input1.par -f2 input2.par -dt0 dt0 -dt1 dt1 -dt2 dt2 -o output.json -lin"<<endl;
+    if( !( arg_parser.exists( string("-f1") ) && arg_parser.exists( string("-f2") ) && arg_parser.exists( string("-n1") ) && arg_parser.exists( string("-n2") ) && arg_parser.exists( string("-o") ) && (argc>=11) ) ){
+        cerr<<"USAGE:\n"<<argv[0]<<" -f1 input1.par -f2 input2.par -n0 nframes0 -n1 nframes1 -n2 nframes2 -o output.json -lin"<<endl;
         return 1;
     }
     
     if ( strcmp( arg_parser.get_ext( arg_parser.get("-f1") ) , "par") ) {
     // check for the extensions of the input file
-    cerr<<"USAGE:\n"<<argv[0]<<" -f1 input1.par -f2 input2.par -dt0 dt0 -dt1 dt1 -dt2 dt2 -o output.json -lin"<<endl;
+    cerr<<"USAGE:\n"<<argv[0]<<" -f1 input1.par -f2 input2.par -n0 nframes0 -n1 nframes1 -n2 nframes2 -o output.json -lin"<<endl;
     exit(EXIT_FAILURE);
     }
    
    if ( strcmp( arg_parser.get_ext( arg_parser.get("-f2") ) , "par") ) {
     // check for the extensions of the input file
-    cerr<<"USAGE:\n"<<argv[0]<<" -f1 input1.par -f2 input2.par -dt0 dt0 -dt1 dt1 -dt2 dt2 -o output.json -lin"<<endl;
+    cerr<<"USAGE:\n"<<argv[0]<<" -f1 input1.par -f2 input2.par -n0 nframes0 -n1 nframes1 -n2 nframes2 -o output.json -lin"<<endl;
     exit(EXIT_FAILURE);
     }
 
     if (arg_parser.exists("-lin")) {lin = true;}
 //     if (arg_parser.exists("-par")) {par = true;}
     
-    double dt1 = std::stod(arg_parser.get("-dt1"));
-    double dt2 = std::stod(arg_parser.get("-dt2"));
+    double dt1 = 1.0e6/std::stod(arg_parser.get("-n1"));
+    double dt2 = 1.0e6/std::stod(arg_parser.get("-n2"));
     double dt0 = 0.0;
-    if (arg_parser.exists("-dt0")) {dt0 = std::stod(arg_parser.get("-dt0"));}
+    if (arg_parser.exists("-n0")) {dt0 = 1.0e6/std::stod(arg_parser.get("-n0"));}
 
     double C1 = 1;
     double C2 = 1;

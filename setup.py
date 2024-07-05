@@ -11,7 +11,7 @@ from numpy.distutils.core import setup, Extension
 setup(
     name='artemis',
     version='0.0.1',
-    description='Molecular allostery Toolkit',
+    description='Molecular communication Toolkit',
     url='https://github.com/nalsur-veallam/ARTEMIS',
     author='Ruslan A. Mallaev',
     author_email='mallaev.ra@phystech.edu',

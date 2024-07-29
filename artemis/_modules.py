@@ -1,4 +1,5 @@
 from artemis.modules.map.draw import draw_map
+from artemis.modules.map.contacts import contacts_map
 from artemis.datatypes import MAP, GROUPS, ALLOSTERY, CLUSTERS
 import artemis
 import os
@@ -117,6 +118,20 @@ def _map(args):
             Map.interrupt()
 
         draw_map(Map, args.o, args.diag, args.norm)
+
+    elif args.contacts:
+
+        if args.o is None:
+            args.o = 'contacs.pdf'
+
+        for f in args.files:
+            Map = MAP(f)
+            if Map.is_ok():
+                break
+        if not Map.is_ok():
+            Map.interrupt()
+
+        contacts_map(Map, args.o, args.diag, args.norm, args.vmax)
 
 def cluster(args):
     for f in args.files:

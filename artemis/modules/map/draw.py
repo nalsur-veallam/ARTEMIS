@@ -30,6 +30,6 @@ def draw_map(Map, out_path, diag, norm):
     plt.title('Mutual information on residues', fontsize=20)
     try:
         fig.savefig(out_path)
-        print("File",out_path," created\n")
+        print("File",out_path,"created\n")
     except:
         print("Error writing file",out_path + '\n')

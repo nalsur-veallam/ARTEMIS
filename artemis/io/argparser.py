@@ -37,6 +37,9 @@ def parse():
       map_parser.add_argument('--gen', action='store_true',
                               help='Generate MI map (json) from .par-file.')
 
+      map_parser.add_argument('--contacts', action='store_true',
+                              help='Generate Contacs enrichment map from .par-file.')
+
       map_parser.add_argument('-n0', type=float, default=None,
                               help='Denoised map number of frames (default is inf).')
 
@@ -57,6 +60,9 @@ def parse():
 
       map_parser.add_argument('-diag', action='store_true',
                               help='Draw the diagonal of the MIE matrix.')
+
+      map_parser.add_argument('-vmax', type=float, default=None,
+                              help='The maximum value of colorbar for Contacts map.')
 
       map_parser.set_defaults(func=_map)
 

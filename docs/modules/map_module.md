@@ -6,7 +6,7 @@ Module for constructing and processing a matrix of mutual information based on P
 artemis map -h
 ```
 
-The `artemis map` module contains three programs. Two of them (`--gen` and `--denoise`) calculate the mutual information matrix from PARENT data. The `--draw` program draws the mutual information matrix as a heatmap.
+The `artemis map` module contains four programs. Two of them (`--gen` and `--denoise`) calculate the mutual information matrix from PARENT data. The `--draw` program draws the mutual information matrix as a heatmap. The `--contacts` program draws the Contacts enrichment matrix as a heatmap.
 
 #### `--gen` program
 
@@ -56,7 +56,7 @@ artemis map example1.par example2.par --denoise -n0 N0 -n1 N1 -n2 N2 -o out_path
 To draw the mutual information matrix, use the `artemis map --draw` program. As input, the program receives the ARTEMIS internal mutual information matrix format in the form of a `.json` file. The output is an image in the format specified by the user from those supported by python (default `.pdf`). Using the `-norm` flag, it is possible to normalize the matrix so that the maximum element of the matrix is ​​equal to 1. Also, the matrix is ​​drawn without diagonal values. If you want to draw them, use the `-diag` flag. So:
 
 ```bash
-usage: artemis map --draw -norm -diag -o O -lin file [.json-file]
+usage: artemis map --draw -norm -diag -o O file [.json-file]
 
 positional arguments:
  files .json-file
@@ -71,6 +71,29 @@ And an example of using the program:
 
 ```bash
 artemis map example.json --draw -norm -diag -o out_path.pdf
+```
+
+#### `--contacts` program
+
+To draw the Contacts enrichment matrix, use the `artemis map --contacts` program. As input, the program receives the ARTEMIS internal mutual information matrix format in the form of a `.json` file. The output is an image in the format specified by the user from those supported by python (default `.pdf`). Using the `-norm` flag, it is possible to zero out all pairs of residues for which enrichment is less than one. Also, the matrix is ​​drawn without diagonal values. If you want to draw them, use the `-diag` flag. To specify the maximum value of colorbar (this can be useful for comparing matrices of different systems), you can specify it using the `-vmax` flag. So:
+
+```bash
+usage: artemis map --contacts -norm -diag -vmax VMAX -o O file [.json-file]
+
+positional arguments:
+ files .json-file
+
+options:
+ -o O Outfile path.
+ -norm       Normalize the MIE matrix before drawing.
+ -diag       Draw the diagonal of the MIE matrix.
+ -vmax VMAX  The maximum value of colorbar for Contacts map.
+```
+
+And an example of using the program:
+
+```bash
+artemis map example.json --contacts -norm -diag -vmax 2 -o out_path.pdf
 ```
 
 ***To see an example of use, look at the tutorial for using the program at the [link](https://nalsur-veallam.github.io/ARTEMIS/tutorial.html).***

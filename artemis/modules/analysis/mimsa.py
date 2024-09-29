@@ -56,35 +56,44 @@ def hobohm(matrix, gaps, cl):
     a = np.array(matrix)
     numseq, seqlen = a.shape
 
-    gap_percentages = np.sum(a == gaps, axis=1)  # Count occurrences of ignore_value per sequence
-    sort = np.argsort(gap_percentages)  # Get sorted indices by gap percentage
-    a = a[sort]  # Sort the array by gap percentage
+    # Count occurrences of gaps per sequence
+    gap_percentages = np.sum(a == gaps, axis=1)
+    # Get sorted indices by gap percentage
+    sort = np.argsort(gap_percentages)
+    # Sort the array by gap percentage
+    a = a[sort]
 
-    # CALCULATE DISTANCE MATRIX, based on differences not including gaps
-    d = np.zeros([numseq, numseq])  # Initialize distance matrix
+    # Calculation of distance matrix
+    # Initialize distance matrix
+    d = np.zeros([numseq, numseq])
     for i in tqdm(range(numseq), desc="Calculating distance matrix for Hobohm clustering"):
-        valid_positions = a[i] != gaps  # Only consider non-gap positions
+        # Only consider non-gap positions
+        valid_positions = a[i] != gaps
         d[i + 1:, i] = d[i, i + 1:] = 1 - np.sum(a[i] == a[i + 1:], axis=1) / float(np.sum(valid_positions))
 
-    # APPOINT SEQUENCES TO CLUSTERS DEPENDING ON THEIR DISTANCES
-    c = {}  # Dictionary for clusters
-    s = np.ones(numseq)  # Array indicating unassigned sequences
+    # Initialize cluster dictionary and unassigned sequences array
+    cls = {}
+    seqs = np.ones(numseq)
 
     for i in range(numseq):
-        if s[i]:  # If sequence is unassigned
+        # If sequence is unassigned
+        if seqs[i]:
             # Find matches which are unassigned and below the threshold
-            m = np.nonzero(np.logical_and(d[i, i + 1:] < 1 - cl, s[i + 1:]))[0] + i + 1
-            c[i] = list(m) if m.size else []  # Add matching sequences to cluster
-            if m.size:
-                s[m] = 0  # Mark the matched sequences as assigned
+            match = np.nonzero(np.logical_and(d[i, i + 1:] < 1 - cl, seqs[i + 1:]))[0] + i + 1
+            # Add matching sequences to cluster
+            cls[i] = list(match) if match.size else []
+            if match.size:
+                # Mark the matched sequences as assigned
+                seqs[match] = 0
 
-    # COMPUTING CLUSTER WEIGHTS
-    cluster_weights = sorted([(x, 1.0 / len([k] + v)) for k, v in c.items() for x in [k] + v])
-    sort, w = zip(*sorted(cluster_weights))  # Sort by the original order
-    w = list(w)
-    w = np.array(w)
-    print(f'Identified {len(c)} clusters')
-    return w
+    # Compute cluster weights
+    cluster_weights = sorted([(x, 1.0 / len([k] + v)) for k, v in cls.items() for x in [k] + v])
+    # Sort by the original order
+    sort, weights = zip(*sorted(cluster_weights))
+    weights = list(weights)
+    weights = np.array(weights)
+    print(f'Identified {len(cls)} clusters')
+    return weights
 
 # MI between two columns
 def calc_MI(col_pair, matrix, bins=20, ignore_values=None, weights=None):
@@ -96,6 +105,7 @@ def calc_MI(col_pair, matrix, bins=20, ignore_values=None, weights=None):
     filtered_data1 = data1[mask]
     filtered_data2 = data2[mask]
 
+    # Use weights for histogram calculations if present
     if weights is not None:
         filtered_weights = weights[mask]
     else:
@@ -120,16 +130,17 @@ def calc_MI(col_pair, matrix, bins=20, ignore_values=None, weights=None):
 
     return col1, col2, mi
 
+# Function to compute a MI matrix column-wise using parallel processing (CPU)
 def comp_MI(matrix, bins=20, ignore_values=None, weights=None):
     if ignore_values is None:
         ignore_values = []
     num_cols = matrix.shape[1]
     col_pairs = [(i, j) for i in range(num_cols) for j in range(i + 1, num_cols)]
 
-    # Use partial to pass the matrix, bins, and values to ignore to the worker function
+    # Use partial to pass the matrix, bins, values to ignore and weights to the worker function
     worker_func = partial(calc_MI, matrix=matrix, bins=bins, ignore_values=ignore_values, weights=weights)
 
-    # Run in parallel
+    # Run
     with Pool() as pool:
         mutual_info_results = pool.map(worker_func, col_pairs)
 
@@ -144,8 +155,10 @@ def comp_MI(matrix, bins=20, ignore_values=None, weights=None):
 
     return mi_matrix
 
-
+# Function to calculate MI from scrambled alignemnt (randomized positions of AA)
 def remove_bg(mimat, iterations, ign, bins, ignored, int_matrix):
+
+    # Commented part implements a an averaged denoising over iterations of scramble MI
     # i = 0
     # num_cols = mimat.shape[1]
     # bg_matrix = np.zeros((num_cols, num_cols))
@@ -162,20 +175,23 @@ def remove_bg(mimat, iterations, ign, bins, ignored, int_matrix):
         bgmat = comp_MI(shuffled, bins, ignore_values=ignored)
         corrected = np.subtract(corrected, bgmat)
         i += 1
+    # Set negative values to 0
     if ign:
         corrected[corrected < 0] = 0
     return corrected
 
-
+#  Function to calculate column-wise row column weighting
 def calc_rcw(col_pair, matrix):
     col1, col2 = col_pair
     data1, data2 = matrix[:, col1], matrix[:, col2]
+    # Mean MI in column i
     imean = data1.sum() / (len(data1) - 1)
+    # Mean MI in column j
     jmean = data2.sum() / (len(data2) - 1)
     rcw = (imean + jmean) / 2
     return col1, col2, rcw
 
-
+#  Function to apply row column weighting to MI matrix
 def apply_rcw(matrix):
     num_cols = matrix.shape[1]
     col_pairs = [(i, j) for i in range(num_cols) for j in range(i + 1, num_cols)]
@@ -183,11 +199,11 @@ def apply_rcw(matrix):
     # Use partial to pass the matrix to the worker function
     worker_func = partial(calc_rcw, matrix=matrix)
 
-    # Run in parallel
+    # Run
     with Pool() as pool:
         rcw_results = pool.map(worker_func, col_pairs)
 
-    # Create an empty matrix for apc  values
+    # Create an empty matrix for rcw  values
     rcw_matrix = np.zeros((num_cols, num_cols))
 
     # Fill in the upper triangular part of the matrix
@@ -199,17 +215,20 @@ def apply_rcw(matrix):
     corrected = np.divide(matrix, rcw_matrix)
     return corrected
 
-
+#  Function to calculate column-wise average product correction
 def calc_apc(col_pair, matrix):
     col1, col2 = col_pair
     data1, data2 = matrix[:, col1], matrix[:, col2]
+    # Mean MI of MI matrix
     mimean = np.sum(np.tril(matrix, -1)) * 2 / (len(data1) * (len(data1) - 1))
+    # Mean MI in column i
     imean = data1.sum() / (len(data1) - 1)
+    # Mean MI in column j
     jmean = data2.sum() / (len(data2) - 1)
     apc = (imean * jmean) / mimean
     return col1, col2, apc
 
-
+#  Function to apply average product correction to MI matrix
 def apply_apc(matrix, ign):
     num_cols = matrix.shape[1]
     col_pairs = [(i, j) for i in range(num_cols) for j in range(i + 1, num_cols)]
@@ -217,11 +236,11 @@ def apply_apc(matrix, ign):
     # Use partial to pass the matrix to the worker function
     worker_func = partial(calc_apc, matrix=matrix)
 
-    # Run in parallel
+    # Run
     with Pool() as pool:
         apc_results = pool.map(worker_func, col_pairs)
 
-    # Create an empty matrix for apc  values
+    # Create an empty matrix for apc values
     apc_matrix = np.zeros((num_cols, num_cols))
 
     # Fill in the upper triangular part of the matrix
@@ -230,11 +249,12 @@ def apply_apc(matrix, ign):
         # Symmetric matrix
         apc_matrix[col2, col1] = apc
     corrected = np.subtract(matrix, apc_matrix)
+    # Set negative values to 0
     if ign:
         corrected[corrected < 0] = 0
     return corrected
 
-
+# Main function
 def map_from_msa(name, out, format, apc, rcw, cl, igg, ss, igc, igp, ign):
     start = time.time()
     # Read alignment
@@ -247,7 +267,7 @@ def map_from_msa(name, out, format, apc, rcw, cl, igg, ss, igc, igp, ign):
     int_matrix, bins, gap, place_holder_num = mat_to_nmsa(matrix, igp, igg)
 
     weights = None
-    if cl:# or cl == float(0):
+    if cl:
         weights = hobohm(int_matrix, gap, cl)
 
     if igg:

@@ -1,6 +1,6 @@
 import argparse
 import numpy as np
-from artemis._modules import allostery, convert, _map, cluster
+from artemis._modules import allostery, convert, _map, cluster, analysis
 
 def parse():
 

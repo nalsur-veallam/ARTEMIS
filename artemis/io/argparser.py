@@ -149,6 +149,56 @@ def parse():
 
       cluster_parser.set_defaults(func=cluster)
 
+      # Analysis-MIMSA parser
+
+      analysis_parser = subparsers.add_parser('analysis', help='MIE analysis module.')
+
+      analysis_parser.add_argument('--mimsa', action='store_true',
+                                   help='Draw mutual information map from msa')
+
+      analysis_parser.add_argument('-n', type=str, required=True,
+                                   help='alignment file')
+
+      analysis_parser.add_argument('-o', type=str, default='msa_map',
+                                   help='Outfile path.')
+
+      analysis_parser.add_argument('-f', type=str, default='fasta',
+                                   choices=['clustal', 'emboss', 'fasta', 'fasta-m10', 'ig', 'maf', 'mauve', 'msf',
+                                            'nexus',
+                                            'phylip', 'phylip-sequential', 'phylip-relaxed', 'stockholm'],
+                                   help='MSA file format.')
+
+      analysis_parser.add_argument('-apc', action='store_true', default=False,
+                                   help='Apply average product correction (Dunn et al., 2008).')
+
+      analysis_parser.add_argument('-rcw', action='store_true', default=False,
+                                   help='Apply row column weighting (Gouveia-Oliveira and Pedersen, 2007).')
+
+      analysis_parser.add_argument('-cl', nargs='?', const=0.62, default=False, type=float,
+                                   help='Cluster sequences by similarity (Hobohm et al., 1992) '
+                                        'and weigh concurrences by cluster size in histogram calculations. '
+                                        'The similarity cutoff is 0.62 by default (Shackelford and Karplus, 2007), '
+                                        'a custom cutoff can be specified after -cl flag.')
+
+      analysis_parser.add_argument('-igg', action='store_true', default=False,
+                                   help='Ignore gaps in calculation of histograms.')
+
+      analysis_parser.add_argument('-ss', nargs='?', const=1, default=False, type=int,
+                                   help='Subtract MI calculated from scrambled input MSA from result matrix. '
+                                        'Number of iterations can be specified (Default: 1)')
+
+      analysis_parser.add_argument('-igc', action='store_true', default=False,
+                                   help='Ignore case in input alignment.')
+
+      analysis_parser.add_argument('-igp', nargs='?', const='X', default=False, type=str,
+                                   help='Ignore unknown residues in calculation of histograms. Default is ''X'','
+                                        ' custom symbol can be specified after flag ')
+
+      analysis_parser.add_argument('-ign', action='store_true', default=False,
+                                   help='Set negative MI values potentially occurring through APC '
+                                        'or background noise subtraction to 0')
+      analysis_parser.set_defaults(func=analysis)
+
       args = parser.parse_args()
 
       return args

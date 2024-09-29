@@ -12,7 +12,7 @@ from artemis.modules.cluster.clustering import do_spectral_clustering
 from artemis.modules.cluster.paint import draw_clustering
 from artemis.modules.cluster.study import study_clustering
 from artemis.modules.cluster.analysis import analyze_clustering
-
+from artemis.modules.analysis import mimsa
 def allostery(args):
 
     for f in args.files:
@@ -202,6 +202,9 @@ def cluster(args):
 
         study_clustering(Clusters, args.min, args.max, args.o, args.spectral)
 
-
+def analysis(args):
+    if args.mimsa:
+        mimsa.map_from_msa(args.n, args.o, args.f, args.apc, args.rcw, args.cl, args.igg, args.ss, args.igc,
+                           args.igp, args.ign)
 def convert(args):
     pass

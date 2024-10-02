@@ -204,7 +204,7 @@ def cluster(args):
 
 def analysis(args):
     if args.mimsa:
-        mimsa.map_from_msa(args.n, args.o, args.f, args.apc, args.rcw, args.cl, args.igg, args.ss, args.igc,
+        mimsa.map_from_msa(args.n, args.o, args.f, args.apc, args.rcw, args.cl, args.igg, args.zs, args.igc,
                            args.igp, args.ign)
 def convert(args):
     pass

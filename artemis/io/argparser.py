@@ -183,9 +183,9 @@ def parse():
       analysis_parser.add_argument('-igg', action='store_true', default=False,
                                    help='Ignore gaps in calculation of histograms.')
 
-      analysis_parser.add_argument('-ss', nargs='?', const=1, default=False, type=int,
-                                   help='Subtract MI calculated from scrambled input MSA from result matrix. '
-                                        'Number of iterations can be specified (Default: 1)')
+      analysis_parser.add_argument('-zs', nargs='?', const=100, default=False, type=int,
+                                   help='Weigh MI matrix by z-score with null sample from randomized columns '
+                                        '(Default sample size: 100)')
 
       analysis_parser.add_argument('-igc', action='store_true', default=False,
                                    help='Ignore case in input alignment.')
@@ -194,9 +194,8 @@ def parse():
                                    help='Ignore unknown residues in calculation of histograms. Default is ''X'','
                                         ' custom symbol can be specified after flag ')
 
-      analysis_parser.add_argument('-ign', action='store_true', default=False,
-                                   help='Set negative MI values potentially occurring through APC '
-                                        'or background noise subtraction to 0')
+      analysis_parser.add_argument('-ign', action='store_false', default=True,
+                                   help='Do not set negative MI values potentially occurring through APC to 0 ')
       analysis_parser.set_defaults(func=analysis)
 
       args = parser.parse_args()

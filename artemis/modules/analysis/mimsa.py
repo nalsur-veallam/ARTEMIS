@@ -155,30 +155,56 @@ def comp_MI(matrix, bins=20, ignore_values=None, weights=None):
 
     return mi_matrix
 
-# Function to calculate MI from scrambled alignemnt (randomized positions of AA)
-def remove_bg(mimat, iterations, ign, bins, ignored, int_matrix):
+# Function to calculate MI from scrambled alignment (randomized positions of AA)
+def null_samples(int_matrix, iterations, ign, bins, ignored, rcw, apc, weights):
 
-    # Commented part implements a an averaged denoising over iterations of scramble MI
-    # i = 0
-    # num_cols = mimat.shape[1]
-    # bg_matrix = np.zeros((num_cols, num_cols))
-    # while i < iterations:
-    #     shuffled = np.apply_along_axis(np.random.permutation, axis=1, arr=int_matrix)
-    #     bg_matrix = np.add(bg_matrix, comp_MI(shuffled, bins, ignore_values=ignored))
-    #     i += 1
-    # bg_matrix = np.divide(bg_matrix, iterations)
-    # corrected = np.subtract(mimat, bg_matrix)
     i = 0
-    corrected = mimat
+    null_list = []
+    pbar = tqdm(total=iterations)
     while i < iterations:
-        shuffled = np.apply_along_axis(np.random.permutation, axis=1, arr=int_matrix)
-        bgmat = comp_MI(shuffled, bins, ignore_values=ignored)
-        corrected = np.subtract(corrected, bgmat)
+        shuffled = int_matrix[:, np.random.permutation(int_matrix.shape[1])]
+        sample = comp_MI(shuffled, bins, ignore_values=ignored, weights=weights)
+        if rcw:
+            sample = apply_rcw(sample)
+            sample = (sample - np.min(sample)) / (np.max(sample) - np.min(sample))
+        if apc:
+            sample = apply_apc(sample, ign)
+        null_list.append(sample)
         i += 1
-    # Set negative values to 0
-    if ign:
-        corrected[corrected < 0] = 0
-    return corrected
+    pbar.close()
+    null_list = np.array(null_list)
+    return null_list
+
+
+def zscore_transform_matrices_against_population(sample,  null):
+
+    z_mat = np.zeros((len(sample), len(sample)))
+
+    # Iterate over every element in the matrix
+    for i in range(len(sample)):
+        for j in range(len(sample)):
+            if i != j:  # Skip diagonal elements
+                # Collect the corresponding elements from all matrices
+                corresponding_elements = []
+                for element in null:
+                    corresponding_elements.append(element[i, j])
+                #corresponding_elements = np.array(null[k][i, j] for k in range(num_matrices))
+
+                # Calculate mean and std of corresponding elements
+                mean = np.mean(corresponding_elements)
+                std = np.std(corresponding_elements)
+
+                # Compute Z-score for the current element
+                if std != 0:
+                    z_score = (sample[i, j] - mean) / std
+                else:
+                    z_score = 0  # Avoid division by zero
+
+                # Update the matrix with the Z-score
+                z_mat[i, j] = z_score
+
+    return z_mat
+
 
 #  Function to calculate column-wise row column weighting
 def calc_rcw(col_pair, matrix):
@@ -255,7 +281,7 @@ def apply_apc(matrix, ign):
     return corrected
 
 # Main function
-def map_from_msa(name, out, format, apc, rcw, cl, igg, ss, igc, igp, ign):
+def map_from_msa(name, out, format, apc, rcw, cl, igg, zs, igc, igp, ign):
     start = time.time()
     # Read alignment
     alignment = AlignIO.read(open(name), format)
@@ -269,25 +295,26 @@ def map_from_msa(name, out, format, apc, rcw, cl, igg, ss, igc, igp, ign):
     weights = None
     if cl:
         weights = hobohm(int_matrix, gap, cl)
-
     if igg:
         ignored.append(gap)
     ignored.append(place_holder_num)
 
     mimat = comp_MI(int_matrix, bins=bins, ignore_values=ignored, weights=weights)
     res = mimat
-    if ss:
-        res = remove_bg(res, ss, ign, bins, ignored, int_matrix)
-        print(f"Removed {ss} iterations of randomized alignment MI.")
+
     if rcw:
         res = apply_rcw(res)
         print(f"Applied RCW.")
         res = np.nan_to_num(res)
         res = (res - np.min(res)) / (np.max(res) - np.min(res))
-
     if apc:
         res = apply_apc(res, ign)
         print(f"Applied APC.")
+    if zs:
+        samples = null_samples(res, zs, ign, bins, ignored, rcw, apc, weights)
+        z_mat = zscore_transform_matrices_against_population(res, samples)
+        res = res*np.abs(z_mat)
+
     # Output
     res = res.tolist()
     data = {}

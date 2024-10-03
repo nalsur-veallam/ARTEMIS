@@ -180,12 +180,12 @@ def parse():
                                         'The similarity cutoff is 0.62 by default (Shackelford and Karplus, 2007), '
                                         'a custom cutoff can be specified after -cl flag.')
 
-      analysis_parser.add_argument('-igg', action='store_true', default=False,
+      analysis_parser.add_argument('-igg', action='store_false', default=True,
                                    help='Ignore gaps in calculation of histograms.')
 
       analysis_parser.add_argument('-zs', nargs='?', const=100, default=False, type=int,
-                                   help='Weigh MI matrix by z-score with null sample from randomized columns '
-                                        '(Default sample size: 100)')
+                                   help='Weigh MI matrix by positive z-score with null sample from randomized columns '
+                                        '(Default sample size: 100) also outputs zscore matrix')
 
       analysis_parser.add_argument('-igc', action='store_true', default=False,
                                    help='Ignore case in input alignment.')

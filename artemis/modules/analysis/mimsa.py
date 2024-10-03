@@ -47,8 +47,7 @@ def mat_to_nmsa(matrix, igp, igg):
     if igg:
         bins -= 1
         unique_chars.remove('-')
-    print("These characters will be treated as unique in the MSA")
-    print(unique_chars)
+    print(f"These characters will be treated as unique in the MSA:\n{', '.join(unique_chars)}\n")
     int_matrix = np.vectorize(char_to_int.get)(matrix)
     return int_matrix, bins, gap, place_holder_num
 
@@ -93,7 +92,7 @@ def hobohm(matrix, gaps, cl):
     sort, weights = zip(*sorted(cluster_weights))
     weights = list(weights)
     weights = np.array(weights)
-    print(f'Identified {len(cls)} clusters')
+    print(f'Identified {len(cls)} clusters\n')
     return weights
 
 
@@ -104,7 +103,6 @@ def calc_mi(col_pair, matrix, bins=20, ignore_values=None, weights=None):
 
     # Filter out values to be ignored for histogram calculations
     mask = np.isin(data1, ignore_values, invert=True) & np.isin(data2, ignore_values, invert=True)
-    #print(len(mask))
     filtered_data1 = data1[mask]
     filtered_data2 = data2[mask]
 
@@ -161,10 +159,10 @@ def comp_mi(matrix, bins=20, ignore_values=None, weights=None):
 
 
 # Function to calculate MI from scrambled alignment (randomized columns)
-def null_samples(int_matrix, iterations, ign, bins, rcw, apc, ignored=None,  weights=None):
+def null_samples(int_matrix, iterations, ign, bins, rcw, apc, ignored=None, weights=None):
     i = 0
     null_list = []
-    with tqdm(total=iterations) as pbar:
+    with tqdm(total=iterations, desc="Calculating MI from scrambled MSA") as pbar:
         while i < iterations:
             shuffled = int_matrix[:, np.random.permutation(int_matrix.shape[1])]
             sample = comp_mi(shuffled, bins=bins, ignore_values=ignored, weights=weights)
@@ -172,7 +170,7 @@ def null_samples(int_matrix, iterations, ign, bins, rcw, apc, ignored=None,  wei
                 sample = apply_apc(sample, ign)
             if rcw:
                 sample = apply_rcw(sample)
-                #sample = (sample - np.min(sample)) / (np.max(sample) - np.min(sample))
+                # sample = (sample - np.min(sample)) / (np.max(sample) - np.min(sample))
             null_list.append(sample)
 
             pbar.update(1)
@@ -294,8 +292,8 @@ def map_from_msa(name, out, fformat, apc, rcw, cl, igg, zs, igc, igp, ign):
     # Read alignment
     alignment = AlignIO.read(open(name), fformat)
     # Print information about alignment
-    print("Alignment length %i" % alignment.get_alignment_length())
-    print("Number of sequences %i" % len(alignment))
+    print("Alignment length: %i" % alignment.get_alignment_length())
+    print("Number of sequences: %i" % len(alignment))
     ignored = []
     matrix = al_to_mat(alignment, igc)
     int_matrix, bins, gap, place_holder_num = mat_to_nmsa(matrix, igp, igg)
@@ -311,35 +309,26 @@ def map_from_msa(name, out, fformat, apc, rcw, cl, igg, zs, igc, igp, ign):
 
     if apc:
         res = apply_apc(res, ign)
-        print(f"Applied APC.")
+        print(f"Applied APC.\n")
     if rcw:
         res = apply_rcw(res)
-        print(f"Applied RCW.")
+        print(f"Applied RCW.\n")
         res = np.nan_to_num(res)
     if zs:
         samples = null_samples(int_matrix, zs, ign, bins, rcw, apc, ignored=ignored, weights=weights)
         z_mat = calc_zscore(res, samples)
-
-        res = res * np.maximum(z_mat, 0)
         z_mat[z_mat < 0] = 0
         z_mat = z_mat.tolist()
-        data1 = {}
-        data1['NResidues'] = len(res)
-        data1['map'] = z_mat
-        data1['names'] = list(alignment[0,:])
-        data1['real_numbers'] = list(range(1, (len(res) + 1)))
+        data1 = {'NResidues': len(res), 'map': z_mat, 'names': list(alignment[0, :]),
+                 'real_numbers': list(range(1, (len(res) + 1)))}
         with open(f'{out + "_zscore.json"}', "w") as g:
             json.dump(data1, g)
 
     # Output
     res = res.tolist()
-    data = {}
-    data['NResidues'] = len(res)
-    data['map'] = res
-    data['names'] = list(alignment[0, :])
-    data['real_numbers'] = list(range(1, (len(res) + 1)))
+    data = {'NResidues': len(res), 'map': res, 'names': list(alignment[0, :]),
+            'real_numbers': list(range(1, (len(res) + 1)))}
     with open(f'{out + ".json"}', "w") as f:
         json.dump(data, f)
     end = time.time()
-    print(f'Writing {out + ".json"}')
-    print(f"Finished in {end - start} seconds.")
+    print(f'Writing {out + ".json"}\nFinished in {end - start} seconds.')

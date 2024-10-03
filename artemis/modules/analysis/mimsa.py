@@ -6,6 +6,7 @@ from multiprocessing import Pool
 from functools import partial
 from tqdm import tqdm
 
+
 # Convert the alignment to a numpy array
 def al_to_mat(alignment, igc):
     mat = []
@@ -32,10 +33,10 @@ def mat_to_nmsa(matrix, igp, igg):
     unique_chars = list(np.unique(matrix))
     # Specify number of bins depending on unique characters and specified ignored symbols
     bins = len(unique_chars)
-    # Convert to numercial
+    # Convert to numerical
     char_to_int = {char: idx for idx, char in enumerate(unique_chars)}
 
-    # Store place holder number and remove one bin
+    # Store placeholder number and remove one bin
     if igp:
         place_holder_num = char_to_int[igp]
         bins -= 1
@@ -95,13 +96,15 @@ def hobohm(matrix, gaps, cl):
     print(f'Identified {len(cls)} clusters')
     return weights
 
+
 # MI between two columns
-def calc_MI(col_pair, matrix, bins=20, ignore_values=None, weights=None):
+def calc_mi(col_pair, matrix, bins=20, ignore_values=None, weights=None):
     col1, col2 = col_pair
     data1, data2 = matrix[:, col1], matrix[:, col2]
 
     # Filter out values to be ignored for histogram calculations
     mask = np.isin(data1, ignore_values, invert=True) & np.isin(data2, ignore_values, invert=True)
+    #print(len(mask))
     filtered_data1 = data1[mask]
     filtered_data2 = data2[mask]
 
@@ -130,15 +133,16 @@ def calc_MI(col_pair, matrix, bins=20, ignore_values=None, weights=None):
 
     return col1, col2, mi
 
+
 # Function to compute a MI matrix column-wise using parallel processing (CPU)
-def comp_MI(matrix, bins=20, ignore_values=None, weights=None):
+def comp_mi(matrix, bins=20, ignore_values=None, weights=None):
     if ignore_values is None:
         ignore_values = []
     num_cols = matrix.shape[1]
     col_pairs = [(i, j) for i in range(num_cols) for j in range(i + 1, num_cols)]
 
     # Use partial to pass the matrix, bins, values to ignore and weights to the worker function
-    worker_func = partial(calc_MI, matrix=matrix, bins=bins, ignore_values=ignore_values, weights=weights)
+    worker_func = partial(calc_mi, matrix=matrix, bins=bins, ignore_values=ignore_values, weights=weights)
 
     # Run
     with Pool() as pool:
@@ -155,29 +159,29 @@ def comp_MI(matrix, bins=20, ignore_values=None, weights=None):
 
     return mi_matrix
 
-# Function to calculate MI from scrambled alignment (randomized positions of AA)
-def null_samples(int_matrix, iterations, ign, bins, ignored, rcw, apc, weights):
 
+# Function to calculate MI from scrambled alignment (randomized columns)
+def null_samples(int_matrix, iterations, ign, bins, rcw, apc, ignored=None,  weights=None):
     i = 0
     null_list = []
-    pbar = tqdm(total=iterations)
-    while i < iterations:
-        shuffled = int_matrix[:, np.random.permutation(int_matrix.shape[1])]
-        sample = comp_MI(shuffled, bins, ignore_values=ignored, weights=weights)
-        if rcw:
-            sample = apply_rcw(sample)
-            sample = (sample - np.min(sample)) / (np.max(sample) - np.min(sample))
-        if apc:
-            sample = apply_apc(sample, ign)
-        null_list.append(sample)
-        i += 1
-    pbar.close()
+    with tqdm(total=iterations) as pbar:
+        while i < iterations:
+            shuffled = int_matrix[:, np.random.permutation(int_matrix.shape[1])]
+            sample = comp_mi(shuffled, bins=bins, ignore_values=ignored, weights=weights)
+            if apc:
+                sample = apply_apc(sample, ign)
+            if rcw:
+                sample = apply_rcw(sample)
+                #sample = (sample - np.min(sample)) / (np.max(sample) - np.min(sample))
+            null_list.append(sample)
+
+            pbar.update(1)
+            i += 1
     null_list = np.array(null_list)
     return null_list
 
 
-def zscore_transform_matrices_against_population(sample,  null):
-
+def calc_zscore(sample, null):
     z_mat = np.zeros((len(sample), len(sample)))
 
     # Iterate over every element in the matrix
@@ -188,7 +192,7 @@ def zscore_transform_matrices_against_population(sample,  null):
                 corresponding_elements = []
                 for element in null:
                     corresponding_elements.append(element[i, j])
-                #corresponding_elements = np.array(null[k][i, j] for k in range(num_matrices))
+                # corresponding_elements = np.array(null[k][i, j] for k in range(num_matrices))
 
                 # Calculate mean and std of corresponding elements
                 mean = np.mean(corresponding_elements)
@@ -217,6 +221,7 @@ def calc_rcw(col_pair, matrix):
     rcw = (imean + jmean) / 2
     return col1, col2, rcw
 
+
 #  Function to apply row column weighting to MI matrix
 def apply_rcw(matrix):
     num_cols = matrix.shape[1]
@@ -241,6 +246,7 @@ def apply_rcw(matrix):
     corrected = np.divide(matrix, rcw_matrix)
     return corrected
 
+
 #  Function to calculate column-wise average product correction
 def calc_apc(col_pair, matrix):
     col1, col2 = col_pair
@@ -253,6 +259,7 @@ def calc_apc(col_pair, matrix):
     jmean = data2.sum() / (len(data2) - 1)
     apc = (imean * jmean) / mimean
     return col1, col2, apc
+
 
 #  Function to apply average product correction to MI matrix
 def apply_apc(matrix, ign):
@@ -280,15 +287,16 @@ def apply_apc(matrix, ign):
         corrected[corrected < 0] = 0
     return corrected
 
+
 # Main function
-def map_from_msa(name, out, format, apc, rcw, cl, igg, zs, igc, igp, ign):
+def map_from_msa(name, out, fformat, apc, rcw, cl, igg, zs, igc, igp, ign):
     start = time.time()
     # Read alignment
-    alignment = AlignIO.read(open(name), format)
+    alignment = AlignIO.read(open(name), fformat)
     # Print information about alignment
     print("Alignment length %i" % alignment.get_alignment_length())
     print("Number of sequences %i" % len(alignment))
-    ignored=[]
+    ignored = []
     matrix = al_to_mat(alignment, igc)
     int_matrix, bins, gap, place_holder_num = mat_to_nmsa(matrix, igp, igg)
 
@@ -298,29 +306,37 @@ def map_from_msa(name, out, format, apc, rcw, cl, igg, zs, igc, igp, ign):
     if igg:
         ignored.append(gap)
     ignored.append(place_holder_num)
-
-    mimat = comp_MI(int_matrix, bins=bins, ignore_values=ignored, weights=weights)
+    mimat = comp_mi(int_matrix, bins=bins, ignore_values=ignored, weights=weights)
     res = mimat
 
+    if apc:
+        res = apply_apc(res, ign)
+        print(f"Applied APC.")
     if rcw:
         res = apply_rcw(res)
         print(f"Applied RCW.")
         res = np.nan_to_num(res)
-        res = (res - np.min(res)) / (np.max(res) - np.min(res))
-    if apc:
-        res = apply_apc(res, ign)
-        print(f"Applied APC.")
     if zs:
-        samples = null_samples(res, zs, ign, bins, ignored, rcw, apc, weights)
-        z_mat = zscore_transform_matrices_against_population(res, samples)
-        res = res*np.abs(z_mat)
+        samples = null_samples(int_matrix, zs, ign, bins, rcw, apc, ignored=ignored, weights=weights)
+        z_mat = calc_zscore(res, samples)
+
+        res = res * np.maximum(z_mat, 0)
+        z_mat[z_mat < 0] = 0
+        z_mat = z_mat.tolist()
+        data1 = {}
+        data1['NResidues'] = len(res)
+        data1['map'] = z_mat
+        data1['names'] = list(alignment[0,:])
+        data1['real_numbers'] = list(range(1, (len(res) + 1)))
+        with open(f'{out + "_zscore.json"}', "w") as g:
+            json.dump(data1, g)
 
     # Output
     res = res.tolist()
     data = {}
     data['NResidues'] = len(res)
     data['map'] = res
-    data['names'] = list(alignment[0,:]) # list('R' * len(res))
+    data['names'] = list(alignment[0, :])
     data['real_numbers'] = list(range(1, (len(res) + 1)))
     with open(f'{out + ".json"}', "w") as f:
         json.dump(data, f)

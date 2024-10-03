@@ -184,7 +184,7 @@ def parse():
                                    help='Ignore gaps in calculation of histograms.')
 
       analysis_parser.add_argument('-zs', nargs='?', const=100, default=False, type=int,
-                                   help='Outpu matrix of positive z-scores with null sample from randomized columns '
+                                   help='Output matrix of positive z-scores with null sample from randomized columns '
                                         '(Default sample size: 100)')
 
       analysis_parser.add_argument('-igc', action='store_true', default=False,

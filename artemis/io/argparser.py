@@ -184,8 +184,8 @@ def parse():
                                    help='Ignore gaps in calculation of histograms.')
 
       analysis_parser.add_argument('-zs', nargs='?', const=100, default=False, type=int,
-                                   help='Weigh MI matrix by positive z-score with null sample from randomized columns '
-                                        '(Default sample size: 100) also outputs zscore matrix')
+                                   help='Outpu matrix of positive z-scores with null sample from randomized columns '
+                                        '(Default sample size: 100)')
 
       analysis_parser.add_argument('-igc', action='store_true', default=False,
                                    help='Ignore case in input alignment.')

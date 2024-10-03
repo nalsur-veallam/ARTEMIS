@@ -292,7 +292,7 @@ def map_from_msa(name, out, fformat, apc, rcw, cl, igg, zs, igc, igp, ign):
     # Read alignment
     alignment = AlignIO.read(open(name), fformat)
     # Print information about alignment
-    print("Alignment length: %i" % alignment.get_alignment_length())
+    print("\nAlignment length: %i" % alignment.get_alignment_length())
     print("Number of sequences: %i" % len(alignment))
     ignored = []
     matrix = al_to_mat(alignment, igc)

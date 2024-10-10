@@ -13,6 +13,7 @@ from artemis.modules.cluster.paint import draw_clustering
 from artemis.modules.cluster.study import study_clustering
 from artemis.modules.cluster.analysis import analyze_clustering
 from artemis.modules.analysis import mimsa
+
 def allostery(args):
 
     for f in args.files:

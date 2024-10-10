@@ -32,4 +32,4 @@ to view available modules.
 
 ## 1) MANUAL AND TUTORIAL
 
-Uploaded via [link](https://nalsur-veallam.github.io/ARTEMIS/).
+Uploaded via [link](https://nalsur-veallam.github.io/ARTEMIS/)

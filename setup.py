@@ -20,7 +20,7 @@ setup(
     python_requires=">=3.8",
 
     packages=find_packages(include=['artemis']),
-    install_requires=['numpy', 'matplotlib', 'seaborn', 'pandas', 'scipy'],
+    install_requires=['numpy', 'matplotlib', 'seaborn', 'pandas', 'scipy', 'biopython', 'tqdm'],
 
     entry_points={
     'console_scripts': [

@@ -1,7 +1,3 @@
-numpy
-matplotlib
-scipy
-setuptools
-seaborn
-pandas
-tqdm
+numpy~=2.1.1
+tqdm~=4.66.5
+biopython~=1.84

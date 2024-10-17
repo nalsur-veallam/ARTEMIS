@@ -47,17 +47,24 @@ def mat_to_nmsa(matrix, igp, igg):
     if igg:
         bins -= 1
         unique_chars.remove('-')
-    print(f"These characters will be treated as unique in the MSA:\n{', '.join(unique_chars)}\n")
+    print(f"\nThese characters will be treated as unique in the MSA:\n{', '.join(unique_chars)}\n")
     int_matrix = np.vectorize(char_to_int.get)(matrix)
     return int_matrix, bins, gap, place_holder_num
 
+def filter_gap_sequences(matrix, gaps, threshold):
+    a = np.array(matrix)
+    numseq, seqlen = a.shape
+    gap_percentages = np.sum(a == gaps, axis=1)/seqlen
+    mask = np.where(gap_percentages <= threshold)[0]
+    filtered_matrix = a[mask]
+    return filtered_matrix
 
 def hobohm(matrix, gaps, cl):
     a = np.array(matrix)
     numseq, seqlen = a.shape
 
     # Count occurrences of gaps per sequence
-    gap_percentages = np.sum(a == gaps, axis=1)
+    gap_percentages = np.sum(a == gaps, axis=1)/seqlen
     # Get sorted indices by gap percentage
     sort = np.argsort(gap_percentages)
     # Sort the array by gap percentage
@@ -287,29 +294,30 @@ def apply_apc(matrix, ign):
 
 
 # Main function
-def map_from_msa(name, out, fformat, apc, rcw, cl, igg, zs, igc, igp, ign):
+def map_from_msa(name, out, fformat, apc, rcw, cl, igg, zs, igc, igp, ign, gpp):
     start = time.time()
     # Read alignment
     alignment = AlignIO.read(open(name), fformat)
     # Print information about alignment
     print("\nAlignment length: %i" % alignment.get_alignment_length())
-    print("Number of sequences: %i" % len(alignment))
     ignored = []
     matrix = al_to_mat(alignment, igc)
     int_matrix, bins, gap, place_holder_num = mat_to_nmsa(matrix, igp, igg)
-
+    int_matrix = filter_gap_sequences(int_matrix, gap, gpp)
+    print("Number of sequences meeting gap threshold: %i" % len(int_matrix))
     weights = None
     if cl:
         weights = hobohm(int_matrix, gap, cl)
     if igg:
         ignored.append(gap)
     ignored.append(place_holder_num)
+
     mimat = comp_mi(int_matrix, bins=bins, ignore_values=ignored, weights=weights)
     res = mimat
 
     if apc:
         res = apply_apc(res, ign)
-        print(f"Applied APC.\n")
+        print(f"\nApplied APC.\n")
     if rcw:
         res = apply_rcw(res)
         print(f"Applied RCW.\n")

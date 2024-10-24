@@ -206,6 +206,6 @@ def cluster(args):
 def analysis(args):
     if args.mimsa:
         mimsa.map_from_msa(args.n, args.o, args.f, args.apc, args.rcw, args.cl, args.igg, args.zs, args.igc,
-                           args.igp, args.ign)
+                           args.igp, args.ign, args.gpp)
 def convert(args):
     pass

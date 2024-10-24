@@ -180,12 +180,16 @@ def parse():
                                         'The similarity cutoff is 0.62 by default (Shackelford and Karplus, 2007), '
                                         'a custom cutoff can be specified after -cl flag.')
 
-      analysis_parser.add_argument('-igg', action='store_false', default=True,
+      analysis_parser.add_argument('-igg', action='store_true', default=False,
                                    help='Ignore gaps in calculation of histograms.')
 
       analysis_parser.add_argument('-zs', nargs='?', const=100, default=False, type=int,
                                    help='Output matrix of positive z-scores with null sample from randomized columns '
                                         '(Default sample size: 100)')
+
+      analysis_parser.add_argument('-gpp', default=0.5, type=float,
+                                   help='remove sequences of a gap percentage higher than the threshold (default=0.5), '
+                                        'to not remove high gap percent sequences, use -gpp 1')
 
       analysis_parser.add_argument('-igc', action='store_true', default=False,
                                    help='Ignore case in input alignment.')

@@ -6,27 +6,28 @@ An information theory based numerical framework for analysis of communication an
 ## 0) INSTALLATION
 To download the console-app version, use:
 
-> git clone https://github.com/nalsur-veallam/ARTEMIS.git
+```bash
+    git clone https://github.com/nalsur-veallam/ARTEMIS.git
+```
 
 After that, enter the directory with the library
 
-> cd ARTEMIS
+```bash
+    cd ARTEMIS
+```
 
-And compile the C++ part of the library using make:
+And run:
 
-> make
+```bash
+    conda env create -f environment.yml
+    conda activate artemis
+```
 
-Next, you can install all the dependencies for Python. Use:
+After this, the ARTEMIS program will be installed in your conda environment. Run
 
-> pip3 install -r requirements.txt
-
-To install the library completely, run:
-
-> pip3 install -e .
-
-After this, the ARTEMIS program will be installed on your computer. Run
-
-> artemis -h
+```bash
+    artemis -h
+```
 
 to view available modules.
 

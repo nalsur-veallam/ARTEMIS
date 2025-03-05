@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "artemis"
+version = "0.0.1"
+dependencies = [
+    "numpy",
+    "scipy",
+    "matplotlib",
+    "pandas",
+    "seaborn",
+    "tqdm",
+    "pre-commit",
+]
+
+requires-python = "> 3.9"
+authors = [
+    {name = "Ruslan Mallaev"},
+    {name = "Anton Polyansky"},
+    {name = "Benjamin Bernrieder"},
+]
+
+[project.scripts]
+tqchem = "artemis.__main__:main"
+
+description = "Molecular communication Toolkit."
+readme = "README.md"
+classifiers = [
+    'Programming Language :: Python :: 3',
+    'License :: Other/Proprietary License',
+    'Operating System :: OS Independent',
+]
+
+[project.urls]
+repository = 'https://github.com/nalsur-veallam/ARTEMIS'
+
+[tool.setuptools]
+packages = ["artemis"]

@@ -1,0 +1,16 @@
+name: artemis
+channels:
+- conda-forge
+dependencies:
+- python >3.9,<3.13
+- pip
+- scikit-learn
+- pip:
+  - pytest
+  - -e .
+  - matplotlib
+  - numpy
+  - pandas
+  - scipy
+  - seaborn
+  - tqdm

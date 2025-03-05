@@ -37,6 +37,10 @@ classifiers = [
 [project.urls]
 repository = 'https://github.com/nalsur-veallam/ARTEMIS'
 
+[project.scripts]
+artemis = "artemis.__main__:main"
+
 [tool.setuptools]
 packages = ["artemis"]
 include-package-data = true
+

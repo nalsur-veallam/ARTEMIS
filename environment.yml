@@ -5,6 +5,7 @@ dependencies:
 - python >3.9,<3.13
 - pip
 - scikit-learn
+- pymol-open-source
 - pip:
   - pytest
   - -e .

@@ -78,6 +78,9 @@ def parse():
       allostery_parser.add_argument('--search', action='store_true',
                               help='Search allosteric site.')
 
+      allostery_parser.add_argument('--critical', action='store_true',
+                              help='Search critical residues.')
+
       allostery_parser.add_argument('--draw', action='store_true',
                               help='Draw allostery using PyMol.')
 

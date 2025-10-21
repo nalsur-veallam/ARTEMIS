@@ -1,5 +1,7 @@
 # ARTEMIS
-An information theory based numerical framework for analysis of communication and clustering in molecular systems using MD processed by the [PARENT](https://github.com/markusfleck/PARENT) or [PARENT_GPU](https://github.com/markusfleck/PARENT_GPU) packages.
+An information theory based numerical framework for analysis of intramolecular communication using molecular dynamics (MD) data processed with the [PARENT](https://github.com/markusfleck/PARENT) or [PARENT_GPU](https://github.com/markusfleck/PARENT_GPU) software packages. This tool gives the possibility to analyze intra- and intermolecular communication networks using all-to-all mutual information (MI) matrix for amino acids in proteins, nucleotides in nucleic acids, or any other molecular subgroups defined in the system. Alternatively, for proteins and nucleic acids MI matrices can be generated from multiple sequence alignments (MSA) and further processed in the same way using ARTEMIS. 
+
+A potentially wide application of ARTEMIS, as well as a description of the methodology, has been published as a pre-print on ChemRxiv: [10.26434/chemrxiv-2025-6tmvz](https://doi.org/10.26434/chemrxiv-2025-6tmvz).
 
 ![Framework scheme](framework_scheme.png) 
 

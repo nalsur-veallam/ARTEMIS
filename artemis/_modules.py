@@ -7,6 +7,7 @@ import subprocess
 from artemis.modules.allostery.search import search_allostery
 from artemis.modules.allostery.paint import draw_allostery
 from artemis.modules.allostery.analysis import analyze_allostery
+from artemis.modules.allostery.criticality import search_critical
 from artemis.modules.cluster.clustering import do_clustering
 from artemis.modules.cluster.clustering import do_spectral_clustering
 from artemis.modules.cluster.paint import draw_clustering
@@ -63,6 +64,29 @@ def allostery(args):
 
         else:
             search_allostery(Allostery, args.o, args.top, args.noseq, args.zscore)
+
+    if args.critical:
+
+        if args.o is None:
+            args.o = 'allosteric_criticality.pdf'
+
+        if args.cluster is not None:
+            calculated = False
+
+            for f in args.files:
+                Clusters = CLUSTERS(f)
+                if Clusters.is_ok() and Clusters.exist() and Clusters.clustering_labels is not None:
+                    search_critical(Allostery, args.o, args.noseq)
+                    calculated = True
+                    break
+                else:
+                    pass
+
+            if not calculated:
+                search_critical(Allostery, args.o, args.noseq)
+
+        else:
+            search_critical(Allostery, args.o, args.noseq)
 
     if args.draw:
 

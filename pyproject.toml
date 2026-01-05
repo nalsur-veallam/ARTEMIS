@@ -23,9 +23,6 @@ authors = [
     {name = "Benjamin Bernrieder"},
 ]
 
-#[project.scripts]
-#tqchem = "artemis.__main__:main"
-
 description = "Molecular communication Toolkit."
 readme = "README.md"
 classifiers = [
@@ -43,4 +40,3 @@ artemis = "artemis.__main__:main"
 [tool.setuptools]
 packages = ["artemis"]
 include-package-data = true
-

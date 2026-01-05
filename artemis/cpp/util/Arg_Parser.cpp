@@ -33,15 +33,8 @@ char* Arg_Parser::get_ext(char* file_str){
         counter++;
     }
     if (last_pos == -1){
-        My_Error my_error((string("ERROR: FILE ") +
-                       string(file_str) + string(" HAS NO EXTENSION! ABORTING."))
-                          .c_str());
+        My_Error my_error((string("ERROR: FILE ") + string(file_str) + string(" HAS NO EXTENSION! ABORTING.")).c_str());
         throw my_error;
     }
     return file_str + last_pos + 1;
 }
-
-
-
-
-

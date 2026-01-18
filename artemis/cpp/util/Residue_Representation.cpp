@@ -1,6 +1,7 @@
 #include "Residue_Representation.h"
 #include<iostream>
 
+
 using namespace std;
 
 Residue_Representation::Residue_Representation(char const * infileInput, bool include_full, int mode){

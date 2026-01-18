@@ -6,6 +6,7 @@
 
 
 
+
 #ifdef __CUDACC__
     #include "../util/classes/My_Error.cpp"
     #define gpuErrchk(ans)                                                         \

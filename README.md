@@ -1,7 +1,8 @@
 # ARTEMIS
 An information theory based numerical framework for analysis of communication and clustering in molecular systems using MD processed by the [PARENT](https://github.com/markusfleck/PARENT) or [PARENT_GPU](https://github.com/markusfleck/PARENT_GPU) packages.
 
-![Framework scheme](framework_scheme.png) 
+
+![Framework scheme](framework_scheme.png)
 
 ## 0) INSTALLATION
 To download the console-app version, use:

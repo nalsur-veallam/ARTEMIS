@@ -1,8 +1,9 @@
-from artemis.io.argparser import parse
 import sys
 
-def main():
+from artemis.io.argparser import parse
 
+
+def main():
     args = parse()
 
     args.func(args)

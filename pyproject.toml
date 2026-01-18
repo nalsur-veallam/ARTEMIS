@@ -14,6 +14,7 @@ dependencies = [
     "scikit-learn",
     "tqdm",
     "pre-commit",
+    "pytest",
 ]
 
 requires-python = "> 3.9"
@@ -22,9 +23,6 @@ authors = [
     {name = "Anton Polyansky"},
     {name = "Benjamin Bernrieder"},
 ]
-
-#[project.scripts]
-#tqchem = "artemis.__main__:main"
 
 description = "Molecular communication Toolkit."
 readme = "README.md"
@@ -43,4 +41,3 @@ artemis = "artemis.__main__:main"
 [tool.setuptools]
 packages = ["artemis"]
 include-package-data = true
-

@@ -5,6 +5,7 @@
 #define TYPE_A 1
 #define TYPE_D 2
 
+
 #define TYPE_BB 0
 #define TYPE_BA 1
 #define TYPE_BD 2

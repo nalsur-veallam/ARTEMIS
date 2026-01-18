@@ -3,6 +3,7 @@
 
 #define PRECISION double
 
+
 #include "util.h"
 #include <fstream>
 #include <sstream>

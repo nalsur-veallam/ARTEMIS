@@ -22,8 +22,12 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       uses: mamba-org/setup-micromamba@v1
+      with:
+        environment-file: environment.yml
+        environment-name: artemis
+        cache-environment: true
     - name: Precommit Checks
       uses: pre-commit/action@v3.0.1
     - name: Run tests
-      run: pytest -v --noconftest --numprocesses=4 --cov=tqchem --cov-report=xml --no-cov-on-fail --cov-branch tests
+      run: pytest -v --noconftest --numprocesses=4 --cov=artemis --cov-report=xml --no-cov-on-fail --cov-branch tests
       shell: micromamba-shell {0}

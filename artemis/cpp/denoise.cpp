@@ -7,28 +7,29 @@
 #include "save_map.cpp"
 #include "util/data.h"
 
+
 using namespace std;
 
 #define h 6.62607015e-34
 
 int main(int argc, char* argv[]){
-    
+
     Arg_Parser arg_parser(argc, argv);
 
     bool lin = false;
 //     bool par = false;
-  
+
     if( !( arg_parser.exists( string("-f1") ) && arg_parser.exists( string("-f2") ) && arg_parser.exists( string("-n1") ) && arg_parser.exists( string("-n2") ) && arg_parser.exists( string("-o") ) && (argc>=11) ) ){
         cerr<<"USAGE:\n"<<argv[0]<<" -f1 input1.par -f2 input2.par -n0 nframes0 -n1 nframes1 -n2 nframes2 -o output.json -lin"<<endl;
         return 1;
     }
-    
+
     if ( strcmp( arg_parser.get_ext( arg_parser.get("-f1") ) , "par") ) {
     // check for the extensions of the input file
     cerr<<"USAGE:\n"<<argv[0]<<" -f1 input1.par -f2 input2.par -n0 nframes0 -n1 nframes1 -n2 nframes2 -o output.json -lin"<<endl;
     exit(EXIT_FAILURE);
     }
-   
+
    if ( strcmp( arg_parser.get_ext( arg_parser.get("-f2") ) , "par") ) {
     // check for the extensions of the input file
     cerr<<"USAGE:\n"<<argv[0]<<" -f1 input1.par -f2 input2.par -n0 nframes0 -n1 nframes1 -n2 nframes2 -o output.json -lin"<<endl;
@@ -37,7 +38,7 @@ int main(int argc, char* argv[]){
 
     if (arg_parser.exists("-lin")) {lin = true;}
 //     if (arg_parser.exists("-par")) {par = true;}
-    
+
     double dt1 = 1.0e6/std::stod(arg_parser.get("-n1"));
     double dt2 = 1.0e6/std::stod(arg_parser.get("-n2"));
     double dt0 = 0.0;
@@ -123,17 +124,17 @@ int main(int argc, char* argv[]){
         Cc = data::noise[it0]/data::noise[it1];
     }
 
-    
+
     Residue_Representation rep1(arg_parser.get("-f1"), false, MODE_TOTAL);
     Entropy_Matrix* mat1 = rep1.getEntropy_Matrix();
-    
+
     Residue_Representation rep2(arg_parser.get("-f2"), false, MODE_TOTAL);
     Entropy_Matrix* mat2 = rep2.getEntropy_Matrix();
-    
+
     vector <vector <double>> map;
     vector <string> names;
-    
-    unsigned int NResidues = rep1.getNResidues();  // TODO: Errors 
+
+    unsigned int NResidues = rep1.getNResidues();  // TODO: Errors
 
     // Mean noise calculation
     double Coeff = 0;
@@ -187,25 +188,25 @@ int main(int argc, char* argv[]){
     }
 
     Coeff = Coeff/iter;
-    
+
     for (unsigned int resid1 = 1; resid1 <= NResidues; resid1++) {
-        
+
         vector <double> mie;
         names.push_back(rep1.getResidueName(resid1));
-        
+
         for (unsigned int resid2 = 1; resid2 <= NResidues; resid2++) {
-            
+
             vector <vector< int > >dofs1;
             dofs1.push_back(rep1.getBonds(resid1));
             dofs1.push_back(rep1.getAngles(resid1));
             dofs1.push_back(rep1.getDihedrals(resid1));
-            
+
             vector <vector< int > >dofs2;
             dofs2.push_back(rep1.getBonds(resid2));
             dofs2.push_back(rep1.getAngles(resid2));
             dofs2.push_back(rep1.getDihedrals(resid2));
-            
-            
+
+
             double mutual = 0;
 
 
@@ -237,18 +238,18 @@ int main(int argc, char* argv[]){
             }
 
             if (mutual < 0) {mutual = 0;}
-            mie.push_back(mutual); 
-            
+            mie.push_back(mutual);
+
         }
-        
+
         map.push_back(mie);
     }
-    
+
     vector <int> real_numbers;
     for (unsigned int i = 0; i < NResidues; i++) {
         real_numbers.push_back(rep1.getResidueNumber(i + 1));
     }
-    
+
     save_map(NResidues, map, names, real_numbers, arg_parser.get("-o"));
 
     return 0;

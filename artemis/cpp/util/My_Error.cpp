@@ -1,6 +1,7 @@
 #ifndef MY_ERROR_CPP
 #define MY_ERROR_CPP
 
+
 #include <stdexcept>
 #include <string>
 

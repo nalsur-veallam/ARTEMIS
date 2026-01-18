@@ -8,6 +8,8 @@ dependencies:
 - pymol-open-source
 - pip:
   - pytest
+  - pytest-xdist
+  - pytest-cov
   - -e .
   - matplotlib
   - numpy

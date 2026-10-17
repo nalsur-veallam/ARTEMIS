@@ -51,77 +51,8 @@ int main(int argc, char* argv[]){
     double Cc = 0;
 
     if (!lin) {
-        unsigned int it0 = 0;
-        unsigned int it1 = 0;
-        unsigned int it2 = 0;
-
-        if (std::find(data::dts.begin(), data::dts.end(), dt0) != data::dts.end()) {
-
-            it0 = std::find(data::dts.begin(), data::dts.end(), dt0) - data::dts.begin();
-
-        } else {
-
-            double diff = std::abs(data::dts[it0] - dt0);
-
-            for (size_t it = 0; it < data::dts.size(); it++) {
-                if (diff > std::abs(data::dts[it] - dt0) ) {
-
-                    it0 = (unsigned int) it;
-                    diff = std::abs(data::dts[it] - dt0);
-
-                }
-            }
-
-            if (dt0 < 1) { C0 = data::approx(dt0, it0);} // TODO: parabolic approximation
-            else { C0 = data::approx(dt0, it0);}
-
-        }
-
-        if (std::find(data::dts.begin(), data::dts.end(), dt1) != data::dts.end()) {
-
-            it1 = std::find(data::dts.begin(), data::dts.end(), dt1) - data::dts.begin();
-
-        } else {
-
-            double diff = std::abs(data::dts[it1] - dt1);
-
-            for (size_t it = 0; it < data::dts.size(); it++) {
-                if (diff > std::abs(data::dts[it] - dt1) ) {
-
-                    it1 = (unsigned int) it;
-                    diff = std::abs(data::dts[it] - dt1);
-
-                }
-            }
-
-            if (dt1 < 1) { C1 = data::approx(dt1, it1);} // TODO: parabolic approximation
-            else { C1 = data::approx(dt1, it1);}
-
-        }
-
-        if (std::find(data::dts.begin(), data::dts.end(), dt2) != data::dts.end()) {
-
-            it2 = std::find(data::dts.begin(), data::dts.end(), dt2) - data::dts.begin();
-
-        } else {
-
-            double diff = std::abs(data::dts[it2] - dt2);
-
-            for (size_t it = 0; it < data::dts.size(); it++) {
-                if (diff > std::abs(data::dts[it] - dt2) ) {
-
-                    it2 = (unsigned int) it;
-                    diff = std::abs(data::dts[it] - dt2);
-
-                }
-            }
-
-            if (dt2 < 1) { C2 = data::approx(dt2, it2);} // TODO: parabolic approximation
-            else { C2 = data::approx(dt2, it2);}
-        }
-
-        C = data::noise[it2]/data::noise[it1];
-        Cc = data::noise[it0]/data::noise[it1];
+        C = data::noise_at(dt2)/data::noise_at(dt1);
+        Cc = data::noise_at(dt0)/data::noise_at(dt1);
     }
 
 

@@ -4,6 +4,7 @@
 
 #include <vector>
 #include <cmath>
+#include <algorithm>
 
 namespace data {
 std::vector<double> dts = {0, 0.2, 0.4, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100};
@@ -41,6 +42,56 @@ double approx_linear(double dt, unsigned int id) {
     else {fit = noise[id] + (noise[id]-noise[id-1])*Ddt/(dts[id]-dts[id-1]);}
 
     return fit/ref;
+
+}
+
+double noise_slope(size_t i) {
+
+    size_t n = dts.size();
+
+    if (i == 0 || i == n - 1) {
+
+        size_t a = (i == 0) ? 0 : n - 2;
+        size_t b = (i == 0) ? 1 : n - 3;
+
+        double h0 = dts[a+1] - dts[a];
+        double h1 = dts[b+1] - dts[b];
+        double d0 = (noise[a+1] - noise[a])/h0;
+        double d1 = (noise[b+1] - noise[b])/h1;
+
+        double m = ((2*h0 + h1)*d0 - h0*d1)/(h0 + h1);
+
+        if (m*d0 <= 0) { m = 0;}
+        else if (d0*d1 < 0 && std::abs(m) > 3*std::abs(d0)) { m = 3*d0;}
+
+        return m;
+
+    }
+
+    double h0 = dts[i] - dts[i-1];
+    double h1 = dts[i+1] - dts[i];
+    double d0 = (noise[i] - noise[i-1])/h0;
+    double d1 = (noise[i+1] - noise[i])/h1;
+
+    if (d0*d1 <= 0) { return 0;}
+
+    double w0 = 2*h1 + h0;
+    double w1 = h1 + 2*h0;
+
+    return (w0 + w1)/(w0/d0 + w1/d1);
+
+}
+
+double noise_at(double dt) {
+
+    size_t k = std::upper_bound(dts.begin(), dts.end(), dt) - dts.begin();
+    k = std::min(std::max(k, (size_t) 1), dts.size() - 1) - 1;
+
+    double h = dts[k+1] - dts[k];
+    double t = (dt - dts[k])/h;
+
+    return (2*t*t*t - 3*t*t + 1)*noise[k] + (t*t*t - 2*t*t + t)*h*noise_slope(k)
+         + (3*t*t - 2*t*t*t)*noise[k+1] + (t*t*t - t*t)*h*noise_slope(k+1);
 
 }
 

@@ -1,5 +1,6 @@
 import argparse
 
+from artemis import __version__
 from artemis._modules import _map, allostery, cluster
 
 
@@ -10,6 +11,7 @@ def parse():
     """
 
     parser = argparse.ArgumentParser()
+    parser.set_defaults(func=lambda args: parser.print_help())
 
     subparsers = parser.add_subparsers(
         title="modules",
@@ -17,7 +19,12 @@ def parse():
         help="ARTEMIS module: map, allostery, cluster (future: convert, analysis)",
     )
 
-    parser.add_argument("--version", action="store_true", help="ARTEMIS version.")
+    parser.add_argument(
+        "--version",
+        action="version",
+        version="%(prog)s " + __version__,
+        help="ARTEMIS version.",
+    )
 
     # Map parser
 

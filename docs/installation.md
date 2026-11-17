@@ -12,25 +12,14 @@ After that, enter the directory with the library
 cd ARTEMIS
 ```
 
-And compile the C++ part of the library using make:
+And run:
 
 ```bash
-make
+conda env create -f environment.yml
+conda activate artemis
 ```
 
-Next, you can install all the dependencies for Python. Use:
-
-```bash
-pip3 install -r requirements.txt
-```
-
-To install the library completely, run:
-
-```bash
-pip3 install -e .
-```
-
-After this, the ARTEMIS program will be installed on your computer. Run
+After this, the ARTEMIS program will be installed in your conda environment. Run
 
 ```bash
 artemis -h

@@ -1,4 +1,5 @@
 import itertools as itt
+import os
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -233,7 +234,7 @@ def analyze_allostery(Allostery, out_path, top, noseq, Zscore):
             if counts[i] > 1:
                 indeces = np.argwhere(np.array(new_names) == item)
                 for j, idx in enumerate(indeces):
-                    new_names[int(idx)] += "[" + str(j + 1) + "]"
+                    new_names[int(idx[0])] += "[" + str(j + 1) + "]"
 
         INTENSITY = {}
         INTENSITY["Intensity"] = np.array(intensity)
@@ -244,7 +245,7 @@ def analyze_allostery(Allostery, out_path, top, noseq, Zscore):
             by=["Intensity"], ascending=False, ignore_index=True
         )
         try:
-            fname = "".join(out_path.split(".")[:-1]) + "_zscore.csv"
+            fname = os.path.splitext(out_path)[0] + "_zscore.csv"
             INTENSITY.to_csv(fname, index=False)
             print("\nFile", fname + " created\n")
         except Exception:
@@ -336,7 +337,7 @@ def analyze_allostery(Allostery, out_path, top, noseq, Zscore):
                     if counts[i] > 1:
                         indeces = np.argwhere(np.array(new_names) == item)
                         for j, idx in enumerate(indeces):
-                            new_names[int(idx)] += "[" + str(j + 1) + "]"
+                            new_names[int(idx[0])] += "[" + str(j + 1) + "]"
 
                 INTENSITY = {}
                 INTENSITY["Intensity"] = np.array(intensity)
@@ -381,7 +382,7 @@ def analyze_allostery(Allostery, out_path, top, noseq, Zscore):
                     if counts[i] > 1:
                         indeces = np.argwhere(np.array(act_s_name) == item)
                         for j, idx in enumerate(indeces):
-                            act_s_name[int(idx)] += "[" + str(j + 1) + "]"
+                            act_s_name[int(idx[0])] += "[" + str(j + 1) + "]"
 
                 m2R = (
                     INTENSITY[INTENSITY["Intensity"] > 2]["Allosteric site"] == 1
@@ -435,7 +436,7 @@ def analyze_allostery(Allostery, out_path, top, noseq, Zscore):
             print("\033[F\033[K\033[F")
 
         try:
-            fname = "".join(out_path.split(".")[:-1]) + "_zscore_top.csv"
+            fname = os.path.splitext(out_path)[0] + "_zscore_top.csv"
             table.to_csv(fname, index=False)
             print("\nFile", fname + " created\n")
         except Exception:
@@ -470,7 +471,7 @@ def analyze_allostery(Allostery, out_path, top, noseq, Zscore):
             ovAmounts_all[columns[resid1]] = amounts_all
 
         try:
-            fname = "".join(out_path.split(".")[:-1]) + "_overlap.xlsx"
+            fname = os.path.splitext(out_path)[0] + "_overlap.xlsx"
             with pd.ExcelWriter(fname) as writer:
                 overlap.to_excel(writer, index=False, sheet_name="overlap (lists)")
                 overlap_all.to_excel(
@@ -558,7 +559,7 @@ def analyze_allostery(Allostery, out_path, top, noseq, Zscore):
                     if counts[i] > 1:
                         indeces = np.argwhere(np.array(new_names) == item)
                         for j, idx in enumerate(indeces):
-                            new_names[int(idx)] += "[" + str(j + 1) + "]"
+                            new_names[int(idx[0])] += "[" + str(j + 1) + "]"
 
                 INTENSITY = {}
                 INTENSITY["Intensity"] = np.array(intensity)
@@ -605,7 +606,7 @@ def analyze_allostery(Allostery, out_path, top, noseq, Zscore):
                     if counts[i] > 1:
                         indeces = np.argwhere(np.array(act_s_name) == item)
                         for j, idx in enumerate(indeces):
-                            act_s_name[int(idx)] += "[" + str(j + 1) + "]"
+                            act_s_name[int(idx[0])] += "[" + str(j + 1) + "]"
 
                 t10R = (INTENSITY.iloc[:top10]["Allosteric site"] == 1).sum(axis=0)
                 INTENSITY = INTENSITY.iloc[:top10]
@@ -630,7 +631,7 @@ def analyze_allostery(Allostery, out_path, top, noseq, Zscore):
             print("\033[F\033[K\033[F")
 
         try:
-            fname = "".join(out_path.split(".")[:-1]) + "_top" + str(top) + ".csv"
+            fname = os.path.splitext(out_path)[0] + "_top" + str(top) + ".csv"
             table.to_csv(fname, index=False)
             print("\nFile", fname + " created\n")
         except Exception:

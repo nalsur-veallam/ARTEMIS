@@ -1,3 +1,5 @@
+import os
+
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -79,7 +81,7 @@ def do_clustering(Clusters, out_path):
     Clusters.clustering_labels = []
 
     for label in clustering.labels_:
-        real_label = int(np.argwhere(unique == label)) + 1
+        real_label = int(np.argwhere(unique == label)[0][0]) + 1
         Clusters.clustering_labels.append(int(real_label))
 
     Clusters.clustering_labels = np.array(Clusters.clustering_labels)
@@ -121,7 +123,7 @@ def do_clustering(Clusters, out_path):
     if out_path == "clustering.pdf":
         fname = "clustering.json"
     else:
-        fname = "".join(out_path.split(".")[:-1]) + ".json"
+        fname = os.path.splitext(out_path)[0] + ".json"
     Clusters.write(fname)
 
 
@@ -143,7 +145,7 @@ def do_spectral_clustering(Clusters, out_path):
     Clusters.clustering_labels = []
 
     for label in clustering.labels_:
-        real_label = int(np.argwhere(unique == label)) + 1
+        real_label = int(np.argwhere(unique == label)[0][0]) + 1
         Clusters.clustering_labels.append(int(real_label))
 
     Clusters.clustering_labels = np.array(Clusters.clustering_labels)
@@ -185,5 +187,5 @@ def do_spectral_clustering(Clusters, out_path):
     if out_path == "clustering.pdf":
         fname = "clustering.json"
     else:
-        fname = "".join(out_path.split(".")[:-1]) + ".json"
+        fname = os.path.splitext(out_path)[0] + ".json"
     Clusters.write(fname)

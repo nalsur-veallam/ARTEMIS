@@ -108,8 +108,9 @@ def draw_allostery(Allostery, out_path, top, noseq, str_path):
             + str(group[j])
             + "& resn "
             + str(group_names[j])
-            + "& chain "
+            + "& chain '"
             + str(group_chains[j])
+            + "'"
         )
         cmd.select("active_site", text, merge=1)
 
@@ -126,8 +127,9 @@ def draw_allostery(Allostery, out_path, top, noseq, str_path):
                 + str(group_alls[j])
                 + "& resn "
                 + str(group_alls_names[j])
-                + "& chain "
+                + "& chain '"
                 + str(group_alls_chains[j])
+                + "'"
             )
             cmd.select("allosteric_site", text, merge=1)
 

@@ -1,3 +1,5 @@
+import os
+
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
@@ -88,5 +90,5 @@ def search_critical(Allostery, out_path, noseq):
     if out_path == "allosteric_intensity.pdf":
         fname = "allostery.json"
     else:
-        fname = "".join(out_path.split(".")[:-1]) + ".json"
+        fname = os.path.splitext(out_path)[0] + ".json"
     Allostery.write(fname)

@@ -1,20 +1,17 @@
 import subprocess
 
-from setuptools import find_packages, setup
-from setuptools.command.install import install
+from setuptools import setup
+from setuptools.command.build_py import build_py
 
 
-class InstallCppCommand(install):
+class BuildCppCommand(build_py):
     def run(self):
         subprocess.check_call(["make"])
-        install.run(self)
+        build_py.run(self)
 
 
 setup(
-    name="artemis",
-    version="0.0.1",
-    packages=find_packages(),
     cmdclass={
-        "install": InstallCppCommand,
+        "build_py": BuildCppCommand,
     },
 )

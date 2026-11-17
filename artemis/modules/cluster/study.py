@@ -1,3 +1,5 @@
+import os
+
 import numpy as np
 import pandas as pd
 import pylab as plt
@@ -17,7 +19,7 @@ def study_clustering(Clusters, min_of_clust, max_of_clust, out_path, spectral):
     print("\nSCRIPT FOR SEARCHING THE OPTIMAL NUMBER OF CLUSTERS IS LAUNCHED\n")
     heigh = 0.1
 
-    out_path = "".join(out_path.split(".")[:-1])
+    out_path = os.path.splitext(out_path)[0]
 
     if Clusters.reference_group is not None and not spectral:
         map_ = Clusters.map_[

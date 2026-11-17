@@ -1,5 +1,6 @@
 import os
 import subprocess
+import sys
 
 import artemis
 from artemis.datatypes import ALLOSTERY, CLUSTERS, GROUPS, MAP
@@ -13,6 +14,12 @@ from artemis.modules.cluster.paint import draw_clustering
 from artemis.modules.cluster.study import study_clustering
 from artemis.modules.map.contacts import contacts_map
 from artemis.modules.map.draw import draw_map
+
+
+def _run(command):
+    returncode = subprocess.run(command, shell=True).returncode
+    if returncode != 0:
+        sys.exit(returncode)
 
 
 def allostery(args):
@@ -123,7 +130,7 @@ def _map(args):
 
         if args.lin:
             if args.n0 is None:
-                subprocess.run(
+                _run(
                     path
                     + "/../bin/denoise -o "
                     + str(args.o)
@@ -135,10 +142,9 @@ def _map(args):
                     + args.files[0]
                     + " -f2 "
                     + args.files[1],
-                    shell=True,
                 )
             else:
-                subprocess.run(
+                _run(
                     path
                     + "/../bin/denoise -o "
                     + str(args.o)
@@ -152,11 +158,10 @@ def _map(args):
                     + args.files[0]
                     + " -f2 "
                     + args.files[1],
-                    shell=True,
                 )
         else:
             if args.n0 is None:
-                subprocess.run(
+                _run(
                     path
                     + "/../bin/denoise -o "
                     + str(args.o)
@@ -168,10 +173,9 @@ def _map(args):
                     + args.files[0]
                     + " -f2 "
                     + args.files[1],
-                    shell=True,
                 )
             else:
-                subprocess.run(
+                _run(
                     path
                     + "/../bin/denoise -o "
                     + str(args.o)
@@ -185,7 +189,6 @@ def _map(args):
                     + args.files[0]
                     + " -f2 "
                     + args.files[1],
-                    shell=True,
                 )
 
     elif args.gen:
@@ -194,9 +197,8 @@ def _map(args):
         if args.o is None:
             args.o = "map.json"
 
-        subprocess.run(
+        _run(
             path + "/../bin/get_map -o " + str(args.o) + " -f " + str(args.files[0]),
-            shell=True,
         )
 
     elif args.draw:

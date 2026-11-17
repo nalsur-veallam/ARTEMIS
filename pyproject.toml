@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "artemis"
-version = "0.0.1"
+dynamic = ["version"]
 dependencies = [
     "numpy",
     "scipy",
@@ -13,6 +13,7 @@ dependencies = [
     "seaborn",
     "scikit-learn",
     "tqdm",
+    "openpyxl",
     "pre-commit",
     "pytest",
 ]
@@ -28,7 +29,7 @@ description = "Molecular communication Toolkit."
 readme = "README.md"
 classifiers = [
     'Programming Language :: Python :: 3',
-    'License :: Other/Proprietary License',
+    'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
     'Operating System :: OS Independent',
 ]
 
@@ -41,3 +42,6 @@ artemis = "artemis.__main__:main"
 [tool.setuptools]
 packages = ["artemis"]
 include-package-data = true
+
+[tool.setuptools.dynamic]
+version = {attr = "artemis.__version__"}

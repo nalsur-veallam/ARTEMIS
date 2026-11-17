@@ -6,3 +6,4 @@ seaborn
 pandas
 tqdm
 pytest
+openpyxl
